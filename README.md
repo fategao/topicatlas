@@ -81,7 +81,7 @@ E2E 覆盖：首页 → 学习路径 → 勾选验收 → 刷新后进度仍在�
 ### 1. 创建仓库并推送
 
 ```bash
-git remote add origin https://github.com/<你的用户名>/topicatlas.git
+git remote add origin https://github.com/haorangao972-ux/topicatlas.git
 git push -u origin main
 ```
 
@@ -95,7 +95,7 @@ git -c http.proxy=http://127.0.0.1:<端口> push -u origin main
 
 仓库 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions**。之后每次推送到 `main`，`.github/workflows/deploy.yml` 会自动校验内容、跑测试、构建并发布。
 
-**还没买域名就先上线看效果？** 在仓库 **Settings → Secrets and variables → Actions → Variables** 加两个变量，站点就会正确跑在 `https://<用户名>.github.io/topicatlas/`：
+**还没买域名就先上线看效果？** 在仓库 **Settings → Secrets and variables → Actions → Variables** 加两个变量，站点就会正确跑在 `https://haorangao972-ux.github.io/topicatlas/`：
 
 | 变量名 | 值 | 作用 |
 |---|---|---|
@@ -117,7 +117,7 @@ git -c http.proxy=http://127.0.0.1:<端口> push -u origin main
 | A | `@` | `185.199.109.153` |
 | A | `@` | `185.199.110.153` |
 | A | `@` | `185.199.111.153` |
-| CNAME | `www` | `<你的用户名>.github.io` |
+| CNAME | `www` | `haorangao972-ux.github.io` |
 
 3. 仓库 **Settings → Pages → Custom domain** 填 `topicatlas.dev` 并保存（`public/CNAME` 已随构建产物发布，这一步会直接通过校验）。
 4. 等 GitHub 签发 Let's Encrypt 证书（Pages 页面会出现绿色 HTTPS 状态），然后勾选 **Enforce HTTPS**。
