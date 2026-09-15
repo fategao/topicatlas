@@ -1,0 +1,100 @@
+import { Callout } from '../../components/ui/Callout'
+
+这一步的目标不是「装好了」，而是「**聊起来了**」：完成初始化、选好模型，并跑通第一轮对话。
+
+### 先选一条最快路径
+
+官方给的判断很直接：先看你的目标，再决定第一步做什么。
+
+| 你的目标 | 先做这步 | 再做这步 |
+|---|---|---|
+| 只想让 Hermes 在本机跑起来 | `hermes setup` | 运行一次真实对话并验证有响应 |
+| 已经知道要用哪个 provider | `hermes model` | 保存配置，然后开始聊天 |
+| 想搭机器人或长期运行的服务 | CLI 正常后运行 `hermes gateway setup` | 接入 Telegram、Discord、Slack 等 |
+| 想用本地或自托管模型 | `hermes model` → 自定义 endpoint | 验证 endpoint、模型名与上下文长度 |
+
+<Callout tone="tip" title="经验法则">
+如果 Hermes 连一次正常对话都完不成，就先别加功能。先让一轮完整对话跑通，再叠加 gateway、cron、skills、语音或路由。
+</Callout>
+
+### 第一步：选择 provider
+
+这是最重要的一步配置，交互式完成：
+
+```bash
+hermes model
+```
+
+选择器会引导你选 provider、完成认证（OAuth 会打开浏览器，API key 提供商会提示输入密钥），再从该 provider 的精选目录里挑具体模型。
+
+<Callout tone="warn" title="硬性要求：上下文至少 64K token">
+Hermes 要求模型至少有 **64,000 token** 的上下文窗口。小窗口模型撑不住多步骤工具调用，启动时会被直接拒绝。托管模型（Claude、GPT、Gemini、Qwen、DeepSeek）通常都满足；跑本地模型时请显式设置，例如 llama.cpp 的 `--ctx-size 65536` 或 Ollama 的 `-c 65536`。
+</Callout>
+
+### 第二步：搞清配置存在哪
+
+Hermes 把密钥和普通配置分开放：
+
+- **密钥与 token** → `~/.hermes/.env`
+- **非密钥配置** → `~/.hermes/config.yaml`
+
+用 CLI 设置时不用自己判断，它会自动路由到正确的文件：
+
+```bash
+hermes config set model anthropic/claude-opus-4.6
+hermes config set terminal.backend docker
+hermes config set OPENROUTER_API_KEY sk-or-...
+```
+
+### 第三步：跑第一次对话
+
+```bash
+hermes            # 经典 CLI
+hermes --tui      # 现代 TUI（推荐）
+```
+
+会看到一个欢迎横幅，显示你的模型、可用工具与 skills。接着用一个**具体且容易验证**的 prompt，例如：
+
+```text
+Summarize this repo in 5 bullets and tell me what the main entrypoint is.
+```
+
+**成功的标志（官方判断标准）：**
+
+1. 横幅显示你选择的模型与 provider
+2. Hermes 无错误地回复
+3. 需要时能够调用工具（终端、文件读取、网页搜索）
+4. 对话可以正常进行超过一轮
+
+### 第四步：验证会话能恢复
+
+在继续叠功能之前，先确认恢复功能正常：
+
+```bash
+hermes --continue    # 恢复最近的会话
+hermes -c            # 简写形式
+```
+
+这应该把你带回刚才的会话。如果不行，检查是不是换了 profile，以及会话是否真的保存了。
+
+### 常见故障模式（最容易浪费时间的那几个）
+
+| 现象 | 可能原因 | 解决方法 |
+|---|---|---|
+| 启动但回复为空或异常 | provider 认证或模型选择有误 | 重跑 `hermes model`，确认 provider、模型与认证 |
+| 自定义 endpoint "可用"但返回乱码 | base URL、模型名有误，或并不兼容 OpenAI | 先用独立客户端验证该 endpoint |
+| Gateway 启动但收不到消息 | Bot token、白名单或平台配置不完整 | 重跑 `hermes gateway setup`，检查 `hermes gateway status` |
+| `hermes --continue` 找不到旧会话 | 换了 profile，或会话从未保存 | 用 `hermes sessions list` 确认 |
+
+### 卡住时的「恢复工具包」
+
+官方给的顺序值得抄下来，按顺序跑一遍基本能回到已知正常状态：
+
+```bash
+hermes doctor
+hermes model
+hermes setup
+hermes sessions list
+hermes --continue
+hermes gateway status
+```

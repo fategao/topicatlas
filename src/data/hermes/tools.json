@@ -1,0 +1,870 @@
+{
+  "module": "tools-reference",
+  "repo": "NousResearch/hermes-agent",
+  "commitSha": "1d8af13e4ddebc02bcb514a235c9719efda91904",
+  "fetchedAt": "2026-09-15T07:16:13.350Z",
+  "license": "MIT",
+  "zhUrl": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference",
+  "enUrl": "https://hermes-agent.nousresearch.com/docs/reference/tools-reference",
+  "generatedAt": "2026-09-15T07:25:47.341Z",
+  "totalToolsets": 29,
+  "totalTools": 70,
+  "overview": [
+    {
+      "id": "可用工具",
+      "title": "可用工具",
+      "anchor": "可用工具",
+      "summary": "Hermes 内置了丰富的工具注册表，涵盖网页搜索、浏览器自动化、终端执行、文件编辑、记忆、委托、RL 训练、消息投递、Home Assistant 等功能。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/features/tools#可用工具"
+    },
+    {
+      "id": "使用工具集",
+      "title": "使用工具集",
+      "anchor": "使用工具集",
+      "summary": "常用工具集包括 web、search、terminal、file、browser、vision、image_gen、moa、skills、tts、todo、memory、session_search、cronjob、code_execution、delegation、clarify、homeassistant、messaging、spotify、discord、discord_admin、debugging 和 safe。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/features/tools#使用工具集"
+    },
+    {
+      "id": "终端后端",
+      "title": "终端后端",
+      "anchor": "终端后端",
+      "summary": "终端工具可在不同环境中执行命令：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/features/tools#终端后端"
+    },
+    {
+      "id": "后台进程管理",
+      "title": "后台进程管理",
+      "anchor": "后台进程管理",
+      "summary": "PTY 模式（pty=true）可启用 Codex 和 Claude Code 等交互式 CLI 工具。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/features/tools#后台进程管理"
+    },
+    {
+      "id": "已完成后台进程的结果",
+      "title": "已完成后台进程的结果",
+      "anchor": "已完成后台进程的结果",
+      "summary": "后台命令完成后，其退出状态和捕获的输出会保留在当前配置档案中。 无头父进程退出或 Hermes 重启后，请恢复启动该命令的会话（或其上下文压缩后的 延续会话），再使用原始 session_id 调用 process(action=\"log\") 读取输出、 调用 process(action=\"poll\") 查看退出状态。即使知道完整进程标识，其他会话 或未绑定所属会话的请求也不能读取保留的结果。process(action=\"list…",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/features/tools#已完成后台进程的结果"
+    },
+    {
+      "id": "sudo-支持",
+      "title": "Sudo 支持",
+      "anchor": "sudo-支持",
+      "summary": "如果命令需要 sudo，系统会提示你输入密码（在本次会话内缓存）。也可在 ~/.hermes/.env 中设置 SUDO_PASSWORD。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/features/tools#sudo-支持"
+    }
+  ],
+  "toolsets": [
+    {
+      "id": "browser-工具集",
+      "name": "browser 工具集",
+      "summary": "",
+      "tools": [
+        {
+          "name": "browser_back",
+          "description": "在浏览器历史记录中导航回上一页。需先调用 browser_navigate。",
+          "requires": "—"
+        },
+        {
+          "name": "browser_click",
+          "description": "点击快照中由 ref ID 标识的元素（如 @e5）。ref ID 显示在快照输出的方括号中。需先调用 browser_navigate 和 browser_snapshot。",
+          "requires": "—"
+        },
+        {
+          "name": "browser_console",
+          "description": "获取当前页面的浏览器控制台输出和 JavaScript 错误。返回 console.log/warn/error/info 消息及未捕获的 JS 异常。用于检测静默 JavaScript 错误、失败的 API 调用和应用警告。需先调用…",
+          "requires": "—"
+        },
+        {
+          "name": "browser_get_images",
+          "description": "获取当前页面所有图片的列表，包含 URL 和 alt 文本。可用于查找供 vision 工具分析的图片。需先调用 browser_navigate。",
+          "requires": "—"
+        },
+        {
+          "name": "browser_navigate",
+          "description": "在浏览器中导航到某个 URL，初始化会话并加载页面。必须在其他浏览器工具之前调用。对于简单信息检索，优先使用 web_search 或 web_extract（更快、更省）。当需要… 时使用浏览器工具。",
+          "requires": "—"
+        },
+        {
+          "name": "browser_press",
+          "description": "按下键盘按键。适用于提交表单（Enter）、导航（Tab）或键盘快捷键。需先调用 browser_navigate。",
+          "requires": "—"
+        },
+        {
+          "name": "browser_scroll",
+          "description": "向某个方向滚动页面。用于显示当前视口上方或下方的更多内容。需先调用 browser_navigate。",
+          "requires": "—"
+        },
+        {
+          "name": "browser_snapshot",
+          "description": "获取当前页面无障碍树的文本快照。返回带 ref ID（如 @e1、@e2）的交互元素，供 browser_click 和 browser_type 使用。full=false（默认）：仅含交互元素的紧凑视图。full=true：完整…",
+          "requires": "—"
+        },
+        {
+          "name": "browser_type",
+          "description": "向由 ref ID 标识的输入框中输入文本。先清空字段，再输入新文本。需先调用 browser_navigate 和 browser_snapshot。",
+          "requires": "—"
+        },
+        {
+          "name": "browser_vision",
+          "description": "对当前页面截图并用视觉 AI 分析。当需要直观理解页面内容时使用——尤其适用于 CAPTCHA、视觉验证挑战、复杂布局，或文本快照… 时。",
+          "requires": "—"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#browser-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "browser-工具集"
+      }
+    },
+    {
+      "id": "browser-工具集cdp-门控工具",
+      "name": "browser 工具集（CDP 门控工具）",
+      "summary": "这两个工具属于 browser 工具集，但仅在会话启动时可访问 Chrome DevTools Protocol（CDP）端点时才注册——通过 /browser connect、browser.cdp_url 配置、Browserbase 会话或 Camofox。",
+      "tools": [
+        {
+          "name": "browser_cdp",
+          "description": "发送原始 Chrome DevTools Protocol 命令。用于高层 browser_* 工具未覆盖的浏览器操作的逃生舱口。参见 https://chromedevtools.github.io/devtools-protocol/",
+          "requires": "CDP 端点"
+        },
+        {
+          "name": "browser_dialog",
+          "description": "响应原生 JavaScript 对话框（alert / confirm / prompt / beforeunload）。先调用 browser_snapshot——待处理的对话框会出现在其 pending_dialogs 字段中。然后调用 `browser_dialog(action='accept'\\",
+          "requires": "'dismiss')`。"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#browser-工具集cdp-门控工具",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "browser-工具集cdp-门控工具"
+      }
+    },
+    {
+      "id": "clarify-工具集",
+      "name": "clarify 工具集",
+      "summary": "",
+      "tools": [
+        {
+          "name": "clarify",
+          "description": "在需要澄清、反馈或决策时向用户提问。支持两种模式：1. 多选 —— 提供最多 4 个选项，用户从中选择或通过第 5 个\"其他\"选项自行输入。2.…",
+          "requires": "—"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#clarify-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "clarify-工具集"
+      }
+    },
+    {
+      "id": "codeexecution-工具集",
+      "name": "code_execution 工具集",
+      "summary": "",
+      "tools": [
+        {
+          "name": "execute_code",
+          "description": "运行可以编程方式调用 Hermes 工具的 Python 脚本。当需要 3 次以上工具调用且调用之间有处理逻辑、需要在大型工具输出进入上下文前过滤/压缩、需要条件分支（…）时使用。",
+          "requires": "—"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#codeexecution-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "codeexecution-工具集"
+      }
+    },
+    {
+      "id": "cronjob-工具集",
+      "name": "cronjob 工具集",
+      "summary": "",
+      "tools": [
+        {
+          "name": "cronjob",
+          "description": "统一的定时任务管理器。使用 action=\"create\"、\"list\"、\"update\"、\"pause\"、\"resume\"、\"run\" 或 \"remove\" 管理任务。支持带一个或多个附加 skill 的 skill 驱动任务，update 时 skills=[] 可清除已附加的 skill。Cron 任务在无当前聊天上下文的全新会话中运行。",
+          "requires": "—"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#cronjob-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "cronjob-工具集"
+      }
+    },
+    {
+      "id": "delegation-工具集",
+      "name": "delegation 工具集",
+      "summary": "",
+      "tools": [
+        {
+          "name": "delegate_task",
+          "description": "生成一个或多个子 agent，在隔离上下文中处理任务。每个子 agent 拥有独立的对话、终端会话和工具集。仅返回最终摘要——中间工具结果不会进入你的上下文窗口。两种…",
+          "requires": "—"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#delegation-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "delegation-工具集"
+      }
+    },
+    {
+      "id": "feishudoc-工具集",
+      "name": "feishu_doc 工具集",
+      "summary": "仅限飞书文档评论智能回复处理器（gateway/platforms/feishu_comment.py）使用。不在 hermes-cli 或常规飞书聊天适配器中暴露。",
+      "tools": [
+        {
+          "name": "feishu_doc_read",
+          "description": "根据 file_type 和 token 读取飞书/Lark 文档（Docx、Doc 或 Sheet）的完整文本内容。",
+          "requires": "飞书应用凭据"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#feishudoc-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "feishudoc-工具集"
+      }
+    },
+    {
+      "id": "feishudrive-工具集",
+      "name": "feishu_drive 工具集",
+      "summary": "仅限飞书文档评论处理器使用。驱动云盘文件的评论读写操作。",
+      "tools": [
+        {
+          "name": "feishu_drive_add_comment",
+          "description": "在飞书/Lark 文档或文件上添加顶级评论。",
+          "requires": "飞书应用凭据"
+        },
+        {
+          "name": "feishu_drive_list_comments",
+          "description": "列出飞书/Lark 文件的全文档评论，最新的排在最前。",
+          "requires": "飞书应用凭据"
+        },
+        {
+          "name": "feishu_drive_list_comment_replies",
+          "description": "列出特定飞书评论线程（全文档或局部选区）的回复。",
+          "requires": "飞书应用凭据"
+        },
+        {
+          "name": "feishu_drive_reply_comment",
+          "description": "在飞书评论线程上发布回复，支持可选的 @ 提及。",
+          "requires": "飞书应用凭据"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#feishudrive-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "feishudrive-工具集"
+      }
+    },
+    {
+      "id": "file-工具集",
+      "name": "file 工具集",
+      "summary": "",
+      "tools": [
+        {
+          "name": "patch",
+          "description": "对文件进行精准的查找替换编辑。用于替代终端中的 sed/awk。使用模糊匹配（9 种策略），轻微的空白/缩进差异不会导致失败。返回统一差异格式。编辑后自动运行语法检查…",
+          "requires": "—"
+        },
+        {
+          "name": "read_file",
+          "description": "带行号和分页功能读取文本文件。用于替代终端中的 cat/head/tail。输出格式：`LINE_NUM\\",
+          "requires": "CONTENT。找不到文件时建议相似文件名。对大文件使用 offset 和 limit`。注意：无法读取图片或…"
+        },
+        {
+          "name": "search_files",
+          "description": "搜索文件内容或按名称查找文件。用于替代终端中的 grep/rg/find/ls。基于 Ripgrep，比 shell 等效命令更快。内容搜索（target='content'）：在文件内进行正则搜索。输出模式：带行号的完整匹配…",
+          "requires": "—"
+        },
+        {
+          "name": "write_file",
+          "description": "将内容写入文件，完全替换现有内容。用于替代终端中的 echo/cat heredoc。自动创建父目录。覆盖整个文件 —— 精准编辑请使用 patch。",
+          "requires": "—"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#file-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "file-工具集"
+      }
+    },
+    {
+      "id": "homeassistant-工具集",
+      "name": "homeassistant 工具集",
+      "summary": "",
+      "tools": [
+        {
+          "name": "ha_call_service",
+          "description": "调用 Home Assistant 服务以控制设备。使用 ha_list_services 发现各域的可用服务及其参数。",
+          "requires": "—"
+        },
+        {
+          "name": "ha_get_state",
+          "description": "获取单个 Home Assistant 实体的详细状态，包括所有属性（亮度、颜色、温度设定值、传感器读数等）。",
+          "requires": "—"
+        },
+        {
+          "name": "ha_list_entities",
+          "description": "列出 Home Assistant 实体。可按域（light、switch、climate、sensor、binary_sensor、cover、fan 等）或区域名称（客厅、厨房、卧室等）过滤。",
+          "requires": "—"
+        },
+        {
+          "name": "ha_list_services",
+          "description": "列出用于设备控制的可用 Home Assistant 服务（动作）。显示每种设备类型可执行的操作及其接受的参数。用于发现如何控制通过 ha_list_entities 找到的设备。",
+          "requires": "—"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#homeassistant-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "homeassistant-工具集"
+      }
+    },
+    {
+      "id": "computeruse-工具集",
+      "name": "computer_use 工具集",
+      "summary": "",
+      "tools": [
+        {
+          "name": "computer_use",
+          "description": "通过 cua-driver 在后台控制 macOS 桌面——截图（SOM / vision / AX）、点击 / 拖拽 / 滚动 / 输入 / 按键 / 等待、list_apps、focus_app。不会抢占用户的光标或键盘焦点。适用于任何支持工具的模型。仅限 macOS。",
+          "requires": "cua-driver 在 $PATH 中（通过 hermes tools 安装）。"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#computeruse-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "computeruse-工具集"
+      }
+    },
+    {
+      "id": "imagegen-工具集",
+      "name": "image_gen 工具集",
+      "summary": "",
+      "tools": [
+        {
+          "name": "image_generate",
+          "description": "使用 FAL.ai 从文本 prompt（提示词）生成高质量图片。底层模型由用户配置（默认：FLUX 2 Klein 9B，生成时间低于 1 秒），agent 不可选择。返回单个图片 URL。使用… 显示。",
+          "requires": "FAL_KEY"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#imagegen-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "imagegen-工具集"
+      }
+    },
+    {
+      "id": "kanban-工具集",
+      "name": "kanban 工具集",
+      "summary": "在以下情况下注册：(a) agent 由 kanban 调度器生成（设置了 HERMES_KANBAN_TASK 环境变量），或 (b) 在显式启用 kanban 工具集的 profile 中运行。任务范围的 worker 使用生命周期工具处理其分配的任务；编排器 profile 还额外获得 kanban_list 和 kanban_unblock 等看板路由工具。完整工作流见 Kanban 多…",
+      "tools": [
+        {
+          "name": "kanban_show",
+          "description": "显示分配给当前 worker 的活跃 kanban 任务（标题、描述、评论、依赖项）。",
+          "requires": "HERMES_KANBAN_TASK 或 kanban 工具集"
+        },
+        {
+          "name": "kanban_list",
+          "description": "带过滤器列出看板任务。仅限编排器；对调度器生成的任务 worker 隐藏。",
+          "requires": "含 kanban 工具集的 profile"
+        },
+        {
+          "name": "kanban_complete",
+          "description": "用结构化交接载荷（结果、产物、后续事项）将当前任务标记为完成。",
+          "requires": "HERMES_KANBAN_TASK 或 kanban 工具集"
+        },
+        {
+          "name": "kanban_block",
+          "description": "因需向用户提问而阻塞当前任务——调度器暂停、呈现问题，并在人工回复后恢复。",
+          "requires": "HERMES_KANBAN_TASK 或 kanban 工具集"
+        },
+        {
+          "name": "kanban_heartbeat",
+          "description": "在长时间运行的操作期间发送进度心跳，让调度器知道 worker 仍在运行。",
+          "requires": "HERMES_KANBAN_TASK 或 kanban 工具集"
+        },
+        {
+          "name": "kanban_comment",
+          "description": "在不改变任务状态的情况下向任务线程添加评论——适用于呈现中间发现。",
+          "requires": "HERMES_KANBAN_TASK 或 kanban 工具集"
+        },
+        {
+          "name": "kanban_create",
+          "description": "从当前任务派生子任务。由编排器和生成后续任务的 worker 使用。",
+          "requires": "HERMES_KANBAN_TASK 或 kanban 工具集"
+        },
+        {
+          "name": "kanban_link",
+          "description": "用父 → 子依赖边链接任务。",
+          "requires": "HERMES_KANBAN_TASK 或 kanban 工具集"
+        },
+        {
+          "name": "kanban_unblock",
+          "description": "将被阻塞的任务恢复为 ready 状态。仅限编排器；对调度器生成的任务 worker 隐藏。",
+          "requires": "含 kanban 工具集的 profile"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#kanban-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "kanban-工具集"
+      }
+    },
+    {
+      "id": "memory-工具集",
+      "name": "memory 工具集",
+      "summary": "",
+      "tools": [
+        {
+          "name": "memory",
+          "description": "将重要信息保存到跨会话持久化的记忆中。你的记忆会在会话启动时出现在系统 prompt 中——这是你在对话之间记住用户信息和环境信息的方式。何时保存…",
+          "requires": "—"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#memory-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "memory-工具集"
+      }
+    },
+    {
+      "id": "messaging-工具集",
+      "name": "messaging 工具集",
+      "summary": "",
+      "tools": [
+        {
+          "name": "send_message",
+          "description": "向已连接的消息平台发送消息，或列出可用目标。重要：当用户要求发送到特定频道或人员（而非仅平台名称）时，请先调用 send_message(action='list') 查看可用目标…",
+          "requires": "—"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#messaging-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "messaging-工具集"
+      }
+    },
+    {
+      "id": "sessionsearch-工具集",
+      "name": "session_search 工具集",
+      "summary": "",
+      "tools": [
+        {
+          "name": "session_search",
+          "description": "搜索存储在本地会话数据库中的历史会话，或在某个会话内滚动浏览。基于 FTS5 检索；返回数据库中的实际消息（无 LLM 调用）。三种形态：发现（传入 query）、滚动（传入 session_id + around_message_id）、浏览（无参数）。",
+          "requires": "—"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#sessionsearch-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "sessionsearch-工具集"
+      }
+    },
+    {
+      "id": "skills-工具集",
+      "name": "skills 工具集",
+      "summary": "",
+      "tools": [
+        {
+          "name": "skill_manage",
+          "description": "管理 skill（创建、更新、删除）。Skill 是你的程序性记忆——针对重复任务类型的可复用方法。新 skill 保存到 ~/.hermes/skills/；现有 skill 可在其所在位置修改。操作：create（完整 SKILL.m…）",
+          "requires": "—"
+        },
+        {
+          "name": "skill_view",
+          "description": "Skill 允许加载特定任务和工作流的信息，以及脚本和模板。加载某个 skill 的完整内容或访问其链接文件（参考资料、模板、脚本）。首次调用返回 SKILL.md 内容及…",
+          "requires": "—"
+        },
+        {
+          "name": "skills_list",
+          "description": "列出可用 skill（名称 + 描述）。使用 skill_view(name) 加载完整内容。",
+          "requires": "—"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#skills-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "skills-工具集"
+      }
+    },
+    {
+      "id": "terminal-工具集",
+      "name": "terminal 工具集",
+      "summary": "",
+      "tools": [
+        {
+          "name": "process",
+          "description": "管理通过 terminal(background=true) 启动的后台进程。操作：list（显示所有）、poll（检查状态 + 新输出）、log（带分页的完整输出）、wait（阻塞直到完成或超时）、kill（终止）、write（发送…）",
+          "requires": "—"
+        },
+        {
+          "name": "terminal",
+          "description": "在 Linux 环境中执行 shell 命令。文件系统在调用之间持久化。对长时间运行的服务器设置 background=true。设置 notify_on_complete=true（配合 background=true）可在进程完成时自动收到通知——无需轮询。不要使用 cat/head/tail——使用 read_file。不要使用 grep/rg/find——使用 search_files。",
+          "requires": "—"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#terminal-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "terminal-工具集"
+      }
+    },
+    {
+      "id": "todo-工具集",
+      "name": "todo 工具集",
+      "summary": "",
+      "tools": [
+        {
+          "name": "todo",
+          "description": "管理当前会话的任务列表。适用于包含 3 个以上步骤的复杂任务，或用户提供多个任务时。不带参数调用可读取当前列表。写入：- 提供 todos 数组以创建/更新条目 - merge=…",
+          "requires": "—"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#todo-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "todo-工具集"
+      }
+    },
+    {
+      "id": "vision-工具集",
+      "name": "vision 工具集",
+      "summary": "",
+      "tools": [
+        {
+          "name": "vision_analyze",
+          "description": "使用 AI 视觉分析图片。在支持视觉的主模型上，将原始图片像素作为多模态工具结果返回，使模型在下一轮能原生看到图片。在纯文本主模型上，回退到辅助视觉模型描述图片并以文本形式返回描述。两种情况下工具签名完全相同。",
+          "requires": "—"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#vision-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "vision-工具集"
+      }
+    },
+    {
+      "id": "video-工具集",
+      "name": "video 工具集",
+      "summary": "可选工具集（默认 hermes-cli 集中不加载）。通过 --toolsets video 添加，或在 toolsets: 配置中包含 video。",
+      "tools": [
+        {
+          "name": "video_analyze",
+          "description": "分析来自 URL 或文件路径的视频内容——字幕、场景分解、关键时间戳和视觉描述。",
+          "requires": "—"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#video-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "video-工具集"
+      }
+    },
+    {
+      "id": "videogen-工具集",
+      "name": "video_gen 工具集",
+      "summary": "可选工具集（默认 hermes-cli 集中不加载）。通过 --toolsets video_gen 添加，或在 hermes tools → Video Generation 中启用（同时引导你选择后端）。",
+      "tools": [
+        {
+          "name": "video_generate",
+          "description": "使用用户配置的视频生成后端，从文本 prompt 生成视频（文本生成视频）或为静态图片制作动画（图片生成视频）。传入 image_url 可为该图片制作动画；省略则从文本生成。后端自动路由到正确端点。在 video 字段中返回 HTTP URL 或绝对文件路径。",
+          "requires": "活跃的 video_gen 插件 + 其凭据（如 XAI_API_KEY、FAL_KEY）"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#videogen-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "videogen-工具集"
+      }
+    },
+    {
+      "id": "web-工具集",
+      "name": "web 工具集",
+      "summary": "",
+      "tools": [
+        {
+          "name": "web_search",
+          "description": "在网络上搜索信息。默认返回最多 5 条结果，包含标题、URL 和描述。接受可选的 limit（1-100，默认 5）。查询直接传递给配置的后端，因此当后端支持时，site:domain、filetype:pdf、intitle:word、-term、\"exact phrase\" 等运算符可能有效。",
+          "requires": "EXA_API_KEY 或 PARALLEL_API_KEY 或 FIRECRAWL_API_KEY 或 TAVILY_API_KEY"
+        },
+        {
+          "name": "web_extract",
+          "description": "从网页 URL 提取内容。以 Markdown 格式返回页面内容。也支持 PDF URL——直接传入 PDF 链接即可转换为 Markdown 文本。预算内（默认 15000 字符）的页面完整返回；更大的页面截断为头+尾窗口，完整文本存储在磁盘上供 read_file 分页读取（无 LLM 摘要）。",
+          "requires": "EXA_API_KEY 或 PARALLEL_API_KEY 或 FIRECRAWL_API_KEY 或 TAVILY_API_KEY"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#web-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "web-工具集"
+      }
+    },
+    {
+      "id": "xsearch-工具集",
+      "name": "x_search 工具集",
+      "summary": "",
+      "tools": [
+        {
+          "name": "x_search",
+          "description": "使用 xAI 内置的 x_search Responses 工具搜索 X（Twitter）帖子、主页和话题串。用于获取 X 上的当前讨论、反应或观点，而非通用网页。默认关闭——通过 hermes tools → 🐦 X (Twitter) Search 选择启用。仅在配置了 xAI 凭据时注册 schema（check_fn 门控）。",
+          "requires": "XAI_API_KEY 或 xAI Grok OAuth（SuperGrok / Premium+）登录"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#xsearch-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "xsearch-工具集"
+      }
+    },
+    {
+      "id": "tts-工具集",
+      "name": "tts 工具集",
+      "summary": "",
+      "tools": [
+        {
+          "name": "text_to_speech",
+          "description": "将文本转换为语音音频。返回平台以语音消息形式传递的 MEDIA: 路径。在 Telegram 上以语音气泡播放，在 Discord/WhatsApp 上作为音频附件。在 CLI 模式下保存到 ~/voice-memos/。语音和提供者…",
+          "requires": "—"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#tts-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "tts-工具集"
+      }
+    },
+    {
+      "id": "discord-工具集",
+      "name": "discord 工具集",
+      "summary": "在 hermes-discord 平台工具集（仅 gateway）上注册。使用与消息适配器相同的 bot token。",
+      "tools": [
+        {
+          "name": "discord",
+          "description": "读取并参与 Discord 服务器。操作包括 search_members、fetch_messages、send_message、react、fetch_channel、list_channels 等。",
+          "requires": "DISCORD_BOT_TOKEN"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#discord-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "discord-工具集"
+      }
+    },
+    {
+      "id": "discordadmin-工具集",
+      "name": "discord_admin 工具集",
+      "summary": "在 hermes-discord 平台工具集上注册。审核操作需要 bot 持有相应的 Discord 权限。",
+      "tools": [
+        {
+          "name": "discord_admin",
+          "description": "通过 REST API 管理 Discord 服务器：列出 guild/频道/角色，创建/编辑/删除频道，管理角色授予、禁言、踢出和封禁。",
+          "requires": "DISCORD_BOT_TOKEN + bot 权限"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#discordadmin-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "discordadmin-工具集"
+      }
+    },
+    {
+      "id": "spotify-工具集",
+      "name": "spotify 工具集",
+      "summary": "由内置 spotify 插件注册。需要 OAuth token——运行一次 hermes spotify setup 进行授权。",
+      "tools": [
+        {
+          "name": "spotify_playback",
+          "description": "控制 Spotify 播放、查看当前播放状态或获取最近播放的曲目。",
+          "requires": "Spotify OAuth"
+        },
+        {
+          "name": "spotify_devices",
+          "description": "列出 Spotify Connect 设备或将播放转移到其他设备。",
+          "requires": "Spotify OAuth"
+        },
+        {
+          "name": "spotify_queue",
+          "description": "查看用户的 Spotify 队列或向其添加项目。",
+          "requires": "Spotify OAuth"
+        },
+        {
+          "name": "spotify_search",
+          "description": "在 Spotify 目录中搜索曲目、专辑、艺术家、播放列表、节目或单集。",
+          "requires": "Spotify OAuth"
+        },
+        {
+          "name": "spotify_playlists",
+          "description": "列出、查看、创建、更新和修改 Spotify 播放列表。",
+          "requires": "Spotify OAuth"
+        },
+        {
+          "name": "spotify_albums",
+          "description": "获取 Spotify 专辑元数据或专辑曲目。",
+          "requires": "Spotify OAuth"
+        },
+        {
+          "name": "spotify_library",
+          "description": "列出、保存或移除用户已保存的 Spotify 曲目或专辑。",
+          "requires": "Spotify OAuth"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#spotify-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "spotify-工具集"
+      }
+    },
+    {
+      "id": "hermes-yuanbao-工具集",
+      "name": "hermes-yuanbao 工具集",
+      "summary": "仅在 hermes-yuanbao 平台工具集上注册。元宝是腾讯的聊天应用；这些工具驱动其私信/群组/表情包 API。",
+      "tools": [
+        {
+          "name": "yb_query_group_info",
+          "description": "查询群组（应用内称为\"派/Pai\"）的基本信息：名称、群主、成员数。",
+          "requires": "元宝凭据"
+        },
+        {
+          "name": "yb_query_group_members",
+          "description": "查询群组成员（用于 @ 提及、按名称查找用户、列出机器人）。",
+          "requires": "元宝凭据"
+        },
+        {
+          "name": "yb_send_dm",
+          "description": "向群组中的用户发送私信，支持可选的媒体文件。",
+          "requires": "元宝凭据"
+        },
+        {
+          "name": "yb_search_sticker",
+          "description": "按关键词搜索元宝内置表情（TIM 表情）目录。",
+          "requires": "元宝凭据"
+        },
+        {
+          "name": "yb_send_sticker",
+          "description": "向当前元宝聊天发送内置表情。",
+          "requires": "元宝凭据"
+        }
+      ],
+      "source": {
+        "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#hermes-yuanbao-工具集",
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "anchor": "hermes-yuanbao-工具集"
+      }
+    }
+  ],
+  "toolsetsReference": [
+    {
+      "id": "工具集参考",
+      "title": "工具集参考",
+      "depth": 0,
+      "anchor": "工具集参考",
+      "summary": "工具集（Toolset）是工具的命名集合，用于控制 agent 可以执行的操作。它是按平台、按会话或按任务配置工具可用性的主要机制。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/toolsets-reference#工具集参考"
+    },
+    {
+      "id": "工具集的工作原理",
+      "title": "工具集的工作原理",
+      "depth": 1,
+      "anchor": "工具集的工作原理",
+      "summary": "每个工具恰好属于一个工具集。启用某个工具集后，该集合中的所有工具都将对 agent 可用。工具集分为三种类型：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/toolsets-reference#工具集的工作原理"
+    },
+    {
+      "id": "配置工具集",
+      "title": "配置工具集",
+      "depth": 1,
+      "anchor": "配置工具集",
+      "summary": "",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/toolsets-reference#配置工具集"
+    },
+    {
+      "id": "按会话cli",
+      "title": "按会话（CLI）",
+      "depth": 2,
+      "anchor": "按会话cli",
+      "summary": "",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/toolsets-reference#按会话cli"
+    },
+    {
+      "id": "按平台configyaml",
+      "title": "按平台（config.yaml）",
+      "depth": 2,
+      "anchor": "按平台configyaml",
+      "summary": "",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/toolsets-reference#按平台configyaml"
+    },
+    {
+      "id": "交互式管理",
+      "title": "交互式管理",
+      "depth": 2,
+      "anchor": "交互式管理",
+      "summary": "",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/toolsets-reference#交互式管理"
+    },
+    {
+      "id": "核心工具集",
+      "title": "核心工具集",
+      "depth": 1,
+      "anchor": "核心工具集",
+      "summary": "",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/toolsets-reference#核心工具集"
+    },
+    {
+      "id": "平台工具集",
+      "title": "平台工具集",
+      "depth": 1,
+      "anchor": "平台工具集",
+      "summary": "平台工具集定义了部署目标的完整工具配置。大多数消息平台使用与 hermes-cli 相同的配置：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/toolsets-reference#平台工具集"
+    },
+    {
+      "id": "动态工具集",
+      "title": "动态工具集",
+      "depth": 1,
+      "anchor": "动态工具集",
+      "summary": "",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/toolsets-reference#动态工具集"
+    },
+    {
+      "id": "mcp-server-工具集",
+      "title": "MCP server 工具集",
+      "depth": 2,
+      "anchor": "mcp-server-工具集",
+      "summary": "每个已配置的 MCP server 在运行时会生成一个 mcp-<server> 工具集。例如，若配置了 github MCP server，则会创建包含该 server 所有暴露工具的 mcp-github 工具集。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/toolsets-reference#mcp-server-工具集"
+    },
+    {
+      "id": "插件工具集",
+      "title": "插件工具集",
+      "depth": 2,
+      "anchor": "插件工具集",
+      "summary": "插件可在初始化期间通过 ctx.register_tool() 注册自己的工具集。这些工具集与内置工具集并列显示，可以用相同方式启用/禁用。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/toolsets-reference#插件工具集"
+    },
+    {
+      "id": "自定义工具集",
+      "title": "自定义工具集",
+      "depth": 2,
+      "anchor": "自定义工具集",
+      "summary": "在 config.yaml 中定义自定义工具集，以创建项目专属的工具集合：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/toolsets-reference#自定义工具集"
+    },
+    {
+      "id": "通配符",
+      "title": "通配符",
+      "depth": 2,
+      "anchor": "通配符",
+      "summary": "",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/toolsets-reference#通配符"
+    },
+    {
+      "id": "与-hermes-tools-的关系",
+      "title": "与 hermes tools 的关系",
+      "depth": 1,
+      "anchor": "与-hermes-tools-的关系",
+      "summary": "hermes tools 命令提供基于 curses 的 UI，用于按平台切换单个工具的启用/禁用状态。该操作在工具级别进行（比工具集更细粒度），并持久化到 config.yaml。即使工具集已启用，被禁用的工具也会被过滤掉。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/toolsets-reference#与-hermes-tools-的关系"
+    }
+  ]
+}

@@ -1,0 +1,2413 @@
+{
+  "module": "configuration",
+  "repo": "NousResearch/hermes-agent",
+  "commitSha": "1d8af13e4ddebc02bcb514a235c9719efda91904",
+  "fetchedAt": "2026-09-15T07:16:13.350Z",
+  "license": "MIT",
+  "zhUrl": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration",
+  "enUrl": "https://hermes-agent.nousresearch.com/docs/user-guide/configuration",
+  "generatedAt": "2026-09-15T07:25:47.336Z",
+  "totalSections": 84,
+  "totalKeys": 273,
+  "docLineCount": 1747,
+  "entries": [
+    {
+      "id": "配置",
+      "title": "配置",
+      "depth": 0,
+      "anchor": "配置",
+      "summary": "所有设置均存储在 ~/.hermes/ 目录中，便于访问。",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#配置"
+    },
+    {
+      "id": "目录结构",
+      "title": "目录结构",
+      "depth": 1,
+      "anchor": "目录结构",
+      "summary": "",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#目录结构"
+    },
+    {
+      "id": "管理配置",
+      "title": "管理配置",
+      "depth": 1,
+      "anchor": "管理配置",
+      "summary": "",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#管理配置"
+    },
+    {
+      "id": "配置优先级",
+      "title": "配置优先级",
+      "depth": 1,
+      "anchor": "配置优先级",
+      "summary": "设置按以下顺序解析（优先级从高到低）：",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#配置优先级"
+    },
+    {
+      "id": "环境变量替换",
+      "title": "环境变量替换",
+      "depth": 1,
+      "anchor": "环境变量替换",
+      "summary": "可以在 config.yaml 中使用 ${VAR_NAME} 语法引用环境变量：",
+      "keys": [
+        {
+          "key": "api_key",
+          "value": "${GOOGLE_API_KEY}",
+          "comment": ""
+        },
+        {
+          "key": "base_url",
+          "value": "${CUSTOM_VISION_URL}",
+          "comment": ""
+        },
+        {
+          "key": "api_key",
+          "value": "${DELEGATION_KEY}",
+          "comment": ""
+        }
+      ],
+      "snippets": [
+        "auxiliary:\n  vision:\n    api_key: ${GOOGLE_API_KEY}\n    base_url: ${CUSTOM_VISION_URL}\n\ndelegation:\n  api_key: ${DELEGATION_KEY}"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#环境变量替换"
+    },
+    {
+      "id": "provider-超时",
+      "title": "Provider 超时",
+      "depth": 2,
+      "anchor": "provider-超时",
+      "summary": "可以为 provider 设置 providers.<id>.request_timeout_seconds 作为全局请求超时，以及 providers.<id>.models.<model>.timeout_seconds 作为特定模型的覆盖值。适用于每种传输方式（OpenAI-wire、原生 Anthropic、Anthropic 兼容）上的主轮次客户端、回退链、凭据轮换后的重建，以及（对于…",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#provider-超时"
+    },
+    {
+      "id": "终端后端配置",
+      "title": "终端后端配置",
+      "depth": 1,
+      "anchor": "终端后端配置",
+      "summary": "Hermes 支持七种终端后端。每种后端决定 agent 的 shell 命令实际在哪里执行 —— 本地机器、Docker 容器、通过 SSH 的远程服务器、Modal 云沙箱（直接或通过 Nous 托管的 gateway）、Daytona 工作区、Vercel Sandbox，或 Singularity/Apptainer 容器。",
+      "keys": [
+        {
+          "key": "backend",
+          "value": "local",
+          "comment": "local | docker | ssh | modal | daytona | vercel_sandbox | singularity"
+        },
+        {
+          "key": "cwd",
+          "value": "\".\"",
+          "comment": "Gateway/cron 工作目录（CLI 始终使用启动目录）"
+        },
+        {
+          "key": "timeout",
+          "value": "180",
+          "comment": "每条命令的超时时间（秒）"
+        },
+        {
+          "key": "env_passthrough",
+          "value": "[]",
+          "comment": "转发到沙箱执行的环境变量名（terminal + execute_code）"
+        },
+        {
+          "key": "singularity_image",
+          "value": "\"docker://nikolaik/python-nodejs:python3.11-nodejs20\"",
+          "comment": "Singularity 后端的容器镜像"
+        },
+        {
+          "key": "modal_image",
+          "value": "\"nikolaik/python-nodejs:python3.11-nodejs20\"",
+          "comment": "Modal 后端的容器镜像"
+        },
+        {
+          "key": "daytona_image",
+          "value": "\"nikolaik/python-nodejs:python3.11-nodejs20\"",
+          "comment": "Daytona 后端的容器镜像"
+        }
+      ],
+      "snippets": [
+        "terminal:\n  backend: local    # local | docker | ssh | modal | daytona | vercel_sandbox | singularity\n  cwd: \".\"          # Gateway/cron 工作目录（CLI 始终使用启动目录）\n  timeout: 180      # 每条命令的超时时间（秒）\n  env_passthrough: []  # 转发到沙箱执行的环境变量名（terminal + execute_code）\n  singularity_image: \"docker://nikolaik/python-nodejs:python3.11-nodejs20\"  # Singularity 后端的容器镜像\n  modal_image: \"nikolaik/python-nodejs:python3.11-nodejs20\"                 # Modal 后端的容器镜像\n  daytona_image: \"nikolaik/python-nodejs:python3.11-nodejs20\"               # Daytona 后端的容器镜像"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#终端后端配置"
+    },
+    {
+      "id": "后端概览",
+      "title": "后端概览",
+      "depth": 2,
+      "anchor": "后端概览",
+      "summary": "",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#后端概览"
+    },
+    {
+      "id": "local-后端",
+      "title": "Local 后端",
+      "depth": 2,
+      "anchor": "local-后端",
+      "summary": "默认后端。命令直接在您的机器上运行，无隔离。无需特殊设置。",
+      "keys": [
+        {
+          "key": "backend",
+          "value": "local",
+          "comment": ""
+        }
+      ],
+      "snippets": [
+        "terminal:\n  backend: local"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#local-后端"
+    },
+    {
+      "id": "docker-后端",
+      "title": "Docker 后端",
+      "depth": 2,
+      "anchor": "docker-后端",
+      "summary": "在具有安全加固的 Docker 容器内运行命令（所有权限已删除、无权限提升、PID 限制）。",
+      "keys": [
+        {
+          "key": "backend",
+          "value": "docker",
+          "comment": ""
+        },
+        {
+          "key": "docker_image",
+          "value": "\"nikolaik/python-nodejs:python3.11-nodejs20\"",
+          "comment": ""
+        },
+        {
+          "key": "docker_mount_cwd_to_workspace",
+          "value": "false",
+          "comment": "将启动目录挂载到 /workspace"
+        },
+        {
+          "key": "docker_run_as_host_user",
+          "value": "false",
+          "comment": "参见下方\"以宿主用户身份运行容器\""
+        },
+        {
+          "key": "docker_forward_env",
+          "value": "",
+          "comment": "转发到容器的环境变量"
+        },
+        {
+          "key": "docker_volumes",
+          "value": "",
+          "comment": "宿主目录挂载"
+        },
+        {
+          "key": "docker_extra_args",
+          "value": "",
+          "comment": "附加到 `docker run` 的额外标志"
+        },
+        {
+          "key": "container_cpu",
+          "value": "1",
+          "comment": "CPU 核心数（0 = 不限制）"
+        },
+        {
+          "key": "container_memory",
+          "value": "5120",
+          "comment": "MB（0 = 不限制）"
+        },
+        {
+          "key": "container_disk",
+          "value": "51200",
+          "comment": "MB（需要 XFS+pquota 上的 overlay2）"
+        },
+        {
+          "key": "container_persistent",
+          "value": "true",
+          "comment": "跨会话持久化 /workspace 和 /root"
+        }
+      ],
+      "snippets": [
+        "terminal:\n  backend: docker\n  docker_image: \"nikolaik/python-nodejs:python3.11-nodejs20\"\n  docker_mount_cwd_to_workspace: false  # 将启动目录挂载到 /workspace\n  docker_run_as_host_user: false   # 参见下方\"以宿主用户身份运行容器\"\n  docker_forward_env:              # 转发到容器的环境变量\n    - \"GITHUB_TOKEN\"\n  docker_volumes:                  # 宿主目录挂载\n    - \"/home/user/projects:/workspace/projects\"\n    - \"/home/user/data:/data:ro\"   # :ro 表示只读\n  docker_extra_args:               # 附加到 `docker run` 的额外标志\n    - \"--gpus=all\"\n    - \"--network=host\"\n\n  # 资源限制\n  container_cpu: 1                 # CPU 核心数（0 = 不限制）\n  container_memory: 5120           # MB（0 = 不限制）\n  container_disk: 51200            # MB（需要 XFS+pquota 上的 overlay2）\n  container_persistent: true       # 跨会话持久化 /workspace 和 /root"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#docker-后端"
+    },
+    {
+      "id": "ssh-后端",
+      "title": "SSH 后端",
+      "depth": 2,
+      "anchor": "ssh-后端",
+      "summary": "通过 SSH 在远程服务器上运行命令。使用 ControlMaster 进行连接复用（5 分钟空闲保活）。默认启用持久 shell —— 状态（cwd、环境变量）在命令之间保持。",
+      "keys": [
+        {
+          "key": "backend",
+          "value": "ssh",
+          "comment": ""
+        },
+        {
+          "key": "persistent_shell",
+          "value": "true",
+          "comment": "保持长期运行的 bash 会话（默认：true）"
+        }
+      ],
+      "snippets": [
+        "terminal:\n  backend: ssh\n  persistent_shell: true           # 保持长期运行的 bash 会话（默认：true）"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#ssh-后端"
+    },
+    {
+      "id": "modal-后端",
+      "title": "Modal 后端",
+      "depth": 2,
+      "anchor": "modal-后端",
+      "summary": "在 Modal 云沙箱中运行命令。每个任务获得一个具有可配置 CPU、内存和磁盘的隔离 VM。文件系统可以跨会话快照/恢复。",
+      "keys": [
+        {
+          "key": "backend",
+          "value": "modal",
+          "comment": ""
+        },
+        {
+          "key": "container_cpu",
+          "value": "1",
+          "comment": "CPU 核心数"
+        },
+        {
+          "key": "container_memory",
+          "value": "5120",
+          "comment": "MB（5GB）"
+        },
+        {
+          "key": "container_disk",
+          "value": "51200",
+          "comment": "MB（50GB）"
+        },
+        {
+          "key": "container_persistent",
+          "value": "true",
+          "comment": "快照/恢复文件系统"
+        }
+      ],
+      "snippets": [
+        "terminal:\n  backend: modal\n  container_cpu: 1                 # CPU 核心数\n  container_memory: 5120           # MB（5GB）\n  container_disk: 51200            # MB（50GB）\n  container_persistent: true       # 快照/恢复文件系统"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#modal-后端"
+    },
+    {
+      "id": "daytona-后端",
+      "title": "Daytona 后端",
+      "depth": 2,
+      "anchor": "daytona-后端",
+      "summary": "在 Daytona 托管工作区中运行命令。支持停止/恢复以实现持久化。",
+      "keys": [
+        {
+          "key": "backend",
+          "value": "daytona",
+          "comment": ""
+        },
+        {
+          "key": "container_cpu",
+          "value": "1",
+          "comment": "CPU 核心数"
+        },
+        {
+          "key": "container_memory",
+          "value": "5120",
+          "comment": "MB → 转换为 GiB"
+        },
+        {
+          "key": "container_disk",
+          "value": "10240",
+          "comment": "MB → 转换为 GiB（最大 10 GiB）"
+        },
+        {
+          "key": "container_persistent",
+          "value": "true",
+          "comment": "停止/恢复而非删除"
+        }
+      ],
+      "snippets": [
+        "terminal:\n  backend: daytona\n  container_cpu: 1                 # CPU 核心数\n  container_memory: 5120           # MB → 转换为 GiB\n  container_disk: 10240            # MB → 转换为 GiB（最大 10 GiB）\n  container_persistent: true       # 停止/恢复而非删除"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#daytona-后端"
+    },
+    {
+      "id": "vercel-sandbox-后端",
+      "title": "Vercel Sandbox 后端",
+      "depth": 2,
+      "anchor": "vercel-sandbox-后端",
+      "summary": "在 Vercel Sandbox 云 microVM 中运行命令。Hermes 使用普通的终端和文件工具接口；没有 Vercel 特定的面向模型的工具。",
+      "keys": [
+        {
+          "key": "backend",
+          "value": "vercel_sandbox",
+          "comment": ""
+        },
+        {
+          "key": "vercel_runtime",
+          "value": "node24",
+          "comment": "node24 | node22 | python3.13"
+        },
+        {
+          "key": "cwd",
+          "value": "/vercel/sandbox",
+          "comment": "默认工作区根目录"
+        },
+        {
+          "key": "container_persistent",
+          "value": "true",
+          "comment": "快照/恢复文件系统"
+        },
+        {
+          "key": "container_disk",
+          "value": "51200",
+          "comment": "仅共享默认值；不支持自定义磁盘"
+        }
+      ],
+      "snippets": [
+        "terminal:\n  backend: vercel_sandbox\n  vercel_runtime: node24          # node24 | node22 | python3.13\n  cwd: /vercel/sandbox            # 默认工作区根目录\n  container_persistent: true      # 快照/恢复文件系统\n  container_disk: 51200           # 仅共享默认值；不支持自定义磁盘"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#vercel-sandbox-后端"
+    },
+    {
+      "id": "singularityapptainer-后端",
+      "title": "Singularity/Apptainer 后端",
+      "depth": 2,
+      "anchor": "singularityapptainer-后端",
+      "summary": "在 Singularity/Apptainer 容器中运行命令。专为 Docker 不可用的 HPC 集群和共享机器设计。",
+      "keys": [
+        {
+          "key": "backend",
+          "value": "singularity",
+          "comment": ""
+        },
+        {
+          "key": "singularity_image",
+          "value": "\"docker://nikolaik/python-nodejs:python3.11-nodejs20\"",
+          "comment": ""
+        },
+        {
+          "key": "container_cpu",
+          "value": "1",
+          "comment": "CPU 核心数"
+        },
+        {
+          "key": "container_memory",
+          "value": "5120",
+          "comment": "MB"
+        },
+        {
+          "key": "container_persistent",
+          "value": "true",
+          "comment": "可写覆盖层跨会话持久化"
+        }
+      ],
+      "snippets": [
+        "terminal:\n  backend: singularity\n  singularity_image: \"docker://nikolaik/python-nodejs:python3.11-nodejs20\"\n  container_cpu: 1                 # CPU 核心数\n  container_memory: 5120           # MB\n  container_persistent: true       # 可写覆盖层跨会话持久化"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#singularityapptainer-后端"
+    },
+    {
+      "id": "常见终端后端问题",
+      "title": "常见终端后端问题",
+      "depth": 2,
+      "anchor": "常见终端后端问题",
+      "summary": "如果终端命令立即失败或终端工具报告为已禁用：",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#常见终端后端问题"
+    },
+    {
+      "id": "拆卸时远程到宿主文件同步",
+      "title": "拆卸时远程到宿主文件同步",
+      "depth": 2,
+      "anchor": "拆卸时远程到宿主文件同步",
+      "summary": "对于 SSH、Modal 和 Daytona 后端（agent 的工作树位于与运行 Hermes 的宿主不同的机器上），Hermes 跟踪 agent 在远程沙箱中触及的文件，并在会话拆卸/沙箱清理时，将修改的文件同步回宿主，存放在 ~/.hermes/cache/remote-syncs/<session-id>/ 下。",
+      "keys": [
+        {
+          "key": "file_sync_max_mb",
+          "value": "100",
+          "comment": "默认 —— 同步最大 100 MB 的文件"
+        },
+        {
+          "key": "file_sync_enabled",
+          "value": "true",
+          "comment": "默认 —— 设为 false 可完全跳过同步"
+        }
+      ],
+      "snippets": [
+        "terminal:\n  file_sync_max_mb: 100     # 默认 —— 同步最大 100 MB 的文件\n  file_sync_enabled: true   # 默认 —— 设为 false 可完全跳过同步"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#拆卸时远程到宿主文件同步"
+    },
+    {
+      "id": "docker-卷挂载",
+      "title": "Docker 卷挂载",
+      "depth": 2,
+      "anchor": "docker-卷挂载",
+      "summary": "使用 Docker 后端时，docker_volumes 允许您与容器共享宿主目录。每个条目使用标准 Docker -v 语法：host_path:container_path[:options]。",
+      "keys": [
+        {
+          "key": "backend",
+          "value": "docker",
+          "comment": ""
+        }
+      ],
+      "snippets": [
+        "terminal:\n  backend: docker\n  docker_volumes:\n    - \"/home/user/projects:/workspace/projects\"   # 读写（默认）\n    - \"/home/user/datasets:/data:ro\"              # 只读\n    - \"/home/user/.hermes/cache/documents:/output\" # Gateway 可见的导出"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#docker-卷挂载"
+    },
+    {
+      "id": "docker-凭据转发",
+      "title": "Docker 凭据转发",
+      "depth": 2,
+      "anchor": "docker-凭据转发",
+      "summary": "默认情况下，Docker 终端会话不继承任意宿主凭据。如果您需要在容器内使用特定 token，请将其添加到 terminal.docker_forward_env。",
+      "keys": [
+        {
+          "key": "backend",
+          "value": "docker",
+          "comment": ""
+        }
+      ],
+      "snippets": [
+        "terminal:\n  backend: docker\n  docker_forward_env:\n    - \"GITHUB_TOKEN\"\n    - \"NPM_TOKEN\""
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#docker-凭据转发"
+    },
+    {
+      "id": "以宿主用户身份运行容器",
+      "title": "以宿主用户身份运行容器",
+      "depth": 2,
+      "anchor": "以宿主用户身份运行容器",
+      "summary": "默认情况下，Docker 容器以 root（UID 0）身份运行。在 /workspace 或其他绑定挂载中创建的文件在宿主上归 root 所有，因此会话结束后您必须 sudo chown 才能从宿主编辑器编辑它们。terminal.docker_run_as_host_user 标志解决了这个问题：",
+      "keys": [
+        {
+          "key": "backend",
+          "value": "docker",
+          "comment": ""
+        },
+        {
+          "key": "docker_run_as_host_user",
+          "value": "true",
+          "comment": "默认：false"
+        }
+      ],
+      "snippets": [
+        "terminal:\n  backend: docker\n  docker_run_as_host_user: true   # 默认：false"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#以宿主用户身份运行容器"
+    },
+    {
+      "id": "可选将启动目录挂载到-workspace",
+      "title": "可选：将启动目录挂载到 /workspace",
+      "depth": 2,
+      "anchor": "可选将启动目录挂载到-workspace",
+      "summary": "Docker 沙箱默认保持隔离。Hermes 不会将您当前的宿主工作目录传入容器，除非您明确选择加入。",
+      "keys": [
+        {
+          "key": "backend",
+          "value": "docker",
+          "comment": ""
+        },
+        {
+          "key": "docker_mount_cwd_to_workspace",
+          "value": "true",
+          "comment": ""
+        }
+      ],
+      "snippets": [
+        "terminal:\n  backend: docker\n  docker_mount_cwd_to_workspace: true"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#可选将启动目录挂载到-workspace"
+    },
+    {
+      "id": "持久-shell",
+      "title": "持久 Shell",
+      "depth": 2,
+      "anchor": "持久-shell",
+      "summary": "默认情况下，每条终端命令在其自己的子进程中运行 —— 工作目录、环境变量和 shell 变量在命令之间重置。启用持久 shell 后，单个长期运行的 bash 进程在 execute() 调用之间保持存活，使状态在命令之间保持。",
+      "keys": [
+        {
+          "key": "persistent_shell",
+          "value": "true",
+          "comment": "默认 —— 为 SSH 启用持久 shell"
+        }
+      ],
+      "snippets": [
+        "terminal:\n  persistent_shell: true   # 默认 —— 为 SSH 启用持久 shell"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#持久-shell"
+    },
+    {
+      "id": "技能设置",
+      "title": "技能设置",
+      "depth": 1,
+      "anchor": "技能设置",
+      "summary": "技能可以通过其 SKILL.md frontmatter 声明自己的配置设置。这些是非机密值（路径、偏好、域设置），存储在 config.yaml 的 skills.config 命名空间下。",
+      "keys": [
+        {
+          "key": "path",
+          "value": "~/myplugin-data",
+          "comment": "示例 —— 每个技能定义自己的键"
+        }
+      ],
+      "snippets": [
+        "skills:\n  config:\n    myplugin:\n      path: ~/myplugin-data   # 示例 —— 每个技能定义自己的键"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#技能设置"
+    },
+    {
+      "id": "agent-创建技能写入的守卫",
+      "title": "Agent 创建技能写入的守卫",
+      "depth": 2,
+      "anchor": "agent-创建技能写入的守卫",
+      "summary": "当 agent 使用 skill_manage 创建、编辑、修补或删除技能时，Hermes 可以选择扫描新/更新的内容以查找危险关键字模式（凭据收集、明显的 prompt 注入、数据外泄指令）。扫描器默认关闭 —— 合法触及 ~/.ssh/ 或提及 $OPENAI_API_KEY 的真实 agent 工作流触发启发式规则过于频繁。如果您希望扫描器在 agent 的技能写入落地前提示您，请重新开启：",
+      "keys": [
+        {
+          "key": "guard_agent_created",
+          "value": "true",
+          "comment": "默认：false"
+        }
+      ],
+      "snippets": [
+        "skills:\n  guard_agent_created: true   # 默认：false"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#agent-创建技能写入的守卫"
+    },
+    {
+      "id": "内存配置",
+      "title": "内存配置",
+      "depth": 1,
+      "anchor": "内存配置",
+      "summary": "",
+      "keys": [
+        {
+          "key": "memory_enabled",
+          "value": "true",
+          "comment": ""
+        },
+        {
+          "key": "user_profile_enabled",
+          "value": "true",
+          "comment": ""
+        },
+        {
+          "key": "memory_char_limit",
+          "value": "2200",
+          "comment": "~800 tokens"
+        },
+        {
+          "key": "user_char_limit",
+          "value": "1375",
+          "comment": "~500 tokens"
+        }
+      ],
+      "snippets": [
+        "memory:\n  memory_enabled: true\n  user_profile_enabled: true\n  memory_char_limit: 2200   # ~800 tokens\n  user_char_limit: 1375     # ~500 tokens"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#内存配置"
+    },
+    {
+      "id": "文件读取安全",
+      "title": "文件读取安全",
+      "depth": 1,
+      "anchor": "文件读取安全",
+      "summary": "控制单次 read_file 调用可以返回多少内容。超过限制的读取将被拒绝，并向 agent 返回错误，提示使用 offset 和 limit 读取较小范围。这可以防止单次读取压缩的 JS 包或大型数据文件时淹没上下文窗口。",
+      "keys": [
+        {
+          "key": "file_read_max_chars",
+          "value": "100000",
+          "comment": "默认 —— ~25-35K tokens"
+        },
+        {
+          "key": "file_read_max_chars",
+          "value": "200000",
+          "comment": ""
+        },
+        {
+          "key": "file_read_max_chars",
+          "value": "30000",
+          "comment": ""
+        }
+      ],
+      "snippets": [
+        "file_read_max_chars: 100000  # 默认 —— ~25-35K tokens",
+        "# 大上下文模型（200K+）\nfile_read_max_chars: 200000\n\n# 小型本地模型（16K 上下文）\nfile_read_max_chars: 30000"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#文件读取安全"
+    },
+    {
+      "id": "工具输出截断限制",
+      "title": "工具输出截断限制",
+      "depth": 1,
+      "anchor": "工具输出截断限制",
+      "summary": "三个相关的上限控制工具在 Hermes 截断之前可以返回多少原始输出：",
+      "keys": [
+        {
+          "key": "max_bytes",
+          "value": "50000",
+          "comment": "终端输出上限（字符）"
+        },
+        {
+          "key": "max_lines",
+          "value": "2000",
+          "comment": "read_file 分页上限"
+        },
+        {
+          "key": "max_line_length",
+          "value": "2000",
+          "comment": "read_file 行号视图中的每行上限"
+        },
+        {
+          "key": "max_bytes",
+          "value": "150000",
+          "comment": ""
+        },
+        {
+          "key": "max_lines",
+          "value": "5000",
+          "comment": ""
+        },
+        {
+          "key": "max_bytes",
+          "value": "20000",
+          "comment": ""
+        },
+        {
+          "key": "max_lines",
+          "value": "500",
+          "comment": ""
+        }
+      ],
+      "snippets": [
+        "tool_output:\n  max_bytes: 50000        # 终端输出上限（字符）\n  max_lines: 2000         # read_file 分页上限\n  max_line_length: 2000   # read_file 行号视图中的每行上限",
+        "# 大上下文模型（200K+）\ntool_output:\n  max_bytes: 150000\n  max_lines: 5000\n\n# 小型本地模型（16K 上下文）\ntool_output:\n  max_bytes: 20000\n  max_lines: 500"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#工具输出截断限制"
+    },
+    {
+      "id": "全局工具集禁用",
+      "title": "全局工具集禁用",
+      "depth": 1,
+      "anchor": "全局工具集禁用",
+      "summary": "要在 CLI 和每个 gateway 平台上统一禁用特定工具集，请在 agent.disabled_toolsets 下列出其名称：",
+      "keys": [],
+      "snippets": [
+        "agent:\n  disabled_toolsets:\n    - memory       # 隐藏内存工具 + MEMORY_GUIDANCE 注入\n    - web          # 任何地方都不使用 web_search / web_extract"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#全局工具集禁用"
+    },
+    {
+      "id": "git-worktree-隔离",
+      "title": "Git Worktree 隔离",
+      "depth": 1,
+      "anchor": "git-worktree-隔离",
+      "summary": "启用隔离的 git worktree，以便在同一仓库上并行运行多个 agent：",
+      "keys": [
+        {
+          "key": "worktree",
+          "value": "true",
+          "comment": "始终创建 worktree（与 hermes -w 相同）"
+        }
+      ],
+      "snippets": [
+        "worktree: true    # 始终创建 worktree（与 hermes -w 相同）\n# worktree: false # 默认 —— 仅在传递 -w 标志时"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#git-worktree-隔离"
+    },
+    {
+      "id": "上下文压缩",
+      "title": "上下文压缩",
+      "depth": 1,
+      "anchor": "上下文压缩",
+      "summary": "Hermes 自动压缩长对话以保持在模型的上下文窗口内。压缩摘要器是一个单独的 LLM 调用 —— 您可以将其指向任何 provider 或端点。",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#上下文压缩"
+    },
+    {
+      "id": "完整参考",
+      "title": "完整参考",
+      "depth": 2,
+      "anchor": "完整参考",
+      "summary": "hygiene_hard_message_limit 是仅限 gateway 的预压缩安全阀。它的存在是为了打破一个死循环：当超大会话的 API 调用持续断开时，gateway 永远收不到 token 使用数据，基于 token 的阈值因此无法触发，于是 transcript 持续增长、断开愈发严重。这个基于消息数的下限仅凭消息数量触发（无论 API 是否失败，消息数始终已知），强制压缩以恢复会…",
+      "keys": [
+        {
+          "key": "enabled",
+          "value": "true",
+          "comment": "开启/关闭压缩"
+        },
+        {
+          "key": "threshold",
+          "value": "0.50",
+          "comment": "在上下文限制的此百分比时压缩"
+        },
+        {
+          "key": "target_ratio",
+          "value": "0.20",
+          "comment": "保留为最近尾部的阈值分数"
+        },
+        {
+          "key": "tail_mode",
+          "value": "legacy",
+          "comment": "尾部保留策略：\"legacy\"（0.20×窗口的逐字尾部）或 \"lean\"（截取 2.5% 窗口、10K-25K 上下限的精简尾部，摘要中附带分块摘录、锚点索引与 session_search 恢复指引 — 压缩后保留 token 约减少 3 倍）"
+        },
+        {
+          "key": "protect_last_n",
+          "value": "20",
+          "comment": "保持未压缩的最少最近消息数"
+        },
+        {
+          "key": "hygiene_hard_message_limit",
+          "value": "5000",
+          "comment": "Gateway 安全阀 —— 见下文"
+        },
+        {
+          "key": "context_timeout_seconds",
+          "value": "120",
+          "comment": "Agent 侧 compress_context 无进展超时（秒）—— 见下文"
+        },
+        {
+          "key": "context_total_ceiling_seconds",
+          "value": "600",
+          "comment": "Agent 侧 compress_context 预提交等待上限（秒；已开始的 SessionDB 提交不会被放弃，超限会记录日志并告警）"
+        },
+        {
+          "key": "model",
+          "value": "\"\"",
+          "comment": "空 = 使用主聊天模型。覆盖为例如 \"google/gemini-3-flash-preview\" 以获得更便宜/更快的压缩。"
+        },
+        {
+          "key": "provider",
+          "value": "\"auto\"",
+          "comment": "Provider：\"auto\"、\"openrouter\"、\"nous\"、\"codex\"、\"main\" 等"
+        },
+        {
+          "key": "base_url",
+          "value": "null",
+          "comment": "自定义 OpenAI 兼容端点（覆盖 provider）"
+        }
+      ],
+      "snippets": [
+        "compression:\n  enabled: true                                     # 开启/关闭压缩\n  threshold: 0.50                                   # 在上下文限制的此百分比时压缩\n  target_ratio: 0.20                                # 保留为最近尾部的阈值分数\n  tail_mode: legacy                                 # 尾部保留策略：\"legacy\"（0.20×窗口的逐字尾部）或 \"lean\"（截取 2.5% 窗口、10K-25K 上下限的精简尾部，摘要中附带分块摘录、锚点索引与 session_search 恢复指引 — 压缩后保留 token 约减少 3 倍）\n  protect_last_n: 20                                # 保持未压缩的最少最近消息数\n  hygiene_hard_message_limit: 5000                  # Gateway 安全阀 —— 见下文\n  context_timeout_seconds: 120                      # Agent 侧 compress_context 无进展超时（秒）—— 见下文\n  context_total_ceiling_seconds: 600                # Agent 侧 compress_context 预提交等待上限（秒；已开始的 SessionDB 提交不会被放弃，超限会记录日志并告警）\n\n# 摘要模型/provider 在 auxiliary: 下配置：\nauxiliary:\n  compression:\n    model: \"\"                                       # 空 = 使用主聊天模型。覆盖为例如 \"google/gemini-3-flash-preview\" 以获得更便宜/更快的压缩。\n    provider: \"auto\"                                # Provider：\"auto\"、\"openrouter\"、\"nous\"、\"codex\"、\"main\" 等\n    base_url: null                                  # 自定义 OpenAI 兼容端点（覆盖 provider）"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#完整参考"
+    },
+    {
+      "id": "常见设置",
+      "title": "常见设置",
+      "depth": 2,
+      "anchor": "常见设置",
+      "summary": "默认（自动检测）—— 无需配置：",
+      "keys": [
+        {
+          "key": "enabled",
+          "value": "true",
+          "comment": ""
+        },
+        {
+          "key": "threshold",
+          "value": "0.50",
+          "comment": ""
+        },
+        {
+          "key": "provider",
+          "value": "nous",
+          "comment": ""
+        },
+        {
+          "key": "model",
+          "value": "gemini-3-flash",
+          "comment": ""
+        },
+        {
+          "key": "model",
+          "value": "glm-4.7",
+          "comment": ""
+        },
+        {
+          "key": "base_url",
+          "value": "https://api.z.ai/api/coding/paas/v4",
+          "comment": ""
+        }
+      ],
+      "snippets": [
+        "compression:\n  enabled: true\n  threshold: 0.50",
+        "auxiliary:\n  compression:\n    provider: nous\n    model: gemini-3-flash",
+        "auxiliary:\n  compression:\n    model: glm-4.7\n    base_url: https://api.z.ai/api/coding/paas/v4"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#常见设置"
+    },
+    {
+      "id": "三个旋钮的交互方式",
+      "title": "三个旋钮的交互方式",
+      "depth": 2,
+      "anchor": "三个旋钮的交互方式",
+      "summary": "",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#三个旋钮的交互方式"
+    },
+    {
+      "id": "会话卡死监视器session-stall-watchdog",
+      "title": "会话卡死监视器（Session Stall Watchdog）",
+      "depth": 1,
+      "anchor": "会话卡死监视器session-stall-watchdog",
+      "summary": "Gateway 运行一个仅通知的卡死监视器（agent.session_stall_timeout，默认 300 秒，0 = 禁用）。当一个忙碌的会话存在待处理的入站后续消息，且 agent 的共享活动时钟空闲达到该时长时，gateway 会记录一条 WARNING 日志并向用户发送一次性通知：",
+      "keys": [
+        {
+          "key": "session_stall_timeout",
+          "value": "300",
+          "comment": "秒；0 禁用监视器"
+        }
+      ],
+      "snippets": [
+        "agent:\n  session_stall_timeout: 300   # 秒；0 禁用监视器"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#会话卡死监视器session-stall-watchdog"
+    },
+    {
+      "id": "上下文引擎",
+      "title": "上下文引擎",
+      "depth": 1,
+      "anchor": "上下文引擎",
+      "summary": "上下文引擎控制在接近模型 token 限制时如何管理对话。内置的 compressor 引擎使用有损摘要（参见上下文压缩）。插件引擎可以用替代策略替换它。",
+      "keys": [
+        {
+          "key": "engine",
+          "value": "\"compressor\"",
+          "comment": "默认 —— 内置有损摘要"
+        },
+        {
+          "key": "engine",
+          "value": "\"lcm\"",
+          "comment": "必须与插件名称匹配"
+        }
+      ],
+      "snippets": [
+        "context:\n  engine: \"compressor\"    # 默认 —— 内置有损摘要",
+        "context:\n  engine: \"lcm\"          # 必须与插件名称匹配"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#上下文引擎"
+    },
+    {
+      "id": "迭代预算",
+      "title": "迭代预算",
+      "depth": 1,
+      "anchor": "迭代预算",
+      "summary": "当 agent 在处理具有许多工具调用的复杂任务时，它可能会耗尽其迭代预算（默认：500 轮）。Hermes 不会在任务中途注入压力警告 —— 早期版本会在预算达到 70%/90% 时警告模型，这会导致模型过早放弃复杂任务，该机制已于 2026 年 4 月移除。",
+      "keys": [
+        {
+          "key": "max_turns",
+          "value": "500",
+          "comment": "每次对话轮次的最大迭代次数（默认：500）"
+        },
+        {
+          "key": "api_max_retries",
+          "value": "3",
+          "comment": "回退启动前每个 provider 的重试次数（默认：3）"
+        }
+      ],
+      "snippets": [
+        "agent:\n  max_turns: 500               # 每次对话轮次的最大迭代次数（默认：500）\n  api_max_retries: 3           # 回退启动前每个 provider 的重试次数（默认：3）"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#迭代预算"
+    },
+    {
+      "id": "api-超时",
+      "title": "API 超时",
+      "depth": 2,
+      "anchor": "api-超时",
+      "summary": "Hermes 对流式传输有单独的超时层，以及用于非流式调用的陈旧检测器。陈旧检测器仅在您将其保留为隐式默认值时才会自动调整本地 provider。",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#api-超时"
+    },
+    {
+      "id": "上下文压力警告",
+      "title": "上下文压力警告",
+      "depth": 1,
+      "anchor": "上下文压力警告",
+      "summary": "与迭代预算压力分开，上下文压力跟踪对话距压缩阈值有多近 —— 即上下文压缩触发以摘要旧消息的点。这有助于您和 agent 了解对话何时变长。",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#上下文压力警告"
+    },
+    {
+      "id": "凭据池策略",
+      "title": "凭据池策略",
+      "depth": 1,
+      "anchor": "凭据池策略",
+      "summary": "当您为同一 provider 拥有多个 API 密钥或 OAuth token 时，配置轮换策略：",
+      "keys": [
+        {
+          "key": "openrouter",
+          "value": "round_robin",
+          "comment": "均匀循环使用密钥"
+        },
+        {
+          "key": "anthropic",
+          "value": "least_used",
+          "comment": "始终选择使用最少的密钥"
+        }
+      ],
+      "snippets": [
+        "credential_pool_strategies:\n  openrouter: round_robin    # 均匀循环使用密钥\n  anthropic: least_used      # 始终选择使用最少的密钥"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#凭据池策略"
+    },
+    {
+      "id": "prompt-缓存",
+      "title": "Prompt 缓存",
+      "depth": 1,
+      "anchor": "prompt-缓存",
+      "summary": "当活跃 provider 支持时，Hermes 自动开启跨会话 prompt 缓存 —— 无需用户配置。",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#prompt-缓存"
+    },
+    {
+      "id": "辅助模型",
+      "title": "辅助模型",
+      "depth": 1,
+      "anchor": "辅助模型",
+      "summary": "Hermes 使用\"辅助\"模型处理图像分析、浏览器截图分析、会话标题生成和上下文压缩等附带任务。默认情况下（auxiliary.*.provider: \"auto\"），Hermes 将每个辅助任务路由到您的主聊天模型 —— 与您在 hermes model 中选择的相同 provider/模型。您无需配置任何内容即可开始，但请注意，在昂贵的推理模型（Opus、MiniMax M2.7 等）上，辅…",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#辅助模型"
+    },
+    {
+      "id": "交互式配置辅助模型",
+      "title": "交互式配置辅助模型",
+      "depth": 2,
+      "anchor": "交互式配置辅助模型",
+      "summary": "无需手动编辑 YAML，运行 hermes model 并从菜单中选择\"配置辅助模型\"。您将获得交互式的每任务选择器：",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#交互式配置辅助模型"
+    },
+    {
+      "id": "视频教程",
+      "title": "视频教程",
+      "depth": 2,
+      "anchor": "视频教程",
+      "summary": "<div style={{position: 'relative', width: '100%', aspectRatio: '16 / 9', marginBottom: '1.5rem'}}> <iframe src=\"https://www.youtube.com/embed/NoF-YajElIM\" title=\"Hermes Agent — Auxiliary Models Tutor…",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#视频教程"
+    },
+    {
+      "id": "通用配置模式",
+      "title": "通用配置模式",
+      "depth": 2,
+      "anchor": "通用配置模式",
+      "summary": "Hermes 中的每个模型槽位 —— 辅助任务、压缩、回退 —— 使用相同的三个旋钮：",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#通用配置模式"
+    },
+    {
+      "id": "完整辅助配置参考",
+      "title": "完整辅助配置参考",
+      "depth": 2,
+      "anchor": "完整辅助配置参考",
+      "summary": "",
+      "keys": [
+        {
+          "key": "provider",
+          "value": "\"auto\"",
+          "comment": "\"auto\"、\"openrouter\"、\"nous\"、\"codex\"、\"main\" 等"
+        },
+        {
+          "key": "model",
+          "value": "\"\"",
+          "comment": "例如 \"openai/gpt-4o\"、\"google/gemini-2.5-flash\""
+        },
+        {
+          "key": "base_url",
+          "value": "\"\"",
+          "comment": "自定义 OpenAI 兼容端点（覆盖 provider）"
+        },
+        {
+          "key": "api_key",
+          "value": "\"\"",
+          "comment": "base_url 的 API 密钥（回退到 OPENAI_API_KEY）"
+        },
+        {
+          "key": "timeout",
+          "value": "120",
+          "comment": "秒 —— LLM API 调用超时；视觉负载需要宽裕的超时"
+        },
+        {
+          "key": "download_timeout",
+          "value": "30",
+          "comment": "秒 —— 图像 HTTP 下载；慢速连接请增加"
+        },
+        {
+          "key": "provider",
+          "value": "\"auto\"",
+          "comment": ""
+        },
+        {
+          "key": "model",
+          "value": "\"\"",
+          "comment": ""
+        },
+        {
+          "key": "base_url",
+          "value": "\"\"",
+          "comment": ""
+        },
+        {
+          "key": "api_key",
+          "value": "\"\"",
+          "comment": ""
+        },
+        {
+          "key": "timeout",
+          "value": "30",
+          "comment": "秒"
+        },
+        {
+          "key": "timeout",
+          "value": "120",
+          "comment": "秒 —— 压缩摘要长对话，需要更多时间"
+        },
+        {
+          "key": "provider",
+          "value": "\"auto\"",
+          "comment": ""
+        },
+        {
+          "key": "model",
+          "value": "\"\"",
+          "comment": ""
+        },
+        {
+          "key": "base_url",
+          "value": "\"\"",
+          "comment": ""
+        },
+        {
+          "key": "api_key",
+          "value": "\"\"",
+          "comment": ""
+        },
+        {
+          "key": "timeout",
+          "value": "30",
+          "comment": ""
+        },
+        {
+          "key": "provider",
+          "value": "\"auto\"",
+          "comment": ""
+        },
+        {
+          "key": "model",
+          "value": "\"\"",
+          "comment": ""
+        },
+        {
+          "key": "base_url",
+          "value": "\"\"",
+          "comment": ""
+        },
+        {
+          "key": "api_key",
+          "value": "\"\"",
+          "comment": ""
+        },
+        {
+          "key": "timeout",
+          "value": "30",
+          "comment": ""
+        },
+        {
+          "key": "provider",
+          "value": "\"auto\"",
+          "comment": ""
+        },
+        {
+          "key": "model",
+          "value": "\"\"",
+          "comment": ""
+        },
+        {
+          "key": "base_url",
+          "value": "\"\"",
+          "comment": ""
+        },
+        {
+          "key": "api_key",
+          "value": "\"\"",
+          "comment": ""
+        },
+        {
+          "key": "timeout",
+          "value": "120",
+          "comment": ""
+        }
+      ],
+      "snippets": [
+        "auxiliary:\n  # 图像分析（vision_analyze 工具 + 浏览器截图）\n  vision:\n    provider: \"auto\"           # \"auto\"、\"openrouter\"、\"nous\"、\"codex\"、\"main\" 等\n    model: \"\"                  # 例如 \"openai/gpt-4o\"、\"google/gemini-2.5-flash\"\n    base_url: \"\"               # 自定义 OpenAI 兼容端点（覆盖 provider）\n    api_key: \"\"                # base_url 的 API 密钥（回退到 OPENAI_API_KEY）\n    timeout: 120               # 秒 —— LLM API 调用超时；视觉负载需要宽裕的超时\n    download_timeout: 30       # 秒 —— 图像 HTTP 下载；慢速连接请增加\n\n  # 危险命令审批分类器\n  approval:\n    provider: \"auto\"\n    model: \"\"\n    base_url: \"\"\n    api_key: \"\"\n    timeout: 30                # 秒\n\n  # 上下文压缩超时（与 compression.* 配置分开）\n  compression:\n    timeout: 120               # 秒 —— 压缩摘要长对话，需要更多时间\n    # fallback_chain:           # 可选 —— 发生速率限制/连接故障时尝试的 provider\n    #   - provider: nous\n    #     model: deepseek/deepseek-chat\n    #   - provider: openrouter\n    #     model: google/gemini-2.5-flash\n    #     base_url: \"\"\n    #     api_key: \"\"\n\n  # 技能中心 —— 技能匹配和搜索\n  skills_hub:\n    provider: \"auto\"\n    model: \"\"\n    base_url: \"\"\n    api_key: \"\"\n    timeout: 30\n\n  # MCP 工具调度\n  mcp:\n    provider: \"auto\"\n    model: \"\"\n    base_url: \"\"\n    api_key: \"\"\n    timeout: 30\n\n  # Kanban 分类规格说明器 —— `hermes kanban specify <id>`（或\n  # 仪表板上 Triage 列卡片的 ✨ Specify 按钮）使用此\n  # 槽位将单行描述扩展为具体规格并将\n  # 任务提升到 `todo`。便宜快速的模型在这里效果很好；规格扩展\n  # 很短，不需要推理深度。\n  triage_specifier:\n    provider: \"auto\"\n    model: \"\"\n    base_url: \"\"\n    api_key: \"\"\n    timeout: 120"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#完整辅助配置参考"
+    },
+    {
+      "id": "辅助任务的每任务回退链",
+      "title": "辅助任务的每任务回退链",
+      "depth": 2,
+      "anchor": "辅助任务的每任务回退链",
+      "summary": "每个辅助任务都可以选择性地定义一个 fallback_chain —— 一个 provider/model 条目列表，当主要辅助 provider 因速率限制、网络连接问题或付费限制而失败时，Hermes 会尝试使用该列表：",
+      "keys": [
+        {
+          "key": "provider",
+          "value": "openrouter",
+          "comment": ""
+        },
+        {
+          "key": "model",
+          "value": "openai/gpt-4o-mini",
+          "comment": ""
+        },
+        {
+          "key": "model",
+          "value": "deepseek/deepseek-chat",
+          "comment": ""
+        },
+        {
+          "key": "model",
+          "value": "google/gemini-2.5-flash",
+          "comment": ""
+        }
+      ],
+      "snippets": [
+        "auxiliary:\n  compression:\n    provider: openrouter\n    model: openai/gpt-4o-mini\n    fallback_chain:\n      - provider: nous\n        model: deepseek/deepseek-chat\n      - provider: openrouter\n        model: google/gemini-2.5-flash"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#辅助任务的每任务回退链"
+    },
+    {
+      "id": "openrouter-路由和辅助任务的-pareto-code",
+      "title": "OpenRouter 路由和辅助任务的 Pareto Code",
+      "depth": 2,
+      "anchor": "openrouter-路由和辅助任务的-pareto-code",
+      "summary": "当辅助任务解析到 OpenRouter（显式或通过 provider: \"main\" 而您的主 agent 在 OpenRouter 上）时，主 agent 的 provider_routing 和 openrouter.min_coding_score 设置不会传播 —— 按设计，每个辅助任务是独立的。要为特定辅助任务设置 OpenRouter provider 偏好或使用 Pareto Co…",
+      "keys": [
+        {
+          "key": "provider",
+          "value": "openrouter",
+          "comment": ""
+        },
+        {
+          "key": "model",
+          "value": "openrouter/pareto-code",
+          "comment": "为此任务使用 Pareto Code 路由器"
+        },
+        {
+          "key": "provider",
+          "value": "",
+          "comment": "OpenRouter provider 路由偏好"
+        },
+        {
+          "key": "order",
+          "value": "[anthropic, google]",
+          "comment": "按此顺序尝试这些 providers"
+        },
+        {
+          "key": "sort",
+          "value": "throughput",
+          "comment": "或 \"price\" | \"latency\""
+        },
+        {
+          "key": "plugins",
+          "value": "",
+          "comment": "OpenRouter Pareto Code 路由器旋钮"
+        },
+        {
+          "key": "min_coding_score",
+          "value": "0.5",
+          "comment": "0.0–1.0；越高 = 更强的编码能力"
+        }
+      ],
+      "snippets": [
+        "auxiliary:\n  compression:\n    provider: openrouter\n    model: openrouter/pareto-code         # 为此任务使用 Pareto Code 路由器\n    extra_body:\n      provider:                            # OpenRouter provider 路由偏好\n        order: [anthropic, google]         # 按此顺序尝试这些 providers\n        sort: throughput                   # 或 \"price\" | \"latency\"\n        # only: [anthropic]                # 限制到特定 provider\n        # ignore: [deepinfra]              # 排除特定 providers\n      plugins:                             # OpenRouter Pareto Code 路由器旋钮\n        - id: pareto-router\n          min_coding_score: 0.5            # 0.0–1.0；越高 = 更强的编码能力"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#openrouter-路由和辅助任务的-pareto-code"
+    },
+    {
+      "id": "更改视觉模型",
+      "title": "更改视觉模型",
+      "depth": 2,
+      "anchor": "更改视觉模型",
+      "summary": "使用 GPT-4o 而非 Gemini Flash 进行图像分析：",
+      "keys": [
+        {
+          "key": "model",
+          "value": "\"openai/gpt-4o\"",
+          "comment": ""
+        }
+      ],
+      "snippets": [
+        "auxiliary:\n  vision:\n    model: \"openai/gpt-4o\""
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#更改视觉模型"
+    },
+    {
+      "id": "provider-选项",
+      "title": "Provider 选项",
+      "depth": 2,
+      "anchor": "provider-选项",
+      "summary": "这些选项适用于辅助任务配置（auxiliary:、compression:、fallback_model:），而非您的主 model.provider 设置。",
+      "keys": [
+        {
+          "key": "provider",
+          "value": "\"gmi\"",
+          "comment": ""
+        },
+        {
+          "key": "model",
+          "value": "\"anthropic/claude-opus-4.6\"",
+          "comment": ""
+        }
+      ],
+      "snippets": [
+        "auxiliary:\n  compression:\n    provider: \"gmi\"\n    model: \"anthropic/claude-opus-4.6\""
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#provider-选项"
+    },
+    {
+      "id": "常见设置",
+      "title": "常见设置",
+      "depth": 2,
+      "anchor": "常见设置",
+      "summary": "使用直接自定义端点（比 provider: \"main\" 对本地/自托管 API 更清晰）：",
+      "keys": [
+        {
+          "key": "base_url",
+          "value": "\"http://localhost:1234/v1\"",
+          "comment": ""
+        },
+        {
+          "key": "api_key",
+          "value": "\"local-key\"",
+          "comment": ""
+        },
+        {
+          "key": "model",
+          "value": "\"qwen2.5-vl\"",
+          "comment": ""
+        },
+        {
+          "key": "provider",
+          "value": "\"main\"",
+          "comment": ""
+        },
+        {
+          "key": "model",
+          "value": "\"gpt-4o\"",
+          "comment": "或 \"gpt-4o-mini\" 更便宜"
+        },
+        {
+          "key": "provider",
+          "value": "\"openrouter\"",
+          "comment": ""
+        },
+        {
+          "key": "model",
+          "value": "\"openai/gpt-4o\"",
+          "comment": "或 \"google/gemini-2.5-flash\" 等"
+        },
+        {
+          "key": "provider",
+          "value": "\"codex\"",
+          "comment": "使用您的 ChatGPT OAuth token"
+        },
+        {
+          "key": "default",
+          "value": "MiniMax-M2.7",
+          "comment": ""
+        },
+        {
+          "key": "provider",
+          "value": "minimax-oauth",
+          "comment": ""
+        },
+        {
+          "key": "base_url",
+          "value": "https://api.minimax.io/anthropic",
+          "comment": ""
+        },
+        {
+          "key": "provider",
+          "value": "\"main\"",
+          "comment": "使用您的活跃自定义端点"
+        },
+        {
+          "key": "model",
+          "value": "\"my-local-model\"",
+          "comment": ""
+        }
+      ],
+      "snippets": [
+        "auxiliary:\n  vision:\n    base_url: \"http://localhost:1234/v1\"\n    api_key: \"local-key\"\n    model: \"qwen2.5-vl\"",
+        "# 在 ~/.hermes/.env 中：\n# OPENAI_BASE_URL=https://api.openai.com/v1\n# OPENAI_API_KEY=sk-...\n\nauxiliary:\n  vision:\n    provider: \"main\"\n    model: \"gpt-4o\"       # 或 \"gpt-4o-mini\" 更便宜",
+        "auxiliary:\n  vision:\n    provider: \"openrouter\"\n    model: \"openai/gpt-4o\"      # 或 \"google/gemini-2.5-flash\" 等",
+        "auxiliary:\n  vision:\n    provider: \"codex\"     # 使用您的 ChatGPT OAuth token\n    # 模型默认为 gpt-5.3-codex（支持视觉）"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#常见设置"
+    },
+    {
+      "id": "环境变量旧版",
+      "title": "环境变量（旧版）",
+      "depth": 2,
+      "anchor": "环境变量旧版",
+      "summary": "辅助模型也可以通过环境变量配置。但是，config.yaml 是首选方法 —— 它更易于管理，并支持所有选项，包括 base_url 和 api_key。",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#环境变量旧版"
+    },
+    {
+      "id": "推理努力程度",
+      "title": "推理努力程度",
+      "depth": 1,
+      "anchor": "推理努力程度",
+      "summary": "控制模型在响应前进行多少\"思考\"：",
+      "keys": [
+        {
+          "key": "reasoning_effort",
+          "value": "\"\"",
+          "comment": "空 = 中等。选项：none、minimal、low、medium、high、xhigh、max、ultra"
+        }
+      ],
+      "snippets": [
+        "agent:\n  reasoning_effort: \"\"   # 空 = 中等。选项：none、minimal、low、medium、high、xhigh、max、ultra"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#推理努力程度"
+    },
+    {
+      "id": "工具使用强制",
+      "title": "工具使用强制",
+      "depth": 1,
+      "anchor": "工具使用强制",
+      "summary": "某些模型偶尔会将预期操作描述为文本而不是进行工具调用（\"我会运行测试...\"而不是实际调用终端）。工具使用强制会注入系统提示词指导，引导模型实际调用工具。",
+      "keys": [
+        {
+          "key": "tool_use_enforcement",
+          "value": "\"auto\"",
+          "comment": "\"auto\" | true | false | [\"model-substring\", ...]"
+        }
+      ],
+      "snippets": [
+        "agent:\n  tool_use_enforcement: \"auto\"   # \"auto\" | true | false | [\"model-substring\", ...]"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#工具使用强制"
+    },
+    {
+      "id": "注入的内容",
+      "title": "注入的内容",
+      "depth": 2,
+      "anchor": "注入的内容",
+      "summary": "启用后，系统提示词中可能会添加三层指导：",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#注入的内容"
+    },
+    {
+      "id": "何时开启",
+      "title": "何时开启",
+      "depth": 2,
+      "anchor": "何时开启",
+      "summary": "如果您使用的模型不在默认自动列表中，并注意到它经常描述它会做什么而不是实际去做，请设置 tool_use_enforcement: true 或将模型子字符串添加到列表中：",
+      "keys": [
+        {
+          "key": "tool_use_enforcement",
+          "value": "[\"gpt\", \"codex\", \"gemini\", \"grok\", \"my-custom-model\"]",
+          "comment": ""
+        }
+      ],
+      "snippets": [
+        "agent:\n  tool_use_enforcement: [\"gpt\", \"codex\", \"gemini\", \"grok\", \"my-custom-model\"]"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#何时开启"
+    },
+    {
+      "id": "tts-配置",
+      "title": "TTS 配置",
+      "depth": 1,
+      "anchor": "tts-配置",
+      "summary": "这控制 text_to_speech 工具和语音模式中的口语回复（CLI 中的 /voice tts 或消息 gateway）。",
+      "keys": [
+        {
+          "key": "provider",
+          "value": "\"edge\"",
+          "comment": "\"edge\" | \"elevenlabs\" | \"openai\" | \"minimax\" | \"mistral\" | \"gemini\" | \"xai\" | \"neutts\""
+        },
+        {
+          "key": "speed",
+          "value": "1.0",
+          "comment": "全局速度倍数（所有 provider 的回退）"
+        },
+        {
+          "key": "voice",
+          "value": "\"en-US-AriaNeural\"",
+          "comment": "322 种声音，74 种语言"
+        },
+        {
+          "key": "speed",
+          "value": "1.0",
+          "comment": "速度倍数（转换为速率百分比，例如 1.5 → +50%）"
+        },
+        {
+          "key": "voice_id",
+          "value": "\"pNInz6obpgDQGcFmaJgB\"",
+          "comment": ""
+        },
+        {
+          "key": "model_id",
+          "value": "\"eleven_multilingual_v2\"",
+          "comment": ""
+        },
+        {
+          "key": "model",
+          "value": "\"gpt-4o-mini-tts\"",
+          "comment": ""
+        },
+        {
+          "key": "voice",
+          "value": "\"alloy\"",
+          "comment": "alloy、echo、fable、onyx、nova、shimmer"
+        },
+        {
+          "key": "speed",
+          "value": "1.0",
+          "comment": "速度倍数（API 限制为 0.25–4.0）"
+        },
+        {
+          "key": "base_url",
+          "value": "\"https://api.openai.com/v1\"",
+          "comment": "覆盖 OpenAI 兼容 TTS 端点"
+        },
+        {
+          "key": "speed",
+          "value": "1.0",
+          "comment": "语音速度倍数"
+        },
+        {
+          "key": "model",
+          "value": "\"voxtral-mini-tts-2603\"",
+          "comment": ""
+        },
+        {
+          "key": "voice_id",
+          "value": "\"c69964a6-ab8b-4f8a-9465-ec0925096ec8\"",
+          "comment": "Paul - Neutral（默认）"
+        },
+        {
+          "key": "model",
+          "value": "\"gemini-2.5-flash-preview-tts\"",
+          "comment": "或 gemini-2.5-pro-preview-tts"
+        },
+        {
+          "key": "voice",
+          "value": "\"Kore\"",
+          "comment": "30 种预置声音：Zephyr、Puck、Kore、Enceladus 等"
+        },
+        {
+          "key": "voice_id",
+          "value": "\"eve\"",
+          "comment": "xAI TTS 声音"
+        },
+        {
+          "key": "language",
+          "value": "\"en\"",
+          "comment": "ISO 639-1"
+        },
+        {
+          "key": "sample_rate",
+          "value": "24000",
+          "comment": ""
+        },
+        {
+          "key": "bit_rate",
+          "value": "128000",
+          "comment": "MP3 比特率"
+        },
+        {
+          "key": "ref_audio",
+          "value": "''",
+          "comment": ""
+        },
+        {
+          "key": "ref_text",
+          "value": "''",
+          "comment": ""
+        },
+        {
+          "key": "model",
+          "value": "neuphonic/neutts-air-q4-gguf",
+          "comment": ""
+        },
+        {
+          "key": "device",
+          "value": "cpu",
+          "comment": ""
+        }
+      ],
+      "snippets": [
+        "tts:\n  provider: \"edge\"              # \"edge\" | \"elevenlabs\" | \"openai\" | \"minimax\" | \"mistral\" | \"gemini\" | \"xai\" | \"neutts\"\n  speed: 1.0                    # 全局速度倍数（所有 provider 的回退）\n  edge:\n    voice: \"en-US-AriaNeural\"   # 322 种声音，74 种语言\n    speed: 1.0                  # 速度倍数（转换为速率百分比，例如 1.5 → +50%）\n  elevenlabs:\n    voice_id: \"pNInz6obpgDQGcFmaJgB\"\n    model_id: \"eleven_multilingual_v2\"\n  openai:\n    model: \"gpt-4o-mini-tts\"\n    voice: \"alloy\"              # alloy、echo、fable、onyx、nova、shimmer\n    speed: 1.0                  # 速度倍数（API 限制为 0.25–4.0）\n    base_url: \"https://api.openai.com/v1\"  # 覆盖 OpenAI 兼容 TTS 端点\n  minimax:\n    speed: 1.0                  # 语音速度倍数\n    # base_url: \"\"              # 可选：覆盖 OpenAI 兼容 TTS 端点\n  mistral:\n    model: \"voxtral-mini-tts-2603\"\n    voice_id: \"c69964a6-ab8b-4f8a-9465-ec0925096ec8\"  # Paul - Neutral（默认）\n  gemini:\n    model: \"gemini-2.5-flash-preview-tts\"   # 或 gemini-2.5-pro-preview-tts\n    voice: \"Kore\"               # 30 种预置声音：Zephyr、Puck、Kore、Enceladus 等\n  xai:\n    voice_id: \"eve\"             # xAI TTS 声音\n    language: \"en\"              # ISO 639-1\n    sample_rate: 24000\n    bit_rate: 128000            # MP3 比特率\n    # base_url: \"https://api.x.ai/v1\"\n  neutts:\n    ref_audio: ''\n    ref_text: ''\n    model: neuphonic/neutts-air-q4-gguf\n    device: cpu"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#tts-配置"
+    },
+    {
+      "id": "显示设置",
+      "title": "显示设置",
+      "depth": 1,
+      "anchor": "显示设置",
+      "summary": "",
+      "keys": [
+        {
+          "key": "tool_progress",
+          "value": "all",
+          "comment": "off | new | all | verbose"
+        },
+        {
+          "key": "tool_progress_command",
+          "value": "false",
+          "comment": "在消息 gateway 中启用 /verbose 斜杠命令"
+        },
+        {
+          "key": "platforms",
+          "value": "{}",
+          "comment": "每平台显示覆盖（见下文）"
+        },
+        {
+          "key": "interim_assistant_messages",
+          "value": "true",
+          "comment": "Gateway：将自然的轮次中 assistant 更新作为单独消息发送"
+        },
+        {
+          "key": "skin",
+          "value": "default",
+          "comment": "内置或自定义 CLI 皮肤（参阅 user-guide/features/skins）"
+        },
+        {
+          "key": "personality",
+          "value": "\"kawaii\"",
+          "comment": "旧版外观字段，仍在某些摘要中显示"
+        },
+        {
+          "key": "compact",
+          "value": "false",
+          "comment": "紧凑输出模式（减少空白）"
+        },
+        {
+          "key": "resume_display",
+          "value": "full",
+          "comment": "full（恢复时显示之前的消息）| minimal（仅单行）"
+        },
+        {
+          "key": "bell_on_complete",
+          "value": "false",
+          "comment": "当 agent 完成时播放终端铃声（适合长任务）"
+        },
+        {
+          "key": "show_reasoning",
+          "value": "false",
+          "comment": "在每次响应上方显示模型推理/思考（用 /reasoning show|hide 切换）"
+        },
+        {
+          "key": "streaming",
+          "value": "false",
+          "comment": "将 token 实时流式传输到终端"
+        },
+        {
+          "key": "show_cost",
+          "value": "false",
+          "comment": "在 CLI 状态栏中显示估计 $ 成本"
+        },
+        {
+          "key": "timestamps",
+          "value": "false",
+          "comment": "为 true 时，在 CLI/TUI 记录中为用户和 assistant 标签添加 [HH:MM] 时间戳前缀"
+        },
+        {
+          "key": "tool_preview_length",
+          "value": "0",
+          "comment": "工具调用预览的最大字符数（0 = 无限制，显示完整路径/命令）"
+        },
+        {
+          "key": "runtime_footer",
+          "value": "",
+          "comment": "Gateway：在最终回复中附加运行时上下文页脚"
+        },
+        {
+          "key": "enabled",
+          "value": "false",
+          "comment": ""
+        },
+        {
+          "key": "fields",
+          "value": "[\"model\", \"context_pct\", \"cwd\"]",
+          "comment": ""
+        },
+        {
+          "key": "file_mutation_verifier",
+          "value": "true",
+          "comment": "当本轮 write_file/patch 调用失败时附加建议性页脚"
+        },
+        {
+          "key": "language",
+          "value": "en",
+          "comment": "静态消息的 UI 语言（审批提示、部分 gateway 回复）。en | zh | zh-hant | ja | de | es | fr | tr | uk | af | ko | it | ga | pt | ru | hu"
+        }
+      ],
+      "snippets": [
+        "display:\n  tool_progress: all      # off | new | all | verbose\n  tool_progress_command: false  # 在消息 gateway 中启用 /verbose 斜杠命令\n  platforms: {}           # 每平台显示覆盖（见下文）\n  interim_assistant_messages: true  # Gateway：将自然的轮次中 assistant 更新作为单独消息发送\n  skin: default           # 内置或自定义 CLI 皮肤（参阅 user-guide/features/skins）\n  personality: \"kawaii\"  # 旧版外观字段，仍在某些摘要中显示\n  compact: false          # 紧凑输出模式（减少空白）\n  resume_display: full    # full（恢复时显示之前的消息）| minimal（仅单行）\n  bell_on_complete: false # 当 agent 完成时播放终端铃声（适合长任务）\n  show_reasoning: false   # 在每次响应上方显示模型推理/思考（用 /reasoning show|hide 切换）\n  streaming: false        # 将 token 实时流式传输到终端\n  show_cost: false        # 在 CLI 状态栏中显示估计 $ 成本\n  timestamps: false       # 为 true 时，在 CLI/TUI 记录中为用户和 assistant 标签添加 [HH:MM] 时间戳前缀\n  tool_preview_length: 0  # 工具调用预览的最大字符数（0 = 无限制，显示完整路径/命令）\n  runtime_footer:         # Gateway：在最终回复中附加运行时上下文页脚\n    enabled: false\n    fields: [\"model\", \"context_pct\", \"cwd\"]\n  file_mutation_verifier: true    # 当本轮 write_file/patch 调用失败时附加建议性页脚\n  language: en            # 静态消息的 UI 语言（审批提示、部分 gateway 回复）。en | zh | zh-hant | ja | de | es | fr | tr | uk | af | ko | it | ga | pt | ru | hu"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#显示设置"
+    },
+    {
+      "id": "文件变更验证器",
+      "title": "文件变更验证器",
+      "depth": 2,
+      "anchor": "文件变更验证器",
+      "summary": "当 display.file_mutation_verifier 为 true（默认）时，每当本轮中 write_file 或 patch 调用失败且从未被对同一路径的成功写入取代时，Hermes 会在 assistant 的最终响应中附加一行建议。这捕获了\"批量并行补丁，一半静默失败，模型总结成功\"这类过度声明，而无需您在每次编辑后手动运行 git status。",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#文件变更验证器"
+    },
+    {
+      "id": "静态消息的-ui-语言",
+      "title": "静态消息的 UI 语言",
+      "depth": 2,
+      "anchor": "静态消息的-ui-语言",
+      "summary": "display.language 设置翻译一小组静态面向用户的消息 —— CLI 审批提示、少数 gateway 斜杠命令回复（例如重启排空通知、\"审批已过期\"、\"目标已清除\"）。它不翻译 agent 响应、日志行、工具输出、错误回溯或斜杠命令描述 —— 这些保持英文。如果您希望 agent 本身用另一种语言回复，只需在您的提示词或系统消息中告诉它。",
+      "keys": [
+        {
+          "key": "language",
+          "value": "zh",
+          "comment": "CLI 审批提示以中文显示"
+        }
+      ],
+      "snippets": [
+        "display:\n  language: zh   # CLI 审批提示以中文显示"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#静态消息的-ui-语言"
+    },
+    {
+      "id": "运行时元数据页脚仅限-gateway",
+      "title": "运行时元数据页脚（仅限 gateway）",
+      "depth": 2,
+      "anchor": "运行时元数据页脚仅限-gateway",
+      "summary": "当 display.runtime_footer.enabled: true 时，Hermes 在每个 gateway 轮次的最终消息中附加一个小型运行时上下文页脚。目前页脚可显示模型、上下文窗口百分比和当前工作目录。默认关闭；如果您的团队希望每个回复都包含这些来源信息，请按 gateway 选择加入。",
+      "keys": [
+        {
+          "key": "enabled",
+          "value": "true",
+          "comment": ""
+        },
+        {
+          "key": "fields",
+          "value": "[\"model\", \"context_pct\", \"cwd\"]",
+          "comment": "支持字段：model、context_pct、cwd"
+        }
+      ],
+      "snippets": [
+        "display:\n  runtime_footer:\n    enabled: true\n    fields: [\"model\", \"context_pct\", \"cwd\"]   # 支持字段：model、context_pct、cwd"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#运行时元数据页脚仅限-gateway"
+    },
+    {
+      "id": "每平台进度覆盖",
+      "title": "每平台进度覆盖",
+      "depth": 2,
+      "anchor": "每平台进度覆盖",
+      "summary": "不同平台有不同的详细程度需求。例如，Signal 无法编辑消息，因此每次进度更新都会成为单独的消息 —— 很嘈杂。使用 display.platforms 设置每平台模式：",
+      "keys": [
+        {
+          "key": "tool_progress",
+          "value": "all",
+          "comment": "全局默认"
+        },
+        {
+          "key": "tool_progress",
+          "value": "'off'",
+          "comment": "在 Signal 上静默进度"
+        },
+        {
+          "key": "tool_progress",
+          "value": "verbose",
+          "comment": "在 Telegram 上详细进度"
+        },
+        {
+          "key": "tool_progress",
+          "value": "'off'",
+          "comment": "在共享 Slack 工作区中保持安静"
+        }
+      ],
+      "snippets": [
+        "display:\n  tool_progress: all          # 全局默认\n  platforms:\n    signal:\n      tool_progress: 'off'    # 在 Signal 上静默进度\n    telegram:\n      tool_progress: verbose  # 在 Telegram 上详细进度\n    slack:\n      tool_progress: 'off'    # 在共享 Slack 工作区中保持安静"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#每平台进度覆盖"
+    },
+    {
+      "id": "隐私",
+      "title": "隐私",
+      "depth": 1,
+      "anchor": "隐私",
+      "summary": "当 redact_pii 为 true 时，gateway 在将系统提示词发送到受支持平台上的 LLM 之前，会从中删除个人身份信息：",
+      "keys": [
+        {
+          "key": "redact_pii",
+          "value": "false",
+          "comment": "从 LLM 上下文中删除 PII（仅限 gateway）"
+        }
+      ],
+      "snippets": [
+        "privacy:\n  redact_pii: false  # 从 LLM 上下文中删除 PII（仅限 gateway）"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#隐私"
+    },
+    {
+      "id": "语音转文字stt",
+      "title": "语音转文字（STT）",
+      "depth": 1,
+      "anchor": "语音转文字stt",
+      "summary": "如果请求的 provider 不可用，Hermes 按此顺序自动回退：local → groq → openai。",
+      "keys": [
+        {
+          "key": "provider",
+          "value": "\"local\"",
+          "comment": "\"local\" | \"groq\" | \"openai\" | \"mistral\""
+        },
+        {
+          "key": "model",
+          "value": "\"base\"",
+          "comment": "tiny、base、small、medium、large-v3"
+        },
+        {
+          "key": "model",
+          "value": "\"whisper-1\"",
+          "comment": "whisper-1 | gpt-4o-mini-transcribe | gpt-4o-transcribe | gpt-transcribe"
+        }
+      ],
+      "snippets": [
+        "stt:\n  provider: \"local\"            # \"local\" | \"groq\" | \"openai\" | \"mistral\"\n  local:\n    model: \"base\"              # tiny、base、small、medium、large-v3\n  openai:\n    model: \"whisper-1\"         # whisper-1 | gpt-4o-mini-transcribe | gpt-4o-transcribe | gpt-transcribe\n  # model: \"whisper-1\"         # 旧版回退键仍受支持"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#语音转文字stt"
+    },
+    {
+      "id": "语音模式cli",
+      "title": "语音模式（CLI）",
+      "depth": 1,
+      "anchor": "语音模式cli",
+      "summary": "在 CLI 中使用 /voice on 启用麦克风模式，使用 record_key 开始/停止录音，使用 /voice tts 切换口语回复。端到端设置和平台特定行为请参阅语音模式。",
+      "keys": [
+        {
+          "key": "record_key",
+          "value": "\"ctrl+b\"",
+          "comment": "CLI 内的按键通话键"
+        },
+        {
+          "key": "max_recording_seconds",
+          "value": "120",
+          "comment": "长录音的硬停止"
+        },
+        {
+          "key": "auto_tts",
+          "value": "false",
+          "comment": "/voice on 时自动启用口语回复"
+        },
+        {
+          "key": "beep_enabled",
+          "value": "true",
+          "comment": "在 CLI 语音模式中播放录音开始/停止提示音"
+        },
+        {
+          "key": "silence_threshold",
+          "value": "200",
+          "comment": "语音检测的 RMS 阈值"
+        },
+        {
+          "key": "silence_duration",
+          "value": "3.0",
+          "comment": "自动停止前的静默秒数"
+        }
+      ],
+      "snippets": [
+        "voice:\n  record_key: \"ctrl+b\"         # CLI 内的按键通话键\n  max_recording_seconds: 120    # 长录音的硬停止\n  auto_tts: false               # /voice on 时自动启用口语回复\n  beep_enabled: true            # 在 CLI 语音模式中播放录音开始/停止提示音\n  silence_threshold: 200        # 语音检测的 RMS 阈值\n  silence_duration: 3.0         # 自动停止前的静默秒数"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#语音模式cli"
+    },
+    {
+      "id": "流式传输",
+      "title": "流式传输",
+      "depth": 1,
+      "anchor": "流式传输",
+      "summary": "将 token 实时流式传输到终端或消息平台，而不是等待完整响应。",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#流式传输"
+    },
+    {
+      "id": "cli-流式传输",
+      "title": "CLI 流式传输",
+      "depth": 2,
+      "anchor": "cli-流式传输",
+      "summary": "启用后，响应在流式传输框内逐 token 出现。工具调用仍然静默捕获。如果 provider 不支持流式传输，它会自动回退到正常显示。",
+      "keys": [
+        {
+          "key": "streaming",
+          "value": "true",
+          "comment": "实时将 token 流式传输到终端"
+        },
+        {
+          "key": "show_reasoning",
+          "value": "true",
+          "comment": "同时流式传输推理/思考 token（可选）"
+        }
+      ],
+      "snippets": [
+        "display:\n  streaming: true         # 实时将 token 流式传输到终端\n  show_reasoning: true    # 同时流式传输推理/思考 token（可选）"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#cli-流式传输"
+    },
+    {
+      "id": "gateway-流式传输telegramdiscordslack",
+      "title": "Gateway 流式传输（Telegram、Discord、Slack）",
+      "depth": 2,
+      "anchor": "gateway-流式传输telegramdiscordslack",
+      "summary": "启用后，bot 在第一个 token 时发送消息，然后随着更多 token 到来渐进式编辑它。不支持消息编辑的平台（Signal、Email、Home Assistant）在第一次尝试时自动检测 —— 该会话的流式传输被优雅地禁用，不会产生大量消息。",
+      "keys": [
+        {
+          "key": "enabled",
+          "value": "true",
+          "comment": "启用渐进式消息编辑"
+        },
+        {
+          "key": "transport",
+          "value": "edit",
+          "comment": "\"edit\"（渐进式消息编辑）或 \"off\""
+        },
+        {
+          "key": "edit_interval",
+          "value": "0.3",
+          "comment": "消息编辑之间的秒数"
+        },
+        {
+          "key": "buffer_threshold",
+          "value": "40",
+          "comment": "强制编辑刷新前的字符数"
+        },
+        {
+          "key": "cursor",
+          "value": "\" ▉\"",
+          "comment": "流式传输期间显示的光标"
+        },
+        {
+          "key": "fresh_final_after_seconds",
+          "value": "0",
+          "comment": "预览超过此时间时选择发送新的最终消息（Telegram）"
+        }
+      ],
+      "snippets": [
+        "streaming:\n  enabled: true           # 启用渐进式消息编辑\n  transport: edit         # \"edit\"（渐进式消息编辑）或 \"off\"\n  edit_interval: 0.3      # 消息编辑之间的秒数\n  buffer_threshold: 40    # 强制编辑刷新前的字符数\n  cursor: \" ▉\"            # 流式传输期间显示的光标\n  fresh_final_after_seconds: 0    # 预览超过此时间时选择发送新的最终消息（Telegram）"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#gateway-流式传输telegramdiscordslack"
+    },
+    {
+      "id": "群聊会话隔离",
+      "title": "群聊会话隔离",
+      "depth": 1,
+      "anchor": "群聊会话隔离",
+      "summary": "控制共享聊天是每个房间保持一个对话还是每个参与者一个对话：",
+      "keys": [
+        {
+          "key": "group_sessions_per_user",
+          "value": "true",
+          "comment": "true = 群组/频道中每用户隔离，false = 每个聊天一个共享会话"
+        }
+      ],
+      "snippets": [
+        "group_sessions_per_user: true  # true = 群组/频道中每用户隔离，false = 每个聊天一个共享会话"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#群聊会话隔离"
+    },
+    {
+      "id": "未授权-dm-行为",
+      "title": "未授权 DM 行为",
+      "depth": 1,
+      "anchor": "未授权-dm-行为",
+      "summary": "控制当未知用户发送私信时 Hermes 的行为：",
+      "keys": [
+        {
+          "key": "unauthorized_dm_behavior",
+          "value": "pair",
+          "comment": ""
+        },
+        {
+          "key": "unauthorized_dm_behavior",
+          "value": "ignore",
+          "comment": ""
+        }
+      ],
+      "snippets": [
+        "unauthorized_dm_behavior: pair\n\nwhatsapp:\n  unauthorized_dm_behavior: ignore"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#未授权-dm-行为"
+    },
+    {
+      "id": "快速命令",
+      "title": "快速命令",
+      "depth": 1,
+      "anchor": "快速命令",
+      "summary": "定义自定义命令，这些命令要么在不调用 LLM 的情况下运行 shell 命令，要么将一个斜杠命令别名为另一个。Exec 快速命令是零 token 的，对于从消息平台（Telegram、Discord 等）进行快速服务器检查或实用脚本很有用。",
+      "keys": [
+        {
+          "key": "type",
+          "value": "exec",
+          "comment": ""
+        },
+        {
+          "key": "command",
+          "value": "systemctl status hermes-agent",
+          "comment": ""
+        },
+        {
+          "key": "type",
+          "value": "exec",
+          "comment": ""
+        },
+        {
+          "key": "command",
+          "value": "df -h /",
+          "comment": ""
+        },
+        {
+          "key": "type",
+          "value": "exec",
+          "comment": ""
+        },
+        {
+          "key": "command",
+          "value": "cd ~/.hermes/hermes-agent && git pull && uv pip install -e .",
+          "comment": ""
+        },
+        {
+          "key": "type",
+          "value": "exec",
+          "comment": ""
+        },
+        {
+          "key": "command",
+          "value": "nvidia-smi --query-gpu=name,utilization.gpu,memory.used,memory.total --format=csv,noheader",
+          "comment": ""
+        },
+        {
+          "key": "type",
+          "value": "alias",
+          "comment": ""
+        },
+        {
+          "key": "target",
+          "value": "/gateway restart",
+          "comment": ""
+        }
+      ],
+      "snippets": [
+        "quick_commands:\n  status:\n    type: exec\n    command: systemctl status hermes-agent\n  disk:\n    type: exec\n    command: df -h /\n  update:\n    type: exec\n    command: cd ~/.hermes/hermes-agent && git pull && uv pip install -e .\n  gpu:\n    type: exec\n    command: nvidia-smi --query-gpu=name,utilization.gpu,memory.used,memory.total --format=csv,noheader\n  restart:\n    type: alias\n    target: /gateway restart"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#快速命令"
+    },
+    {
+      "id": "人类延迟",
+      "title": "人类延迟",
+      "depth": 1,
+      "anchor": "人类延迟",
+      "summary": "在消息平台中模拟类人响应节奏：",
+      "keys": [
+        {
+          "key": "mode",
+          "value": "\"off\"",
+          "comment": "off | natural | custom"
+        },
+        {
+          "key": "min_ms",
+          "value": "800",
+          "comment": "最小延迟（自定义模式）"
+        },
+        {
+          "key": "max_ms",
+          "value": "2500",
+          "comment": "最大延迟（自定义模式）"
+        }
+      ],
+      "snippets": [
+        "human_delay:\n  mode: \"off\"                  # off | natural | custom\n  min_ms: 800                  # 最小延迟（自定义模式）\n  max_ms: 2500                 # 最大延迟（自定义模式）"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#人类延迟"
+    },
+    {
+      "id": "代码执行",
+      "title": "代码执行",
+      "depth": 1,
+      "anchor": "代码执行",
+      "summary": "配置 execute_code 工具：",
+      "keys": [
+        {
+          "key": "mode",
+          "value": "project",
+          "comment": "project（默认）| strict"
+        },
+        {
+          "key": "timeout",
+          "value": "300",
+          "comment": "最大执行时间（秒）"
+        },
+        {
+          "key": "max_tool_calls",
+          "value": "50",
+          "comment": "代码执行中的最大工具调用次数"
+        }
+      ],
+      "snippets": [
+        "code_execution:\n  mode: project                # project（默认）| strict\n  timeout: 300                 # 最大执行时间（秒）\n  max_tool_calls: 50           # 代码执行中的最大工具调用次数"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#代码执行"
+    },
+    {
+      "id": "web-搜索后端",
+      "title": "Web 搜索后端",
+      "depth": 1,
+      "anchor": "web-搜索后端",
+      "summary": "web_search 和 web_extract 工具支持五种后端 provider。在 config.yaml 中或通过 hermes tools 配置后端：",
+      "keys": [
+        {
+          "key": "backend",
+          "value": "firecrawl",
+          "comment": "firecrawl | searxng | parallel | tavily | exa"
+        },
+        {
+          "key": "search_backend",
+          "value": "\"searxng\"",
+          "comment": ""
+        },
+        {
+          "key": "extract_backend",
+          "value": "\"firecrawl\"",
+          "comment": ""
+        }
+      ],
+      "snippets": [
+        "web:\n  backend: firecrawl    # firecrawl | searxng | parallel | tavily | exa\n\n  # 或使用每功能键混合 provider（例如免费搜索 + 付费提取）：\n  search_backend: \"searxng\"\n  extract_backend: \"firecrawl\""
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#web-搜索后端"
+    },
+    {
+      "id": "浏览器",
+      "title": "浏览器",
+      "depth": 1,
+      "anchor": "浏览器",
+      "summary": "完整对话框工作流请参阅浏览器功能页面。",
+      "keys": [
+        {
+          "key": "inactivity_timeout",
+          "value": "120",
+          "comment": "自动关闭空闲会话前的秒数"
+        },
+        {
+          "key": "command_timeout",
+          "value": "30",
+          "comment": "浏览器命令超时（截图、导航等）（秒）"
+        },
+        {
+          "key": "record_sessions",
+          "value": "false",
+          "comment": "自动将浏览器会话录制为 WebM 视频到 ~/.hermes/browser_recordings/"
+        },
+        {
+          "key": "cdp_url",
+          "value": "\"\"",
+          "comment": ""
+        },
+        {
+          "key": "dialog_policy",
+          "value": "must_respond",
+          "comment": "must_respond | auto_dismiss | auto_accept"
+        },
+        {
+          "key": "dialog_timeout_s",
+          "value": "300",
+          "comment": "must_respond 下的安全自动关闭（秒）"
+        },
+        {
+          "key": "managed_persistence",
+          "value": "false",
+          "comment": "为 true 时，Camofox 会话跨重启持久化 cookie/登录"
+        },
+        {
+          "key": "user_id",
+          "value": "\"\"",
+          "comment": "可选的外部管理 Camofox userId"
+        },
+        {
+          "key": "session_key",
+          "value": "\"\"",
+          "comment": "Hermes 创建标签页时发送的可选会话密钥"
+        },
+        {
+          "key": "adopt_existing_tab",
+          "value": "false",
+          "comment": "在创建新标签页之前重用此身份的现有标签页"
+        }
+      ],
+      "snippets": [
+        "browser:\n  inactivity_timeout: 120        # 自动关闭空闲会话前的秒数\n  command_timeout: 30             # 浏览器命令超时（截图、导航等）（秒）\n  record_sessions: false         # 自动将浏览器会话录制为 WebM 视频到 ~/.hermes/browser_recordings/\n  # 可选 CDP 覆盖 —— 设置后，Hermes 直接附加到您自己的\n  # Chromium 系浏览器（通过 /browser connect），而不是启动无头浏览器。\n  cdp_url: \"\"\n  # 对话框监督器 —— 控制当 CDP 后端附加时（Browserbase、本地 Chromium 系\n  # 浏览器通过 /browser connect）如何处理原生 JS 对话框（alert/confirm/prompt）。\n  # 在 Camofox 和默认本地 agent 浏览器模式下忽略。\n  dialog_policy: must_respond    # must_respond | auto_dismiss | auto_accept\n  dialog_timeout_s: 300          # must_respond 下的安全自动关闭（秒）\n  camofox:\n    managed_persistence: false   # 为 true 时，Camofox 会话跨重启持久化 cookie/登录\n    user_id: \"\"                  # 可选的外部管理 Camofox userId\n    session_key: \"\"              # Hermes 创建标签页时发送的可选会话密钥\n    adopt_existing_tab: false    # 在创建新标签页之前重用此身份的现有标签页"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#浏览器"
+    },
+    {
+      "id": "时区",
+      "title": "时区",
+      "depth": 1,
+      "anchor": "时区",
+      "summary": "使用 IANA 时区字符串覆盖服务器本地时区。影响日志中的时间戳、cron 调度和系统提示词时间注入。",
+      "keys": [
+        {
+          "key": "timezone",
+          "value": "\"America/New_York\"",
+          "comment": "IANA 时区（默认：\"\" = 服务器本地时间）"
+        }
+      ],
+      "snippets": [
+        "timezone: \"America/New_York\"   # IANA 时区（默认：\"\" = 服务器本地时间）"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#时区"
+    },
+    {
+      "id": "discord",
+      "title": "Discord",
+      "depth": 1,
+      "anchor": "discord",
+      "summary": "为消息 gateway 配置 Discord 特定行为：",
+      "keys": [
+        {
+          "key": "require_mention",
+          "value": "true",
+          "comment": "在服务器频道中需要 @提及才能响应"
+        },
+        {
+          "key": "free_response_channels",
+          "value": "\"\"",
+          "comment": "逗号分隔的频道 ID，bot 在这些频道无需 @提及即可响应"
+        },
+        {
+          "key": "auto_thread",
+          "value": "true",
+          "comment": "在频道中 @提及时自动创建线程"
+        }
+      ],
+      "snippets": [
+        "discord:\n  require_mention: true          # 在服务器频道中需要 @提及才能响应\n  free_response_channels: \"\"     # 逗号分隔的频道 ID，bot 在这些频道无需 @提及即可响应\n  auto_thread: true              # 在频道中 @提及时自动创建线程"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#discord"
+    },
+    {
+      "id": "安全",
+      "title": "安全",
+      "depth": 1,
+      "anchor": "安全",
+      "summary": "预执行安全扫描和机密脱敏：",
+      "keys": [
+        {
+          "key": "redact_secrets",
+          "value": "false",
+          "comment": "在工具输出和日志中脱敏 API 密钥模式（默认关闭）"
+        },
+        {
+          "key": "tirith_enabled",
+          "value": "true",
+          "comment": "为终端命令启用 Tirith 安全扫描"
+        },
+        {
+          "key": "tirith_path",
+          "value": "\"tirith\"",
+          "comment": "tirith 二进制文件路径（默认：$PATH 中的 \"tirith\"）"
+        },
+        {
+          "key": "tirith_timeout",
+          "value": "5",
+          "comment": "等待 tirith 扫描的秒数"
+        },
+        {
+          "key": "tirith_fail_open",
+          "value": "true",
+          "comment": "如果 tirith 不可用，允许命令执行"
+        },
+        {
+          "key": "website_blocklist",
+          "value": "",
+          "comment": "参见下方网站黑名单部分"
+        },
+        {
+          "key": "enabled",
+          "value": "false",
+          "comment": ""
+        },
+        {
+          "key": "domains",
+          "value": "[]",
+          "comment": ""
+        },
+        {
+          "key": "shared_files",
+          "value": "[]",
+          "comment": ""
+        }
+      ],
+      "snippets": [
+        "security:\n  redact_secrets: false          # 在工具输出和日志中脱敏 API 密钥模式（默认关闭）\n  tirith_enabled: true           # 为终端命令启用 Tirith 安全扫描\n  tirith_path: \"tirith\"          # tirith 二进制文件路径（默认：$PATH 中的 \"tirith\"）\n  tirith_timeout: 5              # 等待 tirith 扫描的秒数\n  tirith_fail_open: true         # 如果 tirith 不可用，允许命令执行\n  website_blocklist:             # 参见下方网站黑名单部分\n    enabled: false\n    domains: []\n    shared_files: []"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#安全"
+    },
+    {
+      "id": "网站黑名单",
+      "title": "网站黑名单",
+      "depth": 1,
+      "anchor": "网站黑名单",
+      "summary": "阻止 agent 的 web 和浏览器工具访问特定域名：",
+      "keys": [
+        {
+          "key": "enabled",
+          "value": "false",
+          "comment": "启用 URL 阻止（默认：false）"
+        },
+        {
+          "key": "domains",
+          "value": "",
+          "comment": "被阻止的域名模式列表"
+        },
+        {
+          "key": "shared_files",
+          "value": "",
+          "comment": "从外部文件加载额外规则"
+        }
+      ],
+      "snippets": [
+        "security:\n  website_blocklist:\n    enabled: false               # 启用 URL 阻止（默认：false）\n    domains:                     # 被阻止的域名模式列表\n      - \"*.internal.company.com\"\n      - \"admin.example.com\"\n      - \"*.local\"\n    shared_files:                # 从外部文件加载额外规则\n      - \"/etc/hermes/blocked-sites.txt\""
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#网站黑名单"
+    },
+    {
+      "id": "智能审批",
+      "title": "智能审批",
+      "depth": 1,
+      "anchor": "智能审批",
+      "summary": "控制 Hermes 如何处理潜在危险命令：",
+      "keys": [
+        {
+          "key": "mode",
+          "value": "smart",
+          "comment": "smart | manual | off"
+        }
+      ],
+      "snippets": [
+        "approvals:\n  mode: smart   # smart | manual | off"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#智能审批"
+    },
+    {
+      "id": "检查点",
+      "title": "检查点",
+      "depth": 1,
+      "anchor": "检查点",
+      "summary": "破坏性文件操作之前的自动文件系统快照。详情请参阅检查点与回滚。",
+      "keys": [
+        {
+          "key": "enabled",
+          "value": "false",
+          "comment": "启用自动检查点（也可：hermes chat --checkpoints）。默认：false（选择加入）。"
+        },
+        {
+          "key": "max_snapshots",
+          "value": "20",
+          "comment": "每个目录保留的最大检查点数（默认：20）"
+        }
+      ],
+      "snippets": [
+        "checkpoints:\n  enabled: false                 # 启用自动检查点（也可：hermes chat --checkpoints）。默认：false（选择加入）。\n  max_snapshots: 20              # 每个目录保留的最大检查点数（默认：20）"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#检查点"
+    },
+    {
+      "id": "委托",
+      "title": "委托",
+      "depth": 1,
+      "anchor": "委托",
+      "summary": "为委托工具配置子 agent 行为：",
+      "keys": [
+        {
+          "key": "max_concurrent_children",
+          "value": "3",
+          "comment": "每批并行子 agent 数（下限 1，无上限）。也可通过 DELEGATION_MAX_CONCURRENT_CHILDREN 环境变量设置。"
+        },
+        {
+          "key": "max_spawn_depth",
+          "value": "1",
+          "comment": "委托树深度上限（1-3，截断）。1 = 扁平（默认）：父级生成无法委托的叶子。2 = 编排器子级可以生成叶子孙级。3 = 三级。"
+        },
+        {
+          "key": "orchestrator_enabled",
+          "value": "true",
+          "comment": "全局终止开关。为 false 时，role=\"orchestrator\" 被忽略，每个子级无论 max_spawn_depth 如何都被强制为叶子。"
+        }
+      ],
+      "snippets": [
+        "delegation:\n  # model: \"google/gemini-3-flash-preview\"  # 覆盖模型（空 = 继承父级）\n  # provider: \"openrouter\"                  # 覆盖 provider（空 = 继承父级）\n  # base_url: \"http://localhost:1234/v1\"    # 直接 OpenAI 兼容端点（优先于 provider）\n  # api_key: \"local-key\"                    # base_url 的 API 密钥（回退到 OPENAI_API_KEY）\n  # api_mode: \"\"                            # base_url 的线路协议：\"chat_completions\"、\"codex_responses\" 或 \"anthropic_messages\"。空 = 从 URL 自动检测（例如 /anthropic 后缀 → anthropic_messages）。对启发式无法检测的非标准端点显式设置。\n  max_concurrent_children: 3                # 每批并行子 agent 数（下限 1，无上限）。也可通过 DELEGATION_MAX_CONCURRENT_CHILDREN 环境变量设置。\n  max_spawn_depth: 1                        # 委托树深度上限（1-3，截断）。1 = 扁平（默认）：父级生成无法委托的叶子。2 = 编排器子级可以生成叶子孙级。3 = 三级。\n  orchestrator_enabled: true                # 全局终止开关。为 false 时，role=\"orchestrator\" 被忽略，每个子级无论 max_spawn_depth 如何都被强制为叶子。"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#委托"
+    },
+    {
+      "id": "澄清",
+      "title": "澄清",
+      "depth": 1,
+      "anchor": "澄清",
+      "summary": "",
+      "keys": [
+        {
+          "key": "timeout",
+          "value": "120",
+          "comment": "等待用户澄清响应的秒数"
+        }
+      ],
+      "snippets": [
+        "clarify:\n  timeout: 120                 # 等待用户澄清响应的秒数"
+      ],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#澄清"
+    },
+    {
+      "id": "上下文文件soulmdagentsmd",
+      "title": "上下文文件（SOUL.md、AGENTS.md）",
+      "depth": 1,
+      "anchor": "上下文文件soulmdagentsmd",
+      "summary": "Hermes 使用两种不同的上下文范围：",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#上下文文件soulmdagentsmd"
+    },
+    {
+      "id": "工作目录",
+      "title": "工作目录",
+      "depth": 1,
+      "anchor": "工作目录",
+      "summary": "",
+      "keys": [],
+      "snippets": [],
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#工作目录"
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+import { Callout } from '../../components/ui/Callout'
+
+工具是 Hermes 真正「能干活」的原因。这一步的验收是完成一次**读取文件 → 处理数据 → 生成结果文件**的完整工具调用。
+
+### 工具与工具集
+
+工具是扩展 Agent 能力的函数，它们被组织成逻辑上的**工具集**，可以按平台启用或禁用。高层分类：
+
+| 分类 | 代表工具 | 作用 |
+|---|---|---|
+| 终端与文件 | `terminal`、`process`、`read_file`、`patch` | 执行命令、读写文件 |
+| Web | `web_search`、`web_extract` | 搜索网页与提取页面内容 |
+| 浏览器 | `browser_navigate`、`browser_snapshot`、`browser_vision` | 交互式浏览器自动化 |
+| Agent 编排 | `todo`、`clarify`、`execute_code`、`delegate_task` | 规划、澄清、代码执行、子 Agent 委派 |
+| 记忆与召回 | `memory`、`session_search` | 持久化记忆与会话搜索 |
+| 自动化与投递 | `cronjob`、`send_message` | 定时任务与消息投递 |
+| 媒体 | `vision_analyze`、`image_generate`、`text_to_speech` | 多模态分析与生成 |
+
+### 启用与查看
+
+```bash
+# 只用指定工具集启动
+hermes chat --toolsets "web,terminal"
+
+# 查看所有可用工具
+hermes tools
+
+# 按平台交互式配置工具
+hermes tools
+```
+
+常用工具集：`web`、`search`、`terminal`、`file`、`browser`、`vision`、`image_gen`、`skills`、`tts`、`todo`、`memory`、`session_search`、`cronjob`、`code_execution`、`delegation`、`clarify`。
+
+### 终端后端：命令在哪里执行
+
+| 后端 | 说明 | 适用场景 |
+|---|---|---|
+| `local` | 本机执行（默认） | 开发、可信任务 |
+| `docker` | 隔离容器 | 安全性、可复现性 |
+| `ssh` | 远程服务器 | Agent 无法修改自身代码 |
+| `singularity` | HPC 容器 | 集群计算、无 root |
+| `modal` / `daytona` / `vercel_sandbox` | 云端执行 | 弹性、远程持久工作区 |
+
+```yaml
+# ~/.hermes/config.yaml
+terminal:
+  backend: docker
+  docker_image: python:3.11-slim
+```
+
+<Callout tone="info" title="Docker 后端是一个持久沙箱">
+Hermes 在首次使用时启动**一个长期运行的容器**，并把所有终端、文件与 `execute_code` 调用都路由进同一个容器。你 `pip install` 的包、切换的工作目录、写进 `/workspace` 的文件，会在整个 Hermes 进程生命周期内跨 `/new`、`/reset` 与子 Agent 保留；容器在关闭时停止并删除。
+</Callout>
+
+### 后台进程：跑长任务
+
+```python
+# 启动后台命令
+terminal(command="pytest -v tests/", background=true)
+# 返回：{"session_id": "proc_abc123", "pid": 12345}
+
+# 用 process 工具管理它
+process(action="list")
+process(action="poll", session_id="proc_abc123")
+process(action="wait", session_id="proc_abc123")
+process(action="log", session_id="proc_abc123")
+process(action="kill", session_id="proc_abc123")
+```
+
+每个 profile 在 `logs/process-results/` 下最多保留最近 **64 个已完成结果**，最多保存 **7 天**，每条最多保留滚动输出末尾的 **200,000 个字符**。
+
+### 一次完整的工具调用长什么样
+
+这是本步的练习目标，把下面这段直接粘给 Hermes（把文件名换成你自己的数据文件）：
+
+```text
+请用工具完成一次完整的数据处理任务，数据文件是 sales.csv。
+
+1. 用 read_file 读取 sales.csv，先说明它有多少行、每个字段是什么意思。
+2. 用 terminal 或 execute_code 做一次统计（例如按类别汇总），把中间结果贴出来。
+3. 把最终结果写入 summary.md（Markdown 格式，包含一张汇总表）。
+4. 最后列出你这次实际调用了哪些工具，以及结果文件的完整路径。
+
+要求：每一步都要真实调用工具，不要凭空编造数据。
+```
+
+<Callout tone="warn" title="验收的关键在于「文件真的落盘」">
+判断标准不是它说「已完成」，而是结果文件确实出现在磁盘上。用 `ls` 或 `cat` 核对一次，再回来勾选验收清单。
+</Callout>
+
+### Sudo 与安全
+
+需要 sudo 的命令会提示你输入密码（本次会话内缓存），也可以在 `~/.hermes/.env` 中设置 `SUDO_PASSWORD`。容器后端默认启用只读根文件系统、丢弃 Linux capabilities、禁止权限提升、限制 PID 数量并做完整命名空间隔离。

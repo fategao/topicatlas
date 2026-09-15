@@ -1,0 +1,1253 @@
+{
+  "generatedAt": "2026-09-15T07:25:47.380Z",
+  "commitSha": "1d8af13e4ddebc02bcb514a235c9719efda91904",
+  "total": 178,
+  "entries": [
+    {
+      "id": "cmd-hermes-chat",
+      "kind": "command",
+      "title": "hermes chat",
+      "summary": "hermes chat [options]",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-chat"
+    },
+    {
+      "id": "cmd-hermes-model",
+      "kind": "command",
+      "title": "hermes model",
+      "summary": "交互式 provider + 模型选择器。这是添加新 provider、设置 API 密钥和运行 OAuth 流程的命令。 从终端运行——不要在活跃的 Hermes 聊天会话内部运行。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-model"
+    },
+    {
+      "id": "cmd-hermes-gateway",
+      "kind": "command",
+      "title": "hermes gateway",
+      "summary": "hermes gateway <subcommand>",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-gateway"
+    },
+    {
+      "id": "cmd-hermes-lsp",
+      "kind": "command",
+      "title": "hermes lsp",
+      "summary": "管理 Language Server Protocol 集成。LSP 在后台运行真实的语言服务器（pyright、gopls、rust-analyzer 等），并将其诊断信息输入 write_file 和 patch 使用的写后检查。受 git 工作区检测限制——仅当 cwd …",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-lsp"
+    },
+    {
+      "id": "cmd-hermes-setup",
+      "kind": "command",
+      "title": "hermes setup",
+      "summary": "首次运行： 启动首次使用向导。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-setup"
+    },
+    {
+      "id": "cmd-hermes-portal",
+      "kind": "command",
+      "title": "hermes portal",
+      "summary": "检查 Nous Portal 认证、Tool Gateway 路由，并访问订阅页面。不带子命令时运行 status。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-portal"
+    },
+    {
+      "id": "cmd-hermes-whatsapp",
+      "kind": "command",
+      "title": "hermes whatsapp",
+      "summary": "运行 WhatsApp 配对/设置流程，包括模式选择和二维码配对。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-whatsapp"
+    },
+    {
+      "id": "cmd-hermes-slack",
+      "kind": "command",
+      "title": "hermes slack",
+      "summary": "生成一个 Slack app manifest，将 COMMAND_REGISTRY 中的每条 gateway 命令（/btw、/stop、/model 等）注册为一等公民 Slack 斜杠命令——与 Discord 和 Telegram 保持一致。将输出粘贴到你的 Slack…",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-slack"
+    },
+    {
+      "id": "cmd-hermes-login-hermes-logout-",
+      "kind": "command",
+      "title": "hermes login / hermes logout （已弃用）",
+      "summary": "",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-login-hermes-logout-已弃用"
+    },
+    {
+      "id": "cmd-hermes-auth",
+      "kind": "command",
+      "title": "hermes auth",
+      "summary": "管理同一 provider 的密钥轮换凭据池。完整文档请参阅 凭据池。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-auth"
+    },
+    {
+      "id": "cmd-hermes-status",
+      "kind": "command",
+      "title": "hermes status",
+      "summary": "hermes status [--all] [--deep]",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-status"
+    },
+    {
+      "id": "cmd-hermes-cron",
+      "kind": "command",
+      "title": "hermes cron",
+      "summary": "hermes cron <list|create|edit|pause|resume|run|remove|status|tick>",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-cron"
+    },
+    {
+      "id": "cmd-hermes-kanban",
+      "kind": "command",
+      "title": "hermes kanban",
+      "summary": "多 profile、多项目协作看板。每个安装可托管多个看板（每个项目、仓库或领域一个）；每个看板是独立的队列，拥有自己的 SQLite 数据库和调度器作用域。新安装从名为 default 的单个看板开始，其数据库为 ~/.hermes/kanban.db（向后兼容）；其他看板位…",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-kanban"
+    },
+    {
+      "id": "cmd-hermes-webhook",
+      "kind": "command",
+      "title": "hermes webhook",
+      "summary": "管理用于事件驱动 agent 激活的动态 webhook 订阅。需要在 config 中启用 webhook 平台——如未配置，将打印设置说明。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-webhook"
+    },
+    {
+      "id": "cmd-hermes-doctor",
+      "kind": "command",
+      "title": "hermes doctor",
+      "summary": "hermes doctor [--fix]",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-doctor"
+    },
+    {
+      "id": "cmd-hermes-dump",
+      "kind": "command",
+      "title": "hermes dump",
+      "summary": "输出整个 Hermes 设置的紧凑纯文本摘要。专为复制粘贴到 Discord、GitHub issue 或 Telegram 寻求支持而设计——无 ANSI 颜色、无特殊格式，只有数据。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-dump"
+    },
+    {
+      "id": "cmd-hermes-debug",
+      "kind": "command",
+      "title": "hermes debug",
+      "summary": "将调试报告（系统信息 + 近期日志）上传到粘贴服务并获取可分享的 URL。适用于快速支持请求——包含帮助者诊断问题所需的一切信息。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-debug"
+    },
+    {
+      "id": "cmd-hermes-backup",
+      "kind": "command",
+      "title": "hermes backup",
+      "summary": "创建 Hermes 配置、skill、会话和数据的 zip 归档。备份不包含 hermes-agent 代码库本身。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-backup"
+    },
+    {
+      "id": "cmd-hermes-checkpoints",
+      "kind": "command",
+      "title": "hermes checkpoints",
+      "summary": "检查和管理 ~/.hermes/checkpoints/ 处的影子 git 存储——会话内 /rollback 命令的存储层。可随时安全运行；不需要 agent 正在运行。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-checkpoints"
+    },
+    {
+      "id": "cmd-hermes-import",
+      "kind": "command",
+      "title": "hermes import",
+      "summary": "将之前创建的 Hermes 备份恢复到 Hermes 主目录。归档中的所有文件会覆盖 Hermes 主目录中的现有文件；--force 仅跳过当目标已有 Hermes 安装时触发的确认提示。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-import"
+    },
+    {
+      "id": "cmd-hermes-logs",
+      "kind": "command",
+      "title": "hermes logs",
+      "summary": "查看、跟踪和过滤 Hermes 日志文件。所有日志存储在 ~/.hermes/logs/（非默认 profile 存储在 <profile>/logs/）。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-logs"
+    },
+    {
+      "id": "cmd-hermes-config",
+      "kind": "command",
+      "title": "hermes config",
+      "summary": "hermes config <subcommand>",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-config"
+    },
+    {
+      "id": "cmd-hermes-pairing",
+      "kind": "command",
+      "title": "hermes pairing",
+      "summary": "hermes pairing <list|approve|revoke|clear-pending>",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-pairing"
+    },
+    {
+      "id": "cmd-hermes-skills",
+      "kind": "command",
+      "title": "hermes skills",
+      "summary": "hermes skills <subcommand>",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-skills"
+    },
+    {
+      "id": "cmd-hermes-bundles",
+      "kind": "command",
+      "title": "hermes bundles",
+      "summary": "Skill bundle 将多个 skill 归组到一个 /<bundle-name> 斜杠命令下。调用 bundle 会将每个引用的 skill 加载到单个合并的用户消息中。存储位置：~/.hermes/skill-bundles/<slug>.yaml。YAML schem…",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-bundles"
+    },
+    {
+      "id": "cmd-hermes-curator",
+      "kind": "command",
+      "title": "hermes curator",
+      "summary": "Curator 是一个辅助模型后台任务，定期审查 agent 创建的 skill，修剪过期的，合并重叠的，并归档过时的。捆绑和通过 hub 安装的 skill 不会被触及。归档可恢复；不会发生自动删除。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-curator"
+    },
+    {
+      "id": "cmd-hermes-fallback",
+      "kind": "command",
+      "title": "hermes fallback",
+      "summary": "管理 fallback provider 链。当主模型因速率限制、过载或连接错误而失败时，按顺序尝试 fallback provider。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-fallback"
+    },
+    {
+      "id": "cmd-hermes-hooks",
+      "kind": "command",
+      "title": "hermes hooks",
+      "summary": "检查 ~/.hermes/config.yaml 中声明的 shell 脚本 hook，针对合成 payload 测试它们，并管理 ~/.hermes/shell-hooks-allowlist.json 处的首次使用同意许可名单。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-hooks"
+    },
+    {
+      "id": "cmd-hermes-memory",
+      "kind": "command",
+      "title": "hermes memory",
+      "summary": "设置和管理外部 memory provider plugin。可用 provider：honcho、openviking、mem0、hindsight、holographic、retaindb、byterover、supermemory。同一时间只能有一个外部 provider…",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-memory"
+    },
+    {
+      "id": "cmd-hermes-acp",
+      "kind": "command",
+      "title": "hermes acp",
+      "summary": "将 Hermes 作为 ACP（Agent Client Protocol）stdio 服务器启动，用于编辑器集成。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-acp"
+    },
+    {
+      "id": "cmd-hermes-mcp",
+      "kind": "command",
+      "title": "hermes mcp",
+      "summary": "管理 MCP（Model Context Protocol）服务器配置，并将 Hermes 作为 MCP 服务器运行。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-mcp"
+    },
+    {
+      "id": "cmd-hermes-plugins",
+      "kind": "command",
+      "title": "hermes plugins",
+      "summary": "统一的 plugin 管理——通用 plugin、memory provider 和 context engine 集于一处。不带子命令运行 hermes plugins 会打开包含两个部分的复合交互界面：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-plugins"
+    },
+    {
+      "id": "cmd-hermes-tools",
+      "kind": "command",
+      "title": "hermes tools",
+      "summary": "不带 --summary 时，启动交互式按平台工具配置界面。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-tools"
+    },
+    {
+      "id": "cmd-hermes-computer-use",
+      "kind": "command",
+      "title": "hermes computer-use",
+      "summary": "hermes computer-use install 是安装 computer_use toolset 使用的 cua-driver 二进制文件的稳定入口。它运行与首次启用 Computer Use 时 hermes tools 调用的相同上游安装程序，因此如果 toolse…",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-computer-use"
+    },
+    {
+      "id": "cmd-hermes-sessions",
+      "kind": "command",
+      "title": "hermes sessions",
+      "summary": "hermes sessions <subcommand>",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-sessions"
+    },
+    {
+      "id": "cmd-hermes-insights",
+      "kind": "command",
+      "title": "hermes insights",
+      "summary": "hermes insights [--days N] [--source platform]",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-insights"
+    },
+    {
+      "id": "cmd-hermes-claw",
+      "kind": "command",
+      "title": "hermes claw",
+      "summary": "将 OpenClaw 设置迁移到 Hermes。从 ~/.openclaw（或自定义路径）读取并写入 ~/.hermes。自动检测旧版目录名（~/.clawdbot、~/.moltbot）和配置文件名（clawdbot.json、moltbot.json）。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-claw"
+    },
+    {
+      "id": "cmd-hermes-dashboard",
+      "kind": "command",
+      "title": "hermes dashboard",
+      "summary": "启动 Web 控制台——基于浏览器的界面，用于管理配置、API 密钥和监控会话。需要 cd ~/.hermes/hermes-agent && uv pip install -e \".[web]\"（FastAPI + Uvicorn）。内嵌浏览器 Chat 标签页始终可用，但额…",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-dashboard"
+    },
+    {
+      "id": "cmd-hermes-profile",
+      "kind": "command",
+      "title": "hermes profile",
+      "summary": "管理 profile——多个隔离的 Hermes 实例，每个实例拥有自己的 config、会话、skill 和主目录。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-profile"
+    },
+    {
+      "id": "cmd-hermes-completion",
+      "kind": "command",
+      "title": "hermes completion",
+      "summary": "将 shell 补全脚本打印到 stdout。在 shell profile 中 source 输出内容，即可对 Hermes 命令、子命令和 profile 名称进行 Tab 补全。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-completion"
+    },
+    {
+      "id": "cmd-hermes-update",
+      "kind": "command",
+      "title": "hermes update",
+      "summary": "拉取最新的 hermes-agent 代码并在受管理的 venv 中重新安装依赖，然后重新运行安装后 hook（MCP 服务器、skill 同步、补全安装）。可在运行中的安装上安全执行。使用 --check 查看你的检出是否落后于 origin/main，而不安装。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands#hermes-update"
+    },
+    {
+      "id": "cfg-配置",
+      "kind": "config",
+      "title": "配置",
+      "summary": "所有设置均存储在 ~/.hermes/ 目录中，便于访问。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#配置"
+    },
+    {
+      "id": "cfg-配置优先级",
+      "kind": "config",
+      "title": "配置优先级",
+      "summary": "设置按以下顺序解析（优先级从高到低）：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#配置优先级"
+    },
+    {
+      "id": "cfg-环境变量替换",
+      "kind": "config",
+      "title": "环境变量替换",
+      "summary": "可以在 config.yaml 中使用 ${VAR_NAME} 语法引用环境变量：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#环境变量替换"
+    },
+    {
+      "id": "cfg-provider-超时",
+      "kind": "config",
+      "title": "Provider 超时",
+      "summary": "可以为 provider 设置 providers.<id>.request_timeout_seconds 作为全局请求超时，以及 providers.<id>.models.<model>.timeout_seconds 作为特定模型的覆盖值。适用于每种传输方式（OpenA…",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#provider-超时"
+    },
+    {
+      "id": "cfg-终端后端配置",
+      "kind": "config",
+      "title": "终端后端配置",
+      "summary": "Hermes 支持七种终端后端。每种后端决定 agent 的 shell 命令实际在哪里执行 —— 本地机器、Docker 容器、通过 SSH 的远程服务器、Modal 云沙箱（直接或通过 Nous 托管的 gateway）、Daytona 工作区、Vercel Sandbox…",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#终端后端配置"
+    },
+    {
+      "id": "cfg-local-后端",
+      "kind": "config",
+      "title": "Local 后端",
+      "summary": "默认后端。命令直接在您的机器上运行，无隔离。无需特殊设置。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#local-后端"
+    },
+    {
+      "id": "cfg-docker-后端",
+      "kind": "config",
+      "title": "Docker 后端",
+      "summary": "在具有安全加固的 Docker 容器内运行命令（所有权限已删除、无权限提升、PID 限制）。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#docker-后端"
+    },
+    {
+      "id": "cfg-ssh-后端",
+      "kind": "config",
+      "title": "SSH 后端",
+      "summary": "通过 SSH 在远程服务器上运行命令。使用 ControlMaster 进行连接复用（5 分钟空闲保活）。默认启用持久 shell —— 状态（cwd、环境变量）在命令之间保持。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#ssh-后端"
+    },
+    {
+      "id": "cfg-modal-后端",
+      "kind": "config",
+      "title": "Modal 后端",
+      "summary": "在 Modal 云沙箱中运行命令。每个任务获得一个具有可配置 CPU、内存和磁盘的隔离 VM。文件系统可以跨会话快照/恢复。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#modal-后端"
+    },
+    {
+      "id": "cfg-daytona-后端",
+      "kind": "config",
+      "title": "Daytona 后端",
+      "summary": "在 Daytona 托管工作区中运行命令。支持停止/恢复以实现持久化。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#daytona-后端"
+    },
+    {
+      "id": "cfg-vercel-sandbox-后端",
+      "kind": "config",
+      "title": "Vercel Sandbox 后端",
+      "summary": "在 Vercel Sandbox 云 microVM 中运行命令。Hermes 使用普通的终端和文件工具接口；没有 Vercel 特定的面向模型的工具。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#vercel-sandbox-后端"
+    },
+    {
+      "id": "cfg-singularityapptainer-后端",
+      "kind": "config",
+      "title": "Singularity/Apptainer 后端",
+      "summary": "在 Singularity/Apptainer 容器中运行命令。专为 Docker 不可用的 HPC 集群和共享机器设计。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#singularityapptainer-后端"
+    },
+    {
+      "id": "cfg-常见终端后端问题",
+      "kind": "config",
+      "title": "常见终端后端问题",
+      "summary": "如果终端命令立即失败或终端工具报告为已禁用：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#常见终端后端问题"
+    },
+    {
+      "id": "cfg-拆卸时远程到宿主文件同步",
+      "kind": "config",
+      "title": "拆卸时远程到宿主文件同步",
+      "summary": "对于 SSH、Modal 和 Daytona 后端（agent 的工作树位于与运行 Hermes 的宿主不同的机器上），Hermes 跟踪 agent 在远程沙箱中触及的文件，并在会话拆卸/沙箱清理时，将修改的文件同步回宿主，存放在 ~/.hermes/cache/remote…",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#拆卸时远程到宿主文件同步"
+    },
+    {
+      "id": "cfg-docker-卷挂载",
+      "kind": "config",
+      "title": "Docker 卷挂载",
+      "summary": "使用 Docker 后端时，docker_volumes 允许您与容器共享宿主目录。每个条目使用标准 Docker -v 语法：host_path:container_path[:options]。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#docker-卷挂载"
+    },
+    {
+      "id": "cfg-docker-凭据转发",
+      "kind": "config",
+      "title": "Docker 凭据转发",
+      "summary": "默认情况下，Docker 终端会话不继承任意宿主凭据。如果您需要在容器内使用特定 token，请将其添加到 terminal.docker_forward_env。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#docker-凭据转发"
+    },
+    {
+      "id": "cfg-以宿主用户身份运行容器",
+      "kind": "config",
+      "title": "以宿主用户身份运行容器",
+      "summary": "默认情况下，Docker 容器以 root（UID 0）身份运行。在 /workspace 或其他绑定挂载中创建的文件在宿主上归 root 所有，因此会话结束后您必须 sudo chown 才能从宿主编辑器编辑它们。terminal.docker_run_as_host_use…",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#以宿主用户身份运行容器"
+    },
+    {
+      "id": "cfg-可选将启动目录挂载到-workspace",
+      "kind": "config",
+      "title": "可选：将启动目录挂载到 /workspace",
+      "summary": "Docker 沙箱默认保持隔离。Hermes 不会将您当前的宿主工作目录传入容器，除非您明确选择加入。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#可选将启动目录挂载到-workspace"
+    },
+    {
+      "id": "cfg-持久-shell",
+      "kind": "config",
+      "title": "持久 Shell",
+      "summary": "默认情况下，每条终端命令在其自己的子进程中运行 —— 工作目录、环境变量和 shell 变量在命令之间重置。启用持久 shell 后，单个长期运行的 bash 进程在 execute() 调用之间保持存活，使状态在命令之间保持。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#持久-shell"
+    },
+    {
+      "id": "cfg-技能设置",
+      "kind": "config",
+      "title": "技能设置",
+      "summary": "技能可以通过其 SKILL.md frontmatter 声明自己的配置设置。这些是非机密值（路径、偏好、域设置），存储在 config.yaml 的 skills.config 命名空间下。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#技能设置"
+    },
+    {
+      "id": "cfg-agent-创建技能写入的守卫",
+      "kind": "config",
+      "title": "Agent 创建技能写入的守卫",
+      "summary": "当 agent 使用 skill_manage 创建、编辑、修补或删除技能时，Hermes 可以选择扫描新/更新的内容以查找危险关键字模式（凭据收集、明显的 prompt 注入、数据外泄指令）。扫描器默认关闭 —— 合法触及 ~/.ssh/ 或提及 $OPENAI_API_KE…",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#agent-创建技能写入的守卫"
+    },
+    {
+      "id": "cfg-内存配置",
+      "kind": "config",
+      "title": "内存配置",
+      "summary": "memory_enabled、user_profile_enabled、memory_char_limit",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#内存配置"
+    },
+    {
+      "id": "cfg-文件读取安全",
+      "kind": "config",
+      "title": "文件读取安全",
+      "summary": "控制单次 read_file 调用可以返回多少内容。超过限制的读取将被拒绝，并向 agent 返回错误，提示使用 offset 和 limit 读取较小范围。这可以防止单次读取压缩的 JS 包或大型数据文件时淹没上下文窗口。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#文件读取安全"
+    },
+    {
+      "id": "cfg-工具输出截断限制",
+      "kind": "config",
+      "title": "工具输出截断限制",
+      "summary": "三个相关的上限控制工具在 Hermes 截断之前可以返回多少原始输出：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#工具输出截断限制"
+    },
+    {
+      "id": "cfg-全局工具集禁用",
+      "kind": "config",
+      "title": "全局工具集禁用",
+      "summary": "要在 CLI 和每个 gateway 平台上统一禁用特定工具集，请在 agent.disabled_toolsets 下列出其名称：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#全局工具集禁用"
+    },
+    {
+      "id": "cfg-git-worktree-隔离",
+      "kind": "config",
+      "title": "Git Worktree 隔离",
+      "summary": "启用隔离的 git worktree，以便在同一仓库上并行运行多个 agent：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#git-worktree-隔离"
+    },
+    {
+      "id": "cfg-上下文压缩",
+      "kind": "config",
+      "title": "上下文压缩",
+      "summary": "Hermes 自动压缩长对话以保持在模型的上下文窗口内。压缩摘要器是一个单独的 LLM 调用 —— 您可以将其指向任何 provider 或端点。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#上下文压缩"
+    },
+    {
+      "id": "cfg-完整参考",
+      "kind": "config",
+      "title": "完整参考",
+      "summary": "hygiene_hard_message_limit 是仅限 gateway 的预压缩安全阀。它的存在是为了打破一个死循环：当超大会话的 API 调用持续断开时，gateway 永远收不到 token 使用数据，基于 token 的阈值因此无法触发，于是 transcript …",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#完整参考"
+    },
+    {
+      "id": "cfg-常见设置",
+      "kind": "config",
+      "title": "常见设置",
+      "summary": "默认（自动检测）—— 无需配置：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#常见设置"
+    },
+    {
+      "id": "cfg-会话卡死监视器session-stall-watchdog",
+      "kind": "config",
+      "title": "会话卡死监视器（Session Stall Watchdog）",
+      "summary": "Gateway 运行一个仅通知的卡死监视器（agent.session_stall_timeout，默认 300 秒，0 = 禁用）。当一个忙碌的会话存在待处理的入站后续消息，且 agent 的共享活动时钟空闲达到该时长时，gateway 会记录一条 WARNING 日志并向用…",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#会话卡死监视器session-stall-watchdog"
+    },
+    {
+      "id": "cfg-上下文引擎",
+      "kind": "config",
+      "title": "上下文引擎",
+      "summary": "上下文引擎控制在接近模型 token 限制时如何管理对话。内置的 compressor 引擎使用有损摘要（参见上下文压缩）。插件引擎可以用替代策略替换它。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#上下文引擎"
+    },
+    {
+      "id": "cfg-迭代预算",
+      "kind": "config",
+      "title": "迭代预算",
+      "summary": "当 agent 在处理具有许多工具调用的复杂任务时，它可能会耗尽其迭代预算（默认：500 轮）。Hermes 不会在任务中途注入压力警告 —— 早期版本会在预算达到 70%/90% 时警告模型，这会导致模型过早放弃复杂任务，该机制已于 2026 年 4 月移除。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#迭代预算"
+    },
+    {
+      "id": "cfg-api-超时",
+      "kind": "config",
+      "title": "API 超时",
+      "summary": "Hermes 对流式传输有单独的超时层，以及用于非流式调用的陈旧检测器。陈旧检测器仅在您将其保留为隐式默认值时才会自动调整本地 provider。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#api-超时"
+    },
+    {
+      "id": "cfg-上下文压力警告",
+      "kind": "config",
+      "title": "上下文压力警告",
+      "summary": "与迭代预算压力分开，上下文压力跟踪对话距压缩阈值有多近 —— 即上下文压缩触发以摘要旧消息的点。这有助于您和 agent 了解对话何时变长。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#上下文压力警告"
+    },
+    {
+      "id": "cfg-凭据池策略",
+      "kind": "config",
+      "title": "凭据池策略",
+      "summary": "当您为同一 provider 拥有多个 API 密钥或 OAuth token 时，配置轮换策略：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#凭据池策略"
+    },
+    {
+      "id": "cfg-prompt-缓存",
+      "kind": "config",
+      "title": "Prompt 缓存",
+      "summary": "当活跃 provider 支持时，Hermes 自动开启跨会话 prompt 缓存 —— 无需用户配置。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#prompt-缓存"
+    },
+    {
+      "id": "cfg-辅助模型",
+      "kind": "config",
+      "title": "辅助模型",
+      "summary": "Hermes 使用\"辅助\"模型处理图像分析、浏览器截图分析、会话标题生成和上下文压缩等附带任务。默认情况下（auxiliary.*.provider: \"auto\"），Hermes 将每个辅助任务路由到您的主聊天模型 —— 与您在 hermes model 中选择的相同 pro…",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#辅助模型"
+    },
+    {
+      "id": "cfg-交互式配置辅助模型",
+      "kind": "config",
+      "title": "交互式配置辅助模型",
+      "summary": "无需手动编辑 YAML，运行 hermes model 并从菜单中选择\"配置辅助模型\"。您将获得交互式的每任务选择器：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#交互式配置辅助模型"
+    },
+    {
+      "id": "cfg-视频教程",
+      "kind": "config",
+      "title": "视频教程",
+      "summary": "<div style={{position: 'relative', width: '100%', aspectRatio: '16 / 9', marginBottom: '1.5rem'}}> <iframe src=\"https://www.youtube.com/emb…",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#视频教程"
+    },
+    {
+      "id": "cfg-通用配置模式",
+      "kind": "config",
+      "title": "通用配置模式",
+      "summary": "Hermes 中的每个模型槽位 —— 辅助任务、压缩、回退 —— 使用相同的三个旋钮：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#通用配置模式"
+    },
+    {
+      "id": "cfg-完整辅助配置参考",
+      "kind": "config",
+      "title": "完整辅助配置参考",
+      "summary": "provider、model、base_url",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#完整辅助配置参考"
+    },
+    {
+      "id": "cfg-辅助任务的每任务回退链",
+      "kind": "config",
+      "title": "辅助任务的每任务回退链",
+      "summary": "每个辅助任务都可以选择性地定义一个 fallback_chain —— 一个 provider/model 条目列表，当主要辅助 provider 因速率限制、网络连接问题或付费限制而失败时，Hermes 会尝试使用该列表：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#辅助任务的每任务回退链"
+    },
+    {
+      "id": "cfg-openrouter-路由和辅助任务的-pareto-code",
+      "kind": "config",
+      "title": "OpenRouter 路由和辅助任务的 Pareto Code",
+      "summary": "当辅助任务解析到 OpenRouter（显式或通过 provider: \"main\" 而您的主 agent 在 OpenRouter 上）时，主 agent 的 provider_routing 和 openrouter.min_coding_score 设置不会传播 —— 按…",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#openrouter-路由和辅助任务的-pareto-code"
+    },
+    {
+      "id": "cfg-更改视觉模型",
+      "kind": "config",
+      "title": "更改视觉模型",
+      "summary": "使用 GPT-4o 而非 Gemini Flash 进行图像分析：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#更改视觉模型"
+    },
+    {
+      "id": "cfg-provider-选项",
+      "kind": "config",
+      "title": "Provider 选项",
+      "summary": "这些选项适用于辅助任务配置（auxiliary:、compression:、fallback_model:），而非您的主 model.provider 设置。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#provider-选项"
+    },
+    {
+      "id": "cfg-常见设置",
+      "kind": "config",
+      "title": "常见设置",
+      "summary": "使用直接自定义端点（比 provider: \"main\" 对本地/自托管 API 更清晰）：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#常见设置"
+    },
+    {
+      "id": "cfg-环境变量旧版",
+      "kind": "config",
+      "title": "环境变量（旧版）",
+      "summary": "辅助模型也可以通过环境变量配置。但是，config.yaml 是首选方法 —— 它更易于管理，并支持所有选项，包括 base_url 和 api_key。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#环境变量旧版"
+    },
+    {
+      "id": "cfg-推理努力程度",
+      "kind": "config",
+      "title": "推理努力程度",
+      "summary": "控制模型在响应前进行多少\"思考\"：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#推理努力程度"
+    },
+    {
+      "id": "cfg-工具使用强制",
+      "kind": "config",
+      "title": "工具使用强制",
+      "summary": "某些模型偶尔会将预期操作描述为文本而不是进行工具调用（\"我会运行测试...\"而不是实际调用终端）。工具使用强制会注入系统提示词指导，引导模型实际调用工具。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#工具使用强制"
+    },
+    {
+      "id": "cfg-注入的内容",
+      "kind": "config",
+      "title": "注入的内容",
+      "summary": "启用后，系统提示词中可能会添加三层指导：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#注入的内容"
+    },
+    {
+      "id": "cfg-何时开启",
+      "kind": "config",
+      "title": "何时开启",
+      "summary": "如果您使用的模型不在默认自动列表中，并注意到它经常描述它会做什么而不是实际去做，请设置 tool_use_enforcement: true 或将模型子字符串添加到列表中：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#何时开启"
+    },
+    {
+      "id": "cfg-tts-配置",
+      "kind": "config",
+      "title": "TTS 配置",
+      "summary": "这控制 text_to_speech 工具和语音模式中的口语回复（CLI 中的 /voice tts 或消息 gateway）。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#tts-配置"
+    },
+    {
+      "id": "cfg-显示设置",
+      "kind": "config",
+      "title": "显示设置",
+      "summary": "tool_progress、tool_progress_command、platforms",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#显示设置"
+    },
+    {
+      "id": "cfg-文件变更验证器",
+      "kind": "config",
+      "title": "文件变更验证器",
+      "summary": "当 display.file_mutation_verifier 为 true（默认）时，每当本轮中 write_file 或 patch 调用失败且从未被对同一路径的成功写入取代时，Hermes 会在 assistant 的最终响应中附加一行建议。这捕获了\"批量并行补丁，一半…",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#文件变更验证器"
+    },
+    {
+      "id": "cfg-静态消息的-ui-语言",
+      "kind": "config",
+      "title": "静态消息的 UI 语言",
+      "summary": "display.language 设置翻译一小组静态面向用户的消息 —— CLI 审批提示、少数 gateway 斜杠命令回复（例如重启排空通知、\"审批已过期\"、\"目标已清除\"）。它不翻译 agent 响应、日志行、工具输出、错误回溯或斜杠命令描述 —— 这些保持英文。如果您希…",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#静态消息的-ui-语言"
+    },
+    {
+      "id": "cfg-运行时元数据页脚仅限-gateway",
+      "kind": "config",
+      "title": "运行时元数据页脚（仅限 gateway）",
+      "summary": "当 display.runtime_footer.enabled: true 时，Hermes 在每个 gateway 轮次的最终消息中附加一个小型运行时上下文页脚。目前页脚可显示模型、上下文窗口百分比和当前工作目录。默认关闭；如果您的团队希望每个回复都包含这些来源信息，请按 …",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#运行时元数据页脚仅限-gateway"
+    },
+    {
+      "id": "cfg-每平台进度覆盖",
+      "kind": "config",
+      "title": "每平台进度覆盖",
+      "summary": "不同平台有不同的详细程度需求。例如，Signal 无法编辑消息，因此每次进度更新都会成为单独的消息 —— 很嘈杂。使用 display.platforms 设置每平台模式：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#每平台进度覆盖"
+    },
+    {
+      "id": "cfg-隐私",
+      "kind": "config",
+      "title": "隐私",
+      "summary": "当 redact_pii 为 true 时，gateway 在将系统提示词发送到受支持平台上的 LLM 之前，会从中删除个人身份信息：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#隐私"
+    },
+    {
+      "id": "cfg-语音转文字stt",
+      "kind": "config",
+      "title": "语音转文字（STT）",
+      "summary": "如果请求的 provider 不可用，Hermes 按此顺序自动回退：local → groq → openai。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#语音转文字stt"
+    },
+    {
+      "id": "cfg-语音模式cli",
+      "kind": "config",
+      "title": "语音模式（CLI）",
+      "summary": "在 CLI 中使用 /voice on 启用麦克风模式，使用 record_key 开始/停止录音，使用 /voice tts 切换口语回复。端到端设置和平台特定行为请参阅语音模式。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#语音模式cli"
+    },
+    {
+      "id": "cfg-流式传输",
+      "kind": "config",
+      "title": "流式传输",
+      "summary": "将 token 实时流式传输到终端或消息平台，而不是等待完整响应。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#流式传输"
+    },
+    {
+      "id": "cfg-cli-流式传输",
+      "kind": "config",
+      "title": "CLI 流式传输",
+      "summary": "启用后，响应在流式传输框内逐 token 出现。工具调用仍然静默捕获。如果 provider 不支持流式传输，它会自动回退到正常显示。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#cli-流式传输"
+    },
+    {
+      "id": "cfg-gateway-流式传输telegramdiscordslack",
+      "kind": "config",
+      "title": "Gateway 流式传输（Telegram、Discord、Slack）",
+      "summary": "启用后，bot 在第一个 token 时发送消息，然后随着更多 token 到来渐进式编辑它。不支持消息编辑的平台（Signal、Email、Home Assistant）在第一次尝试时自动检测 —— 该会话的流式传输被优雅地禁用，不会产生大量消息。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#gateway-流式传输telegramdiscordslack"
+    },
+    {
+      "id": "cfg-群聊会话隔离",
+      "kind": "config",
+      "title": "群聊会话隔离",
+      "summary": "控制共享聊天是每个房间保持一个对话还是每个参与者一个对话：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#群聊会话隔离"
+    },
+    {
+      "id": "cfg-未授权-dm-行为",
+      "kind": "config",
+      "title": "未授权 DM 行为",
+      "summary": "控制当未知用户发送私信时 Hermes 的行为：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#未授权-dm-行为"
+    },
+    {
+      "id": "cfg-快速命令",
+      "kind": "config",
+      "title": "快速命令",
+      "summary": "定义自定义命令，这些命令要么在不调用 LLM 的情况下运行 shell 命令，要么将一个斜杠命令别名为另一个。Exec 快速命令是零 token 的，对于从消息平台（Telegram、Discord 等）进行快速服务器检查或实用脚本很有用。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#快速命令"
+    },
+    {
+      "id": "cfg-人类延迟",
+      "kind": "config",
+      "title": "人类延迟",
+      "summary": "在消息平台中模拟类人响应节奏：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#人类延迟"
+    },
+    {
+      "id": "cfg-代码执行",
+      "kind": "config",
+      "title": "代码执行",
+      "summary": "配置 execute_code 工具：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#代码执行"
+    },
+    {
+      "id": "cfg-web-搜索后端",
+      "kind": "config",
+      "title": "Web 搜索后端",
+      "summary": "web_search 和 web_extract 工具支持五种后端 provider。在 config.yaml 中或通过 hermes tools 配置后端：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#web-搜索后端"
+    },
+    {
+      "id": "cfg-浏览器",
+      "kind": "config",
+      "title": "浏览器",
+      "summary": "完整对话框工作流请参阅浏览器功能页面。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#浏览器"
+    },
+    {
+      "id": "cfg-时区",
+      "kind": "config",
+      "title": "时区",
+      "summary": "使用 IANA 时区字符串覆盖服务器本地时区。影响日志中的时间戳、cron 调度和系统提示词时间注入。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#时区"
+    },
+    {
+      "id": "cfg-discord",
+      "kind": "config",
+      "title": "Discord",
+      "summary": "为消息 gateway 配置 Discord 特定行为：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#discord"
+    },
+    {
+      "id": "cfg-安全",
+      "kind": "config",
+      "title": "安全",
+      "summary": "预执行安全扫描和机密脱敏：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#安全"
+    },
+    {
+      "id": "cfg-网站黑名单",
+      "kind": "config",
+      "title": "网站黑名单",
+      "summary": "阻止 agent 的 web 和浏览器工具访问特定域名：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#网站黑名单"
+    },
+    {
+      "id": "cfg-智能审批",
+      "kind": "config",
+      "title": "智能审批",
+      "summary": "控制 Hermes 如何处理潜在危险命令：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#智能审批"
+    },
+    {
+      "id": "cfg-检查点",
+      "kind": "config",
+      "title": "检查点",
+      "summary": "破坏性文件操作之前的自动文件系统快照。详情请参阅检查点与回滚。",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#检查点"
+    },
+    {
+      "id": "cfg-委托",
+      "kind": "config",
+      "title": "委托",
+      "summary": "为委托工具配置子 agent 行为：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#委托"
+    },
+    {
+      "id": "cfg-澄清",
+      "kind": "config",
+      "title": "澄清",
+      "summary": "timeout",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#澄清"
+    },
+    {
+      "id": "cfg-上下文文件soulmdagentsmd",
+      "kind": "config",
+      "title": "上下文文件（SOUL.md、AGENTS.md）",
+      "summary": "Hermes 使用两种不同的上下文范围：",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration#上下文文件soulmdagentsmd"
+    },
+    {
+      "id": "tool-browser-工具集",
+      "kind": "tool",
+      "title": "browser 工具集",
+      "summary": "10 个工具 · browser_back、browser_click、browser_console、browser_get_images",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#browser-工具集"
+    },
+    {
+      "id": "tool-browser-工具集cdp-门控工具",
+      "kind": "tool",
+      "title": "browser 工具集（CDP 门控工具）",
+      "summary": "2 个工具 · browser_cdp、browser_dialog",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#browser-工具集cdp-门控工具"
+    },
+    {
+      "id": "tool-clarify-工具集",
+      "kind": "tool",
+      "title": "clarify 工具集",
+      "summary": "1 个工具 · clarify",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#clarify-工具集"
+    },
+    {
+      "id": "tool-codeexecution-工具集",
+      "kind": "tool",
+      "title": "code_execution 工具集",
+      "summary": "1 个工具 · execute_code",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#codeexecution-工具集"
+    },
+    {
+      "id": "tool-cronjob-工具集",
+      "kind": "tool",
+      "title": "cronjob 工具集",
+      "summary": "1 个工具 · cronjob",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#cronjob-工具集"
+    },
+    {
+      "id": "tool-delegation-工具集",
+      "kind": "tool",
+      "title": "delegation 工具集",
+      "summary": "1 个工具 · delegate_task",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#delegation-工具集"
+    },
+    {
+      "id": "tool-feishudoc-工具集",
+      "kind": "tool",
+      "title": "feishu_doc 工具集",
+      "summary": "1 个工具 · feishu_doc_read",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#feishudoc-工具集"
+    },
+    {
+      "id": "tool-feishudrive-工具集",
+      "kind": "tool",
+      "title": "feishu_drive 工具集",
+      "summary": "4 个工具 · feishu_drive_add_comment、feishu_drive_list_comments、feishu_drive_list_comment_replies、feishu_drive_reply_comment",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#feishudrive-工具集"
+    },
+    {
+      "id": "tool-file-工具集",
+      "kind": "tool",
+      "title": "file 工具集",
+      "summary": "4 个工具 · patch、read_file、search_files、write_file",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#file-工具集"
+    },
+    {
+      "id": "tool-homeassistant-工具集",
+      "kind": "tool",
+      "title": "homeassistant 工具集",
+      "summary": "4 个工具 · ha_call_service、ha_get_state、ha_list_entities、ha_list_services",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#homeassistant-工具集"
+    },
+    {
+      "id": "tool-computeruse-工具集",
+      "kind": "tool",
+      "title": "computer_use 工具集",
+      "summary": "1 个工具 · computer_use",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#computeruse-工具集"
+    },
+    {
+      "id": "tool-imagegen-工具集",
+      "kind": "tool",
+      "title": "image_gen 工具集",
+      "summary": "1 个工具 · image_generate",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#imagegen-工具集"
+    },
+    {
+      "id": "tool-kanban-工具集",
+      "kind": "tool",
+      "title": "kanban 工具集",
+      "summary": "9 个工具 · kanban_show、kanban_list、kanban_complete、kanban_block",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#kanban-工具集"
+    },
+    {
+      "id": "tool-memory-工具集",
+      "kind": "tool",
+      "title": "memory 工具集",
+      "summary": "1 个工具 · memory",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#memory-工具集"
+    },
+    {
+      "id": "tool-messaging-工具集",
+      "kind": "tool",
+      "title": "messaging 工具集",
+      "summary": "1 个工具 · send_message",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#messaging-工具集"
+    },
+    {
+      "id": "tool-sessionsearch-工具集",
+      "kind": "tool",
+      "title": "session_search 工具集",
+      "summary": "1 个工具 · session_search",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#sessionsearch-工具集"
+    },
+    {
+      "id": "tool-skills-工具集",
+      "kind": "tool",
+      "title": "skills 工具集",
+      "summary": "3 个工具 · skill_manage、skill_view、skills_list",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#skills-工具集"
+    },
+    {
+      "id": "tool-terminal-工具集",
+      "kind": "tool",
+      "title": "terminal 工具集",
+      "summary": "2 个工具 · process、terminal",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#terminal-工具集"
+    },
+    {
+      "id": "tool-todo-工具集",
+      "kind": "tool",
+      "title": "todo 工具集",
+      "summary": "1 个工具 · todo",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#todo-工具集"
+    },
+    {
+      "id": "tool-vision-工具集",
+      "kind": "tool",
+      "title": "vision 工具集",
+      "summary": "1 个工具 · vision_analyze",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#vision-工具集"
+    },
+    {
+      "id": "tool-video-工具集",
+      "kind": "tool",
+      "title": "video 工具集",
+      "summary": "1 个工具 · video_analyze",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#video-工具集"
+    },
+    {
+      "id": "tool-videogen-工具集",
+      "kind": "tool",
+      "title": "video_gen 工具集",
+      "summary": "1 个工具 · video_generate",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#videogen-工具集"
+    },
+    {
+      "id": "tool-web-工具集",
+      "kind": "tool",
+      "title": "web 工具集",
+      "summary": "2 个工具 · web_search、web_extract",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#web-工具集"
+    },
+    {
+      "id": "tool-xsearch-工具集",
+      "kind": "tool",
+      "title": "x_search 工具集",
+      "summary": "1 个工具 · x_search",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#xsearch-工具集"
+    },
+    {
+      "id": "tool-tts-工具集",
+      "kind": "tool",
+      "title": "tts 工具集",
+      "summary": "1 个工具 · text_to_speech",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#tts-工具集"
+    },
+    {
+      "id": "tool-discord-工具集",
+      "kind": "tool",
+      "title": "discord 工具集",
+      "summary": "1 个工具 · discord",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#discord-工具集"
+    },
+    {
+      "id": "tool-discordadmin-工具集",
+      "kind": "tool",
+      "title": "discord_admin 工具集",
+      "summary": "1 个工具 · discord_admin",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#discordadmin-工具集"
+    },
+    {
+      "id": "tool-spotify-工具集",
+      "kind": "tool",
+      "title": "spotify 工具集",
+      "summary": "7 个工具 · spotify_playback、spotify_devices、spotify_queue、spotify_search",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#spotify-工具集"
+    },
+    {
+      "id": "tool-hermes-yuanbao-工具集",
+      "kind": "tool",
+      "title": "hermes-yuanbao 工具集",
+      "summary": "5 个工具 · yb_query_group_info、yb_query_group_members、yb_send_dm、yb_search_sticker",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference#hermes-yuanbao-工具集"
+    },
+    {
+      "id": "provider-nous-portal",
+      "kind": "provider",
+      "title": "Nous Portal",
+      "summary": "hermes model（OAuth，订阅制）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-openai-codex",
+      "kind": "provider",
+      "title": "OpenAI Codex",
+      "summary": "hermes model → ChatGPT or Codex Subscription（ChatGPT OAuth，使用 Codex 模型）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-github-copilot",
+      "kind": "provider",
+      "title": "GitHub Copilot",
+      "summary": "hermes model（OAuth 设备码流程，COPILOT_GITHUB_TOKEN、GH_TOKEN 或 gh auth token）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-github-copilot-acp",
+      "kind": "provider",
+      "title": "GitHub Copilot ACP",
+      "summary": "hermes model（在本地生成 copilot --acp --stdio 子进程）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-anthropic",
+      "kind": "provider",
+      "title": "Anthropic",
+      "summary": "hermes model（Claude Max + 额外用量积分，通过 OAuth；也支持 Anthropic API key 或手动 setup-token——见下方说明）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-openrouter",
+      "kind": "provider",
+      "title": "OpenRouter",
+      "summary": "~/.hermes/.env 中的 OPENROUTER_API_KEY",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-novitaai",
+      "kind": "provider",
+      "title": "NovitaAI",
+      "summary": "~/.hermes/.env 中的 NOVITA_API_KEY（provider: novita，200+ 模型，Model API、Agent Sandbox、GPU Cloud）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-ai-gateway",
+      "kind": "provider",
+      "title": "AI Gateway",
+      "summary": "~/.hermes/.env 中的 AI_GATEWAY_API_KEY（provider: ai-gateway）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-z-ai-glm",
+      "kind": "provider",
+      "title": "z.ai / GLM",
+      "summary": "~/.hermes/.env 中的 GLM_API_KEY（provider: zai）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-kimi-moonshot",
+      "kind": "provider",
+      "title": "Kimi / Moonshot",
+      "summary": "~/.hermes/.env 中的 KIMI_API_KEY（provider: kimi-coding）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-kimi-moonshot-",
+      "kind": "provider",
+      "title": "Kimi / Moonshot（中国）",
+      "summary": "~/.hermes/.env 中的 KIMI_CN_API_KEY（provider: kimi-coding-cn；别名：kimi-cn、moonshot-cn）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-arcee-ai",
+      "kind": "provider",
+      "title": "Arcee AI",
+      "summary": "~/.hermes/.env 中的 ARCEEAI_API_KEY（provider: arcee；别名：arcee-ai、arceeai）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-gmi-cloud",
+      "kind": "provider",
+      "title": "GMI Cloud",
+      "summary": "~/.hermes/.env 中的 GMI_API_KEY（provider: gmi；别名：gmi-cloud、gmicloud）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-minimax",
+      "kind": "provider",
+      "title": "MiniMax",
+      "summary": "~/.hermes/.env 中的 MINIMAX_API_KEY（provider: minimax）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-minimax-",
+      "kind": "provider",
+      "title": "MiniMax 中国",
+      "summary": "~/.hermes/.env 中的 MINIMAX_CN_API_KEY（provider: minimax-cn）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-xai-grok-responses-api",
+      "kind": "provider",
+      "title": "xAI（Grok）— Responses API",
+      "summary": "~/.hermes/.env 中的 XAI_API_KEY（provider: xai）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-xai-grok-oauth-supergrok-",
+      "kind": "provider",
+      "title": "xAI Grok OAuth（SuperGrok）",
+      "summary": "hermes model → \"xAI Grok OAuth (SuperGrok / Premium+)\"——浏览器登录，无需 API key。参见指南",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-qwen-cloud-dashscope-",
+      "kind": "provider",
+      "title": "Qwen Cloud（阿里 DashScope）",
+      "summary": "~/.hermes/.env 中的 DASHSCOPE_API_KEY（provider: alibaba）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider--coding-plan-",
+      "kind": "provider",
+      "title": "阿里云（Coding Plan）",
+      "summary": "DASHSCOPE_API_KEY（provider: alibaba-coding-plan，别名：alibaba_coding）——独立计费 SKU，不同端点",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-kilo-code",
+      "kind": "provider",
+      "title": "Kilo Code",
+      "summary": "~/.hermes/.env 中的 KILOCODE_API_KEY（provider: kilocode）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider--mimo",
+      "kind": "provider",
+      "title": "小米 MiMo",
+      "summary": "~/.hermes/.env 中的 XIAOMI_API_KEY（provider: xiaomi，别名：mimo、xiaomi-mimo）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider--tokenhub",
+      "kind": "provider",
+      "title": "腾讯 TokenHub",
+      "summary": "~/.hermes/.env 中的 TOKENHUB_API_KEY（provider: tencent-tokenhub，别名：tencent、tokenhub、tencentmaas）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-opencode-zen",
+      "kind": "provider",
+      "title": "OpenCode Zen",
+      "summary": "~/.hermes/.env 中的 OPENCODE_ZEN_API_KEY（provider: opencode-zen）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-opencode-go",
+      "kind": "provider",
+      "title": "OpenCode Go",
+      "summary": "~/.hermes/.env 中的 OPENCODE_GO_API_KEY（provider: opencode-go）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-deepseek",
+      "kind": "provider",
+      "title": "DeepSeek",
+      "summary": "~/.hermes/.env 中的 DEEPSEEK_API_KEY（provider: deepseek）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-hugging-face",
+      "kind": "provider",
+      "title": "Hugging Face",
+      "summary": "~/.hermes/.env 中的 HF_TOKEN（provider: huggingface，别名：hf）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-google-gemini",
+      "kind": "provider",
+      "title": "Google / Gemini",
+      "summary": "~/.hermes/.env 中的 GOOGLE_API_KEY（或 GEMINI_API_KEY）（provider: gemini）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider-lm-studio",
+      "kind": "provider",
+      "title": "LM Studio",
+      "summary": "hermes model → \"LM Studio\"（provider: lmstudio，可选 LM_API_KEY）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    },
+    {
+      "id": "provider--",
+      "kind": "provider",
+      "title": "自定义端点",
+      "summary": "hermes model → 选择\"Custom endpoint\"（保存在 config.yaml）",
+      "url": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers#推理提供商"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+import { Callout } from '../../components/ui/Callout'
+
+这一步要解决的是「**四个概念到底谁管什么**」，然后把这四个值配对，让 Hermes 能连上课程或教师提供的模型服务。
+
+### 四个概念的关系
+
+| 概念 | 回答的问题 | 写在哪里 |
+|---|---|---|
+| **Provider** | 去哪里请求模型（谁提供推理服务） | `config.yaml` 的 `model.provider` |
+| **Model** | 用哪一个具体模型 | `config.yaml` 的 `model.default` |
+| **Base URL** | 请求发往哪个端点（自建/课程端点必需） | `config.yaml` 的 `model.base_url` |
+| **API Key** | 用什么凭据证明你有权限 | `~/.hermes/.env` 里的环境变量 |
+
+一句话记忆：**Provider 和 Model 决定「找谁、用哪个」，Base URL 决定「发到哪」，API Key 决定「凭什么」。**
+
+### 两条认证路线
+
+官方文档里的 provider 分成两类：
+
+- **OAuth 订阅类**：如 Nous Portal、OpenAI Codex、Anthropic、GitHub Copilot、xAI Grok OAuth。走 `hermes model`，浏览器登录，**不需要** API key。
+- **API Key 类**：如 OpenRouter、DeepSeek、Kimi/Moonshot、GLM/z.ai、MiniMax、Qwen/DashScope、GMI Cloud、NovitaAI 等。密钥写进 `~/.hermes/.env`。
+
+常见的 API Key 写法如下（密钥只出现在 `.env`）：
+
+```bash
+# ~/.hermes/.env
+OPENROUTER_API_KEY=你的密钥
+DEEPSEEK_API_KEY=你的密钥
+KIMI_API_KEY=你的密钥
+DASHSCOPE_API_KEY=你的密钥
+```
+
+### 写进 config.yaml 的字段
+
+官方在「配置模型」文档里给出了保存后真实写入 `config.yaml` 的形状：
+
+```yaml
+model:
+  provider: openrouter
+  default: anthropic/claude-opus-4.7
+  base_url: ''        # 切换 provider 时会被清空
+  api_mode: chat_completions
+```
+
+如果是课程提供的、或你自己搭的 OpenAI 兼容端点（VLLM、SGLang、Ollama、LM Studio 等），填上 `base_url`：
+
+```yaml
+model:
+  provider: custom
+  default: qwen3-coder
+  base_url: 'http://127.0.0.1:8000/v1'
+  api_mode: chat_completions
+```
+
+<Callout tone="tip" title="更简单的方式">
+`hermes config set` 会自动路由：密钥进 `.env`，其余进 `config.yaml`。
+
+```bash
+hermes config set model openrouter/anthropic-claude-opus-4.7
+hermes config set OPENROUTER_API_KEY sk-or-...
+```
+</Callout>
+
+### 自定义端点的三个检查点
+
+自己搭端点时，失败几乎都出在这三处：
+
+1. **Base URL** 必须是完整的 `http(s)://` 地址，通常还要带 `/v1` 后缀
+2. **模型名**必须与端点 `/v1/models` 返回的 ID 完全一致
+3. **上下文长度**必须 ≥ 64K，否则启动即被拒绝
+
+### 改完之后什么时候生效
+
+- **CLI（`hermes chat`）**：下次执行时生效
+- **Gateway（Telegram、Discord 等）**：下一个*新*会话生效；现有会话保持原模型
+- **需要的会话内热切换**：用 `/model` 斜杠命令
+
+配置变更**不会**让运行中会话的 prompt 缓存失效——这是官方的有意设计。

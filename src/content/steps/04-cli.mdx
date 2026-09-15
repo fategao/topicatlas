@@ -1,0 +1,68 @@
+import { Callout } from '../../components/ui/Callout'
+
+CLI 是 Hermes 的主界面。这一步的目标很具体：**用五条斜杠命令回答五个最常被问到的问题**。
+
+### 两种终端界面
+
+```bash
+hermes            # 经典 CLI（prompt_toolkit）
+hermes --tui      # 现代 TUI：模态覆盖层、鼠标选择、非阻塞输入
+```
+
+两者共享同一份会话、斜杠命令与配置，可以随时换着用。
+
+### 五条必会命令
+
+| 命令 | 回答的问题 | 说明 |
+|---|---|---|
+| `/help` | 我有哪些命令？ | 显示命令帮助；输入 `/` 会弹出自动补全下拉菜单 |
+| `/model` | 我现在用的是哪个模型？ | 显示或更改当前模型（会话内热切换） |
+| `/tools` | 我有哪些工具？ | 列出当前会话可用的工具 |
+| `/status` | 我这次会话什么状态？ | 模型 / 配置 / token / 时长，外加一份本地计算的会话摘要 |
+| `/context [all]` | 上下文还剩多少？ | 字形方块网格 + 分类 token 表 |
+
+其中两个值的展开说明：
+
+**`/status`** 除了模型与 token 信息，还会给出一块**会话摘要**：近期轮次数、常用工具、涉及文件、最新用户 prompt 与助手回复。它是纯本地计算，不调用 LLM，因此不会额外花钱，也不影响 prompt 缓存。
+
+**`/context`**（别名 `/ctx`）给出上下文占用的可视化分解：系统提示词、工具定义、规则、技能索引、MCP、子 agent、记忆、对话各占多少，以及剩余空间；`/context all` 会再加上每个技能与工具集的开销。在消息平台上则显示用量仪表与自动压缩阈值。
+
+<Callout tone="tip" title="命令不区分大小写">
+`/HELP` 与 `/help` 等价。已安装的 skill 也会自动变成斜杠命令。
+</Callout>
+
+### 交互细节，能省不少时间
+
+**多行输入**：`Alt+Enter`、`Ctrl+J` 在所有终端都可用；`Shift+Enter` 需要终端把它作为独立序列发送（Kitty / foot / WezTerm / Ghostty 默认支持）。
+
+**中断 Agent**：如果响应时间过长，直接输入新消息并按 Enter——这会中断当前任务并切到你的新指令；`Ctrl+C` 同样有效。
+
+**启动时预加载 skill**：
+
+```bash
+hermes -s hermes-agent-dev,github-auth
+hermes chat -s github-pr-workflow -s github-auth
+```
+
+### 自定义快捷命令
+
+不需要调用 LLM 的固定操作，可以做成快捷命令，在 CLI 和消息平台都能用：
+
+```yaml
+# ~/.hermes/config.yaml
+quick_commands:
+  status:
+    type: exec
+    command: systemctl status hermes-agent
+  restart:
+    type: alias
+    target: /gateway restart
+```
+
+### 从命令到子命令：完整参考
+
+上面五条是会话内的斜杠命令。会话外的命令（`hermes logs`、`hermes config`、`hermes gateway`、`hermes doctor`…）共 40 余条，每条都有用法、选项表与示例——已经结构化整理在页面下方的**速查参考 → CLI 命令**里，支持搜索，并带官方锚点。
+
+<Callout tone="info" title="怎么自查这一步">
+打开一个会话，依次输入 `/model`、`/tools`、`/status`、`/context`，把每条命令给出的关键信息用自己的话说一遍。能说清「当前模型是什么、有哪些工具、上下文用了多少」，这一步就通过了。
+</Callout>

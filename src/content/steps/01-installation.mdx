@@ -1,0 +1,87 @@
+import { Callout } from '../../components/ui/Callout'
+
+安装这一步只有两个目标：**装上去**，以及**确认 `hermes` 真的能跑起来**。官方把安装收敛成了一条路径，你不需要自己装 Python、Node.js、ripgrep、ffmpeg。
+
+### 先明确一件事：只有一种受支持的安装方式
+
+官方安装脚本会在 `~/.hermes/hermes-agent` 下创建一个受管理的隔离环境（uv 托管解释器 + venv），并把它作为**唯一受支持的安装方式**——包括开发用途。
+
+<Callout tone="warn" title="不要用 pip">
+请不要执行 `pip install hermes-agent`。源码安装与全局 pip 安装都不在官方支持范围内，出问题时会缺少安装器的依赖与 PATH 配置。
+</Callout>
+
+### 三个入口，按你的环境选
+
+**1. 桌面安装器（macOS / Windows，最省事）**
+
+从官网下载并运行 Hermes Desktop 安装器，它会同时装好命令行与桌面应用。Windows 上首次启动会在后台调用 `install.ps1` 配置依赖。
+
+**2. 一行脚本（Linux / macOS / WSL2 / Android Termux）**
+
+```bash
+curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+```
+
+**3. Windows 原生 PowerShell（不需要 WSL）**
+
+```powershell
+iex (irm https://hermes-agent.nousresearch.com/install.ps1)
+```
+
+Windows 原生安装的独特之处是它会顺带装一个**便携版 Git Bash**（PortableGit），并为 Hermes 设置 `HERMES_GIT_BASH_PATH`。它完全隔离在 `%LOCALAPPDATA%\hermes` 下，不会干扰系统里已有的 Git。
+
+### 安装程序替你做了什么
+
+它一次性处理完所有依赖与配置：
+
+- **依赖**：`uv`、Python 3.11、Node.js、`ripgrep`、`ffmpeg`
+- **仓库**：克隆到 `~/.hermes/hermes-agent`（Windows 原生为 `%LOCALAPPDATA%\hermes\hermes-agent`）
+- **环境**：创建虚拟环境
+- **命令**：把 `hermes` 加进 PATH
+- **Provider**：引导你完成 LLM 提供商配置
+
+你唯一需要提前确认的是 `git` 可用：
+
+```bash
+git --version
+```
+
+### 装完必须重载 shell
+
+这一步最容易被跳过。脚本新写入的 PATH 需要新的 shell 才会生效：
+
+```bash
+source ~/.bashrc   # 或 source ~/.zshrc
+hermes             # 开始聊天
+```
+
+Windows 原生安装则要**重启终端**（或打开一个新的 PowerShell 窗口）。
+
+### 怎么确认装好了
+
+```bash
+hermes doctor
+```
+
+`hermes doctor` 会诊断配置与依赖问题，并直接告诉你缺什么、怎么修。它同时会显示它检测到的安装方式（git 安装程序 / Docker / NixOS），后续 `hermes update` 会打印对应路径的更新命令。
+
+### 常见故障
+
+| 现象 | 原因 | 处理 |
+|---|---|---|
+| `hermes: command not found` | shell 没有重载，或 `~/.local/bin` 不在 PATH | `source ~/.bashrc`，或把 `~/.local/bin` 加入 PATH |
+| `API key not set` | 还没配置 provider | 运行 `hermes model`，或 `hermes config set OPENROUTER_API_KEY your_key` |
+| 更新后配置丢失 | 配置文件缺了新增项 | `hermes config check` 然后 `hermes config migrate` |
+
+### 平台差异要知道的两点
+
+- **Windows 原生 vs WSL2**：两者可以共存，数据互不干扰（原生在 `%LOCALAPPDATA%\hermes`，WSL2 在 `~/.hermes`）。唯一的例外是 dashboard 的 `/chat` 嵌入式终端面板**仅限 WSL2**，因为它需要 POSIX PTY。
+- **以服务账号运行**：只有 Playwright 的 `--with-deps` 需要 root。没有 sudo 时安装器会优雅降级，你只需要让管理员单独跑一次 `sudo npx playwright install-deps chromium`。
+
+<Callout tone="tip" title="最快路径：Nous Portal">
+一个订阅涵盖 300+ 个模型与 Tool Gateway（网页搜索、图像生成、TTS、云端浏览器），不用逐个管理密钥：
+
+```bash
+hermes setup --portal
+```
+</Callout>

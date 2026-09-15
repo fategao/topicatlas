@@ -1,0 +1,210 @@
+{
+  "repo": "NousResearch/hermes-agent",
+  "repoUrl": "https://github.com/NousResearch/hermes-agent",
+  "ref": "main",
+  "commitSha": "1d8af13e4ddebc02bcb514a235c9719efda91904",
+  "commitUrl": "https://github.com/NousResearch/hermes-agent/commit/1d8af13e4ddebc02bcb514a235c9719efda91904",
+  "license": "MIT",
+  "fetchedAt": "2026-09-15T07:16:13.350Z",
+  "fileCount": 22,
+  "files": [
+    {
+      "id": "installation",
+      "step": 1,
+      "zh": {
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/getting-started/installation.md",
+        "snapshot": "content/upstream/zh/getting-started/installation.md",
+        "sha": "87804be07ce52bea3ed1caa2fb18a187d9aeb091",
+        "size": 12049
+      },
+      "en": {
+        "file": "website/docs/getting-started/installation.md",
+        "snapshot": "content/upstream/en/getting-started/installation.md",
+        "sha": "91e6205623a6fb75ff540a98867ae5fc7186f595",
+        "size": 11228
+      },
+      "zhUrl": "https://hermes-agent.nousresearch.com/docs/zh-Hans/getting-started/installation",
+      "enUrl": "https://hermes-agent.nousresearch.com/docs/getting-started/installation"
+    },
+    {
+      "id": "quickstart",
+      "step": 2,
+      "zh": {
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/getting-started/quickstart.md",
+        "snapshot": "content/upstream/zh/getting-started/quickstart.md",
+        "sha": "135e5ee57979bce20c0dd6b59636652215e74701",
+        "size": 15090
+      },
+      "en": {
+        "file": "website/docs/getting-started/quickstart.md",
+        "snapshot": "content/upstream/en/getting-started/quickstart.md",
+        "sha": "3d424f0ae7543072e19470bd3bc81eb178a1e219",
+        "size": 20185
+      },
+      "zhUrl": "https://hermes-agent.nousresearch.com/docs/zh-Hans/getting-started/quickstart",
+      "enUrl": "https://hermes-agent.nousresearch.com/docs/getting-started/quickstart"
+    },
+    {
+      "id": "providers",
+      "step": 3,
+      "zh": {
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/integrations/providers.md",
+        "snapshot": "content/upstream/zh/integrations/providers.md",
+        "sha": "4a0513f519809c575dea8d66e0529de3c713118f",
+        "size": 64297
+      },
+      "en": {
+        "file": "website/docs/integrations/providers.md",
+        "snapshot": "content/upstream/en/integrations/providers.md",
+        "sha": "759aed3dac49d15bc9b80916ea9d371c60ba4639",
+        "size": 89241
+      },
+      "zhUrl": "https://hermes-agent.nousresearch.com/docs/zh-Hans/integrations/providers",
+      "enUrl": "https://hermes-agent.nousresearch.com/docs/integrations/providers"
+    },
+    {
+      "id": "cli",
+      "step": 4,
+      "zh": {
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/user-guide/cli.md",
+        "snapshot": "content/upstream/zh/user-guide/cli.md",
+        "sha": "f08c16ce4e1c77d33d4e221539aedf7ad89257ad",
+        "size": 18687
+      },
+      "en": {
+        "file": "website/docs/user-guide/cli.md",
+        "snapshot": "content/upstream/en/user-guide/cli.md",
+        "sha": "de96e94bee504fe60f24c1dbce23d854d861d274",
+        "size": 28621
+      },
+      "zhUrl": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/cli",
+      "enUrl": "https://hermes-agent.nousresearch.com/docs/user-guide/cli"
+    },
+    {
+      "id": "configuration",
+      "step": 5,
+      "zh": {
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/user-guide/configuration.md",
+        "snapshot": "content/upstream/zh/user-guide/configuration.md",
+        "sha": "45a87b7cb31acc6e457ec685127d20be3d861f29",
+        "size": 96784
+      },
+      "en": {
+        "file": "website/docs/user-guide/configuration.md",
+        "snapshot": "content/upstream/en/user-guide/configuration.md",
+        "sha": "fc70c52a3d8018feed0847d79a421a62b8346528",
+        "size": 204012
+      },
+      "zhUrl": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuration",
+      "enUrl": "https://hermes-agent.nousresearch.com/docs/user-guide/configuration"
+    },
+    {
+      "id": "tools",
+      "step": 6,
+      "zh": {
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/user-guide/features/tools.md",
+        "snapshot": "content/upstream/zh/user-guide/features/tools.md",
+        "sha": "dfa27715548379092cd4715807f921161bd686cf",
+        "size": 10453
+      },
+      "en": {
+        "file": "website/docs/user-guide/features/tools.md",
+        "snapshot": "content/upstream/en/user-guide/features/tools.md",
+        "sha": "94963855d89f18d1bba0233b5f13d9e6daaf0f69",
+        "size": 14555
+      },
+      "zhUrl": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/features/tools",
+      "enUrl": "https://hermes-agent.nousresearch.com/docs/user-guide/features/tools"
+    },
+    {
+      "id": "learning-path",
+      "step": 7,
+      "zh": {
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/getting-started/learning-path.md",
+        "snapshot": "content/upstream/zh/getting-started/learning-path.md",
+        "sha": "fe6bb448ff6c3d44d1c351896d4e66af22b07c81",
+        "size": 7964
+      },
+      "en": {
+        "file": "website/docs/getting-started/learning-path.md",
+        "snapshot": "content/upstream/en/getting-started/learning-path.md",
+        "sha": "0f6e9d85101cafaa5d88f09e56b6ebc1b10bac70",
+        "size": 9105
+      },
+      "zhUrl": "https://hermes-agent.nousresearch.com/docs/zh-Hans/getting-started/learning-path",
+      "enUrl": "https://hermes-agent.nousresearch.com/docs/getting-started/learning-path"
+    },
+    {
+      "id": "configuring-models",
+      "step": 3,
+      "zh": {
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/user-guide/configuring-models.md",
+        "snapshot": "content/upstream/zh/user-guide/configuring-models.md",
+        "sha": "58d31c7d560f0356747907f6f18a0a07dd537a1c",
+        "size": 12282
+      },
+      "en": {
+        "file": "website/docs/user-guide/configuring-models.md",
+        "snapshot": "content/upstream/en/user-guide/configuring-models.md",
+        "sha": "e2f501c8f0d5202cd203d64fae101162a630dc04",
+        "size": 25060
+      },
+      "zhUrl": "https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/configuring-models",
+      "enUrl": "https://hermes-agent.nousresearch.com/docs/user-guide/configuring-models"
+    },
+    {
+      "id": "cli-commands",
+      "step": 0,
+      "zh": {
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/cli-commands.md",
+        "snapshot": "content/upstream/zh/reference/cli-commands.md",
+        "sha": "4271ae3d2a07a36ec5105018f7aca1e01cc049b2",
+        "size": 61268
+      },
+      "en": {
+        "file": "website/docs/reference/cli-commands.md",
+        "snapshot": "content/upstream/en/reference/cli-commands.md",
+        "sha": "1eca44ed404ee78aef4a632ec757b2edff4d514f",
+        "size": 108905
+      },
+      "zhUrl": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/cli-commands",
+      "enUrl": "https://hermes-agent.nousresearch.com/docs/reference/cli-commands"
+    },
+    {
+      "id": "tools-reference",
+      "step": 0,
+      "zh": {
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/tools-reference.md",
+        "snapshot": "content/upstream/zh/reference/tools-reference.md",
+        "sha": "12c36c6f63cb15b4cb030b9ccc77ff0521208054",
+        "size": 21080
+      },
+      "en": {
+        "file": "website/docs/reference/tools-reference.md",
+        "snapshot": "content/upstream/en/reference/tools-reference.md",
+        "sha": "49cff5f2a0b392eaa8a9f5e068e9ede3c61233cc",
+        "size": 37097
+      },
+      "zhUrl": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/tools-reference",
+      "enUrl": "https://hermes-agent.nousresearch.com/docs/reference/tools-reference"
+    },
+    {
+      "id": "toolsets-reference",
+      "step": 0,
+      "zh": {
+        "file": "website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/reference/toolsets-reference.md",
+        "snapshot": "content/upstream/zh/reference/toolsets-reference.md",
+        "sha": "6a0f7391dd664cb2c4b6545cf5b2299f045a18a6",
+        "size": 10391
+      },
+      "en": {
+        "file": "website/docs/reference/toolsets-reference.md",
+        "snapshot": "content/upstream/en/reference/toolsets-reference.md",
+        "sha": "ba3051dac417f51fa1c09026541a1fd93c217370",
+        "size": 13575
+      },
+      "zhUrl": "https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/toolsets-reference",
+      "enUrl": "https://hermes-agent.nousresearch.com/docs/reference/toolsets-reference"
+    }
+  ]
+}

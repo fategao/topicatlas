@@ -1,0 +1,99 @@
+import { Callout } from '../../components/ui/Callout'
+
+这一步的验收点很清晰：**找到 `config.yaml` 与 `.env`，并能解释普通配置和 Secret 配置的区别**。
+
+### 目录职责：每个文件管一件事
+
+```text
+~/.hermes/
+├── config.yaml     # 设置（模型、终端、TTS、压缩等）
+├── .env            # API 密钥和机密
+├── auth.json       # OAuth provider 凭据（Nous Portal 等）
+├── SOUL.md         # 主要 agent 身份（系统提示词第 #1 槽位）
+├── memories/       # 持久记忆（MEMORY.md、USER.md）
+├── skills/         # Agent 创建的技能
+├── cron/           # 定时任务
+├── sessions/       # Gateway 会话
+└── logs/           # 日志（机密自动脱敏）
+```
+
+### 普通配置 vs Secret 配置
+
+这是本步最核心的一张判断表：
+
+| | 普通配置 | Secret 配置 |
+|---|---|---|
+| 放哪 | `~/.hermes/config.yaml` | `~/.hermes/.env` |
+| 举例 | 模型、终端后端、压缩设置、工具集、TTS | API Key、bot token、密码 |
+| 能否提交/分享 | 基本可以（注意脱敏） | **绝对不行** |
+| 在 config.yaml 里引用 | — | 支持 `${VAR_NAME}` 语法引用 |
+
+<Callout tone="warn" title="一句话结论">
+**机密（API Key、bot token、密码）必须放 `.env`；其他所有内容放 `config.yaml`。** 两者都设置时，`config.yaml` 对非机密设置优先；机密永远只来自 `.env`。
+</Callout>
+
+### 配置优先级（从高到低）
+
+1. **CLI 参数** — 例如 `hermes chat --model anthropic/claude-sonnet-4`，只覆盖这一次调用
+2. **`~/.hermes/config.yaml`** — 非机密设置的主配置文件
+3. **`~/.hermes/.env`** — 环境变量回退；机密必须在这里
+4. **内置默认值** — 什么都没设置时的硬编码安全默认值
+
+### 在 config.yaml 里引用环境变量
+
+想让配置文件里不出现明文密钥，可以用 `${VAR}` 语法引用 `.env` 中的值：
+
+```yaml
+auxiliary:
+  vision:
+    api_key: ${GOOGLE_API_KEY}
+    base_url: ${CUSTOM_VISION_URL}
+
+delegation:
+  api_key: ${DELEGATION_KEY}
+```
+
+单个值里可以有多个引用，例如 `url: "${HOST}:${PORT}"`。注意：**只支持 `${VAR}` 语法**，裸写的 `$VAR` 不会被展开；引用的变量不存在时，占位符会原样保留。
+
+### 用 CLI 管理配置
+
+```bash
+hermes config              # 查看当前配置
+hermes config edit         # 在编辑器中打开 config.yaml
+hermes config set KEY VAL  # 设置特定值
+hermes config check        # 检查缺失选项（更新后使用）
+hermes config migrate      # 交互式添加缺失选项
+
+# 示例
+hermes config set model anthropic/claude-opus-4
+hermes config set terminal.backend docker
+hermes config set OPENROUTER_API_KEY sk-or-...   # 保存到 .env
+```
+
+<Callout tone="tip" title="它会自动路由">
+`hermes config set` 会判断值的性质：API 密钥保存到 `.env`，其他所有内容保存到 `config.yaml`。所以你不必记住每个键该放哪个文件。
+</Callout>
+
+### 最常见的两处配置：终端后端与超时
+
+把命令放进隔离环境执行：
+
+```yaml
+terminal:
+  backend: docker    # 或 local / ssh / singularity / modal / daytona / vercel_sandbox
+  cwd: "."
+  timeout: 180
+```
+
+给 provider 设置请求超时（替代旧的 `HERMES_API_TIMEOUT`）：
+
+```yaml
+providers:
+  openrouter:
+    request_timeout_seconds: 600
+    models:
+      anthropic/claude-opus-4.7:
+        timeout_seconds: 900
+```
+
+页面下方的**速查参考 → 配置项**把官方 configuration 文档的全部小节与配置键做成了可搜索索引（84 个小节、273 个配置键），需要某个具体键名时直接搜。
