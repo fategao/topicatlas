@@ -31,12 +31,19 @@ async function main() {
   // 域名相关的三个文件统一由 site.config.json 生成，避免多处硬编码。
   const config = await loadSiteConfig(root)
   const artifacts = buildSiteArtifacts(config, SITE_ROUTES)
-  await writeFile(path.join(dist, 'CNAME'), artifacts.cname, 'utf8')
+  if (artifacts.cname) {
+    await writeFile(path.join(dist, 'CNAME'), artifacts.cname, 'utf8')
+  }
   await writeFile(path.join(dist, 'robots.txt'), artifacts.robots, 'utf8')
   await writeFile(path.join(dist, 'sitemap.xml'), artifacts.sitemap, 'utf8')
 
   console.log(
-    `postbuild: 已生成 dist/404.html（SPA 回退），并按 site.config.json 写入 CNAME / robots.txt / sitemap.xml（${artifacts.domain}）`,
+    [
+      'postbuild: 已生成 dist/404.html（SPA 回退）',
+      `域名 ${artifacts.domain}`,
+      artifacts.cname ? '已写入 CNAME' : '按配置跳过 CNAME（尚未绑定自定义域名）',
+      '已写入 robots.txt / sitemap.xml',
+    ].join('；'),
   )
 }
 

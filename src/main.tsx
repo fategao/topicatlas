@@ -12,7 +12,8 @@ if (!container) throw new Error('缺少 #root 容器')
 
 createRoot(container).render(
   <StrictMode>
-    <BrowserRouter>
+    {/* basename 跟随构建时的 base，保证项目页（/topicatlas/）下路由也能正常工作 */}
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <App />
     </BrowserRouter>
   </StrictMode>,

@@ -31,10 +31,13 @@
 
 ```bash
 npm install
-npm run dev        # 本地开发服务器
+npm run dev        # 开发服务器（热更新），http://localhost:5173
+npm start          # 一条命令：构建 + 起本地服务 + 自动打开浏览器 ← 只想看效果用这个
 npm run build      # tsc -b + vite build + SPA 404 回退
-npm run preview    # 预览生产构建（127.0.0.1:4173）
+npm run start:dist # 只起本地服务（不重新构建），http://127.0.0.1:4173
 ```
+
+> ⚠️ **不要直接双击 `dist/index.html`**。构建产物引用的是站点根路径（`/assets/...`），在 `file://` 协议下浏览器会把它解析成磁盘根目录（`D:/assets/...`）并因 CORS 拦截，结果是**整页白屏**。必须通过 http 打开：`npm start` 或 `npm run start:dist` 均可（`scripts/serve.mjs` 是零依赖本地服务器，并完整还原了 GitHub Pages 的 404 回退行为）。
 
 ## 内容管线
 
@@ -91,6 +94,17 @@ git -c http.proxy=http://127.0.0.1:<端口> push -u origin main
 ### 2. 开启 GitHub Pages
 
 仓库 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions**。之后每次推送到 `main`，`.github/workflows/deploy.yml` 会自动校验内容、跑测试、构建并发布。
+
+**还没买域名就先上线看效果？** 在仓库 **Settings → Secrets and variables → Actions → Variables** 加两个变量，站点就会正确跑在 `https://<用户名>.github.io/topicatlas/`：
+
+| 变量名 | 值 | 作用 |
+|---|---|---|
+| `BASE_PATH` | `/topicatlas` | 让资源路径带上仓库子路径前缀（切回域名时删掉） |
+| `SITE_CUSTOM_DOMAIN` | `false` | 不产出 `CNAME`，避免项目页被重定向到尚未注册的域名 |
+
+买好域名并把 DNS 配好后，**删掉这两个变量**再推一次，即可切回自定义域名模式。
+
+> ⚠️ 反过来也成立：如果域名还没解析好就把 `CNAME` 发上去，GitHub Pages 会认为你要用自定义域名，于是 `github.io` 地址会 301 到一个打不开的域名——表现就是"页面打不开"。
 
 ### 3. 配置自定义域名（Cloudflare）
 

@@ -23,7 +23,13 @@ const siteUrlPlugin = {
 }
 
 export default defineConfig({
-  base: '/',
+  /**
+   * 两种部署形态都支持：
+   * - 绑定自定义域名（最终形态）：base = '/'（默认）
+   * - 先用 GitHub Pages 项目地址 <user>.github.io/topicatlas：
+   *   构建时设 BASE_PATH=/topicatlas，否则资源会被解析到域名根目录而白屏。
+   */
+  base: process.env.BASE_PATH ?? '/',
   plugins: [
     siteUrlPlugin,
     {

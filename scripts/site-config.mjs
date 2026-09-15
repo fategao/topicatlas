@@ -30,23 +30,30 @@ export function normalizeConfig(raw = {}) {
       `site.config.json 里的 domain 不合法：${input || '(空)'}。应形如 topicatlas.dev，不要带协议或路径。`,
     )
   }
-  return { domain }
+  // customDomain=false 时不产出 CNAME：还没注册/还没绑定域名就部署时，
+  // CNAME 会让 GitHub Pages 把项目页重定向到一个不存在的域名。
+  return { domain, customDomain: raw.customDomain !== false }
 }
 
 export async function loadSiteConfig(baseDir = root) {
   const file = path.join(baseDir, 'site.config.json')
+  let raw = DEFAULT_CONFIG
   try {
-    const raw = JSON.parse(await readFile(file, 'utf8'))
-    return normalizeConfig(raw)
+    raw = JSON.parse(await readFile(file, 'utf8'))
   } catch (error) {
-    if (error.code === 'ENOENT') return normalizeConfig(DEFAULT_CONFIG)
-    throw error
+    if (error.code !== 'ENOENT') throw error
   }
+
+  // 环境变量覆盖：让同一份代码既能部署到项目页，也能部署到自定义域名。
+  const merged = { ...raw }
+  if (process.env.SITE_DOMAIN) merged.domain = process.env.SITE_DOMAIN
+  if (process.env.SITE_CUSTOM_DOMAIN === 'false') merged.customDomain = false
+  return normalizeConfig(merged)
 }
 
 /** 生成随构建产物发布的域名相关文件。 */
 export function buildSiteArtifacts(config, routes = SITE_ROUTES) {
-  const { domain } = normalizeConfig(config)
+  const { domain, customDomain } = normalizeConfig(config)
   const siteUrl = `https://${domain}`
 
   const locations = routes.map((route) => (route === '/' ? `${siteUrl}/` : `${siteUrl}${route}`))
@@ -70,8 +77,9 @@ export function buildSiteArtifacts(config, routes = SITE_ROUTES) {
 
   return {
     domain,
+    customDomain,
     siteUrl,
-    cname: `${domain}\n`,
+    cname: customDomain ? `${domain}\n` : null,
     robots,
     sitemap,
     replacements: {

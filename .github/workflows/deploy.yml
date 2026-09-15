@@ -32,6 +32,12 @@ jobs:
       - run: npm run lint
       - run: npm run test
       - run: npm run build
+        env:
+          # 尚未绑定自定义域名时，在仓库 Variables 里设 BASE_PATH=/topicatlas、
+          # SITE_CUSTOM_DOMAIN=false，即可正常跑在 <user>.github.io/<repo>/ 下；
+          # 绑好域名后把这两个变量删掉即可。
+          BASE_PATH: ${{ vars.BASE_PATH }}
+          SITE_CUSTOM_DOMAIN: ${{ vars.SITE_CUSTOM_DOMAIN }}
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

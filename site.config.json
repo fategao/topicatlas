@@ -1,3 +1,4 @@
 {
-  "domain": "topicatlas.dev"
+  "domain": "topicatlas.dev",
+  "customDomain": true
 }

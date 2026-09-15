@@ -35,4 +35,29 @@ describe('站点域名配置', () => {
     expect(() => normalizeConfig({ domain: 'not a domain' })).toThrow()
     expect(() => normalizeConfig({ domain: '' })).toThrow()
   })
+
+  it('默认认为要绑定自定义域名', () => {
+    expect(normalizeConfig({ domain: 'example.com' }).customDomain).toBe(true)
+  })
+
+  it('声明 customDomain=false 时不生成 CNAME，避免把项目页重定向到还没注册的域名', () => {
+    const artifacts = buildSiteArtifacts({ domain: 'topicatlas.dev', customDomain: false }, routes)
+    expect(artifacts.cname).toBeNull()
+    // 其它产物不受影响，sitemap 仍指向最终要用的域名
+    expect(artifacts.sitemap).toContain('<loc>https://topicatlas.dev/</loc>')
+  })
+
+  it('环境变量可以覆盖配置，便于在不同部署形态间切换', async () => {
+    process.env.SITE_DOMAIN = 'Preview.Example.COM/'
+    process.env.SITE_CUSTOM_DOMAIN = 'false'
+    try {
+      const { loadSiteConfig } = await import('../../scripts/site-config.mjs')
+      const config = await loadSiteConfig()
+      expect(config.domain).toBe('preview.example.com')
+      expect(config.customDomain).toBe(false)
+    } finally {
+      delete process.env.SITE_DOMAIN
+      delete process.env.SITE_CUSTOM_DOMAIN
+    }
+  })
 })
