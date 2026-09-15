@@ -6,6 +6,7 @@
 import { access, copyFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { buildSiteArtifacts, loadSiteConfig, SITE_ROUTES } from './site-config.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const dist = path.join(root, 'dist')
@@ -27,13 +28,16 @@ async function main() {
 
   await copyFile(index, path.join(dist, '404.html'))
 
-  // public/CNAME 会被 Vite 自动复制，这里兜底确认一次。
-  const cname = path.join(dist, 'CNAME')
-  if (!(await exists(cname))) {
-    await writeFile(cname, 'topicatlas.dev\n', 'utf8')
-  }
+  // 域名相关的三个文件统一由 site.config.json 生成，避免多处硬编码。
+  const config = await loadSiteConfig(root)
+  const artifacts = buildSiteArtifacts(config, SITE_ROUTES)
+  await writeFile(path.join(dist, 'CNAME'), artifacts.cname, 'utf8')
+  await writeFile(path.join(dist, 'robots.txt'), artifacts.robots, 'utf8')
+  await writeFile(path.join(dist, 'sitemap.xml'), artifacts.sitemap, 'utf8')
 
-  console.log('postbuild: 已生成 dist/404.html（SPA 回退）并确认 CNAME')
+  console.log(
+    `postbuild: 已生成 dist/404.html（SPA 回退），并按 site.config.json 写入 CNAME / robots.txt / sitemap.xml（${artifacts.domain}）`,
+  )
 }
 
 main().catch((error) => {

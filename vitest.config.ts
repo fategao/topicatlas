@@ -10,7 +10,10 @@ export default mergeConfig(
       environment: 'jsdom',
       globals: true,
       setupFiles: ['./tests/setup.ts'],
-      include: ['tests/unit/**/*.test.{ts,tsx}', 'tests/component/**/*.test.{ts,tsx}'],
+      include: [
+        'tests/unit/**/*.test.{ts,tsx,js}',
+        'tests/component/**/*.test.{ts,tsx}',
+      ],
       css: false,
       restoreMocks: true,
     },

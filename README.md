@@ -65,6 +65,16 @@ E2E 覆盖：首页 → 学习路径 → 勾选验收 → 刷新后进度仍在�
 
 ## 部署
 
+### 0. 域名只有一个配置源
+
+站点域名写在根目录的 [`site.config.json`](site.config.json) 里，构建时会自动生成 `CNAME`、`robots.txt`、`sitemap.xml`，并注入 `index.html` 的 canonical 与 og:url。**换域名只需要改这一个文件**，然后重新构建：
+
+```json
+{ "domain": "example.com" }
+```
+
+> 关于 `.dev` 的价格：`topicatlas.dev` 这类 `.dev` 域名的批发价本身就在 $10/年左右（约 ¥70），Cloudflare Registrar 是按成本价卖、且续费同价，所以它已经是地板价而不是加价。若想压低预算，可选的合规后缀有 `.link`（约 $7.7/年，平进平出）与 `.com`（约 $11/年）；要避开 `.site`、`.online` 这类“首年 ¥14、续费 ¥200+”的促销陷阱。换后缀只需改上面这一个配置文件。
+
 ### 1. 创建仓库并推送
 
 ```bash
@@ -72,7 +82,7 @@ git remote add origin https://github.com/<你的用户名>/topicatlas.git
 git push -u origin main
 ```
 
-如果本机访问 GitHub 需要代理，用单次命令即可（不写入全局配置）：
+本机已通过代理（TUN 模式）可以直连 GitHub，直接 push 即可。若某天代理没开、需要临时指定代理，用单次命令（不写全局配置）：
 
 ```bash
 git -c http.proxy=http://127.0.0.1:<端口> push -u origin main
@@ -123,10 +133,10 @@ tests/e2e                 Playwright 端到端与视觉留档
 
 ## 已知环境限制
 
-本项目的开发机网络无法直连 `github.com` 与 Playwright 的浏览器 CDN（`storage.googleapis.com`）。因此：
+开发机在**未开代理**时无法直连 `github.com`、`raw.githubusercontent.com` 与 Playwright 的浏览器 CDN（`storage.googleapis.com`）。开着代理时三者都正常（实测 github.com 约 0.7s、raw 约 0.3s）。因此：
 
-- 推送需要走代理（见上文）。
-- 本地跑 E2E 时用系统已安装的 Chrome：`set PLAYWRIGHT_CHANNEL=chrome && npx playwright test`（CI 里留空，使用 `npx playwright install chromium` 下载的浏览器）。
+- 没开代理时推送需要走隧道（见上文），或直接本地跑 E2E：`set PLAYWRIGHT_CHANNEL=chrome && npx playwright test` 会复用系统已安装的 Chrome，不下载浏览器。
+- CI（GitHub Actions）在境外网络，用 `npx playwright install chromium` 正常下载。
 
 ## 内容来源与许可
 
