@@ -11,11 +11,14 @@ import { createServer } from 'node:http'
 import path from 'node:path'
 import { spawn } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
+import { loadSiteConfigSync } from './site-config.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 // SERVE_DIR 用于预览任意目录（例如模拟 GitHub Pages 项目页的子路径部署）
 const dist = process.env.SERVE_DIR ? path.resolve(process.env.SERVE_DIR) : path.join(root, 'dist')
 const port = Number(process.env.PORT ?? 4173)
+// 与构建产物保持一致：构建时 base 是什么，这里就挂在哪个子路径下
+const basePath = (process.env.BASE_PATH ?? loadSiteConfigSync().basePath ?? '').replace(/\/$/, '')
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -32,7 +35,11 @@ const MIME = {
 
 /** 解析请求路径；找不到时回退到 404.html（与 GitHub Pages 行为一致）。 */
 export async function resolveFile(urlPath) {
-  const relative = decodeURIComponent(String(urlPath).split('?')[0]).replace(/^\/+/, '')
+  const url = decodeURIComponent(String(urlPath).split('?')[0])
+
+  // 站点被部署在子路径时，只有该前缀下的请求才是我们的资源
+  if (basePath && !url.startsWith(basePath)) return null
+  const relative = (basePath ? url.slice(basePath.length) : url).replace(/^\/+/, '')
   const candidate = path.join(dist, relative)
 
   if (!candidate.startsWith(dist)) return null // 阻断路径穿越
@@ -72,8 +79,8 @@ export { server }
 
 // 被 import 时不启动监听，直接运行时才启动
 if (process.argv[1] && process.argv[1].endsWith('serve.mjs')) {
-  server.listen(port, '127.0.0.1', () => {
-    const url = `http://127.0.0.1:${port}/`
+server.listen(port, '127.0.0.1', () => {
+  const url = `http://127.0.0.1:${port}${basePath}/`
     console.log(`本地预览已启动：${url}`)
     console.log('按 Ctrl+C 停止。')
     if (!process.env.NO_OPEN) {
