@@ -68,13 +68,27 @@ E2E 覆盖：首页 → 学习路径 → 勾选验收 → 刷新后进度仍在�
 
 ## 部署
 
-### 0. 域名只有一个配置源
+### 0. 域名与部署路径只有一个配置源
 
-站点域名写在根目录的 [`site.config.json`](site.config.json) 里，构建时会自动生成 `CNAME`、`robots.txt`、`sitemap.xml`，并注入 `index.html` 的 canonical 与 og:url。**换域名只需要改这一个文件**，然后重新构建：
+根目录的 [`site.config.json`](site.config.json) 同时决定「绑哪个域名」和「跑在根路径还是子路径」，构建时自动生成 `CNAME`、`robots.txt`、`sitemap.xml`，并注入 `index.html` 的 canonical 与 og:url：
 
 ```json
-{ "domain": "example.com" }
+{
+  "domain": "topicatlas.dev",
+  "customDomain": false,
+  "basePath": "/topicatlas",
+  "repo": "fategao/topicatlas"
+}
 ```
+
+| 字段 | 含义 |
+|---|---|
+| `domain` | 最终要绑定的域名（还没买也能先填着） |
+| `customDomain` | `false` = 还没绑域名：**不产出 CNAME**，canonical/sitemap 指向 GitHub Pages 项目页；`true` = 产出 CNAME 并用自定义域名 |
+| `basePath` | 部署在子路径时填 `/仓库名`；绑定自定义域名后改成 `""` |
+| `repo` | 未绑域名时用来推导项目页地址 `https://<user>.github.io/<repo>/` |
+
+> 这两个字段配错就是"页面打不开"的两大主因：`customDomain: true` 但域名没解析 → 项目页被 301 到死域名；`basePath` 与真实部署路径不一致 → 资源 404 整页白屏。
 
 > 关于 `.dev` 的价格：`topicatlas.dev` 这类 `.dev` 域名的批发价本身就在 $10/年左右（约 ¥70），Cloudflare Registrar 是按成本价卖、且续费同价，所以它已经是地板价而不是加价。若想压低预算，可选的合规后缀有 `.link`（约 $7.7/年，平进平出）与 `.com`（约 $11/年）；要避开 `.site`、`.online` 这类“首年 ¥14、续费 ¥200+”的促销陷阱。换后缀只需改上面这一个配置文件。
 
@@ -95,16 +109,17 @@ git -c http.proxy=http://127.0.0.1:<端口> push -u origin main
 
 仓库 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions**。之后每次推送到 `main`，`.github/workflows/deploy.yml` 会自动校验内容、跑测试、构建并发布。
 
-**还没买域名就先上线看效果？** 在仓库 **Settings → Secrets and variables → Actions → Variables** 加两个变量，站点就会正确跑在 `https://haorangao972-ux.github.io/topicatlas/`：
+**还没买域名就先上线看效果？** 仓库里的 `site.config.json` 已经是这个形态（`customDomain: false` + `basePath: "/topicatlas"`），推上去就会正确跑在 `https://fategao.github.io/topicatlas/`。买好域名、DNS 配好后，把它改成 `customDomain: true`、`basePath: ""` 再推一次即可切换。
 
-| 变量名 | 值 | 作用 |
-|---|---|---|
-| `BASE_PATH` | `/topicatlas` | 让资源路径带上仓库子路径前缀（切回域名时删掉） |
-| `SITE_CUSTOM_DOMAIN` | `false` | 不产出 `CNAME`，避免项目页被重定向到尚未注册的域名 |
+（CI 里也支持用仓库变量 `BASE_PATH` / `SITE_CUSTOM_DOMAIN` 临时覆盖同一组配置，用于多环境试跑。）
 
-买好域名并把 DNS 配好后，**删掉这两个变量**再推一次，即可切回自定义域名模式。
+### 部署自检
 
-> ⚠️ 反过来也成立：如果域名还没解析好就把 `CNAME` 发上去，GitHub Pages 会认为你要用自定义域名，于是 `github.io` 地址会 301 到一个打不开的域名——表现就是"页面打不开"。
+```bash
+npm run deploy:check
+```
+
+它会检查仓库是否存在、Pages 站点是否可访问，并专门诊断三种「部署绿了但页面打不开」：被 301 到未解析的自定义域名、资源路径与子路径不匹配（白屏）、静态资源 404。
 
 ### 3. 配置自定义域名（Cloudflare）
 

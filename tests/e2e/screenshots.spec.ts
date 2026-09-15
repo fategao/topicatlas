@@ -13,12 +13,12 @@ test('截取视觉留档', async ({ page }, testInfo) => {
   await mkdir(OUT_DIR, { recursive: true })
   const project = testInfo.project.name
 
-  await page.goto('/')
+  await page.goto('./')
   await expect(page.getByRole('heading', { name: /把官方文档/ })).toBeVisible()
   await page.waitForTimeout(400)
   await page.screenshot({ path: path.join(OUT_DIR, `home-${project}.png`), fullPage: false })
 
-  await page.goto('/hermes')
+  await page.goto('hermes')
   await expect(page.getByRole('heading', { name: '学习路径总览' })).toBeVisible()
   await page.waitForTimeout(400)
   await page.screenshot({ path: path.join(OUT_DIR, `hermes-top-${project}.png`), fullPage: false })
@@ -41,7 +41,7 @@ test('截取视觉留档', async ({ page }, testInfo) => {
   })
 
   // 亮色主题也留一张，确认对比度没有因为换肤而崩掉
-  await page.goto('/hermes')
+  await page.goto('hermes')
   await page.getByRole('button', { name: '切换到亮色主题' }).click()
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
   await page.locator('#step-configuration').scrollIntoViewIfNeeded()

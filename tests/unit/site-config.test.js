@@ -24,6 +24,34 @@ describe('站点域名配置', () => {
     expect(artifacts.sitemap.match(/topicatlas\.dev\/</g)?.length).toBe(1)
   })
 
+  it('basePath 归一化：补前导斜杠、去尾部斜杠、空值表示部署在根路径', () => {
+    expect(normalizeConfig({ domain: 'a.dev', basePath: 'topicatlas' }).basePath).toBe('/topicatlas')
+    expect(normalizeConfig({ domain: 'a.dev', basePath: '/topicatlas/' }).basePath).toBe('/topicatlas')
+    expect(normalizeConfig({ domain: 'a.dev', basePath: '' }).basePath).toBe('')
+    expect(normalizeConfig({ domain: 'a.dev' }).basePath).toBe('')
+  })
+
+  it('未绑定自定义域名时，规范链接指向 GitHub Pages 项目页，而不是还没解析的域名', () => {
+    const artifacts = buildSiteArtifacts(
+      { domain: 'topicatlas.dev', customDomain: false, repo: 'fategao/topicatlas' },
+      routes,
+    )
+    expect(artifacts.siteUrl).toBe('https://fategao.github.io/topicatlas')
+    expect(artifacts.sitemap).toContain('<loc>https://fategao.github.io/topicatlas/</loc>')
+    expect(artifacts.sitemap).not.toContain('topicatlas.dev')
+    expect(artifacts.cname).toBeNull()
+  })
+
+  it('绑定自定义域名时，规范链接与 sitemap 用自定义域名，并且产出 CNAME', () => {
+    const artifacts = buildSiteArtifacts(
+      { domain: 'topicatlas.dev', customDomain: true, repo: 'fategao/topicatlas' },
+      routes,
+    )
+    expect(artifacts.siteUrl).toBe('https://topicatlas.dev')
+    expect(artifacts.cname).toBe('topicatlas.dev\n')
+    expect(artifacts.sitemap).toContain('<loc>https://topicatlas.dev/hermes</loc>')
+  })
+
   it('index.html 注入的占位符能定位到规范链接与 og:url', () => {
     const artifacts = buildSiteArtifacts({ domain: 'example.com' }, routes)
     expect(artifacts.siteUrl).toBe('https://example.com')
@@ -59,5 +87,14 @@ describe('站点域名配置', () => {
       delete process.env.SITE_DOMAIN
       delete process.env.SITE_CUSTOM_DOMAIN
     }
+  })
+
+  it('同步读取与异步读取结果一致（vite 构建必须同步拿到底路径）', async () => {
+    const { loadSiteConfig, loadSiteConfigSync } = await import('../../scripts/site-config.mjs')
+    const asyncConfig = await loadSiteConfig()
+    const syncConfig = loadSiteConfigSync()
+    expect(syncConfig).toEqual(asyncConfig)
+    expect(syncConfig.basePath).toBe('/topicatlas')
+    expect(syncConfig.customDomain).toBe(false)
   })
 })
