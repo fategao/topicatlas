@@ -40,6 +40,10 @@ jobs:
           SITE_CUSTOM_DOMAIN: ${{ vars.SITE_CUSTOM_DOMAIN }}
 
       - uses: actions/configure-pages@v5
+        with:
+          # Pages 还没开启时自动开启（需要仓库允许 Actions 使用 pages: write）；
+          # 若这一步报权限错误，就在 Settings → Pages → Source 手动选 GitHub Actions。
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
