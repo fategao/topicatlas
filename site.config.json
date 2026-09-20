@@ -1,6 +1,6 @@
 {
-  "domain": "topicatlas.dev",
-  "customDomain": false,
-  "basePath": "/topicatlas",
+  "domain": "topicatlas.tech",
+  "customDomain": true,
+  "basePath": "",
   "repo": "fategao/topicatlas"
 }
