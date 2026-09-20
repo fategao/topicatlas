@@ -90,12 +90,28 @@ describe('站点域名配置', () => {
   })
 
   it('同步读取与异步读取结果一致（vite 构建必须同步拿到底路径）', async () => {
-    const { loadSiteConfig, loadSiteConfigSync } = await import('../../scripts/site-config.mjs')
-    const asyncConfig = await loadSiteConfig()
-    const syncConfig = loadSiteConfigSync()
-    expect(syncConfig).toEqual(asyncConfig)
-    expect(syncConfig.basePath).toBe('/topicatlas')
-    expect(syncConfig.customDomain).toBe(false)
+    // 用临时目录里的固定配置文件，断言不依赖仓库当前的部署形态——
+    // 否则一旦切换 customDomain/basePath，测试就会因为「仓库状态变了」而误报失败。
+    const { mkdtemp, writeFile, rm } = await import('node:fs/promises')
+    const os = await import('node:os')
+    const pathModule = await import('node:path')
+    const dir = await mkdtemp(pathModule.join(os.tmpdir(), 'topicatlas-config-'))
+
+    try {
+      await writeFile(
+        pathModule.join(dir, 'site.config.json'),
+        JSON.stringify({ domain: 'example.com', customDomain: false, basePath: '/demo', repo: 'me/demo' }),
+      )
+      const { loadSiteConfig, loadSiteConfigSync } = await import('../../scripts/site-config.mjs')
+      const asyncConfig = await loadSiteConfig(dir)
+      const syncConfig = loadSiteConfigSync(dir)
+
+      expect(syncConfig).toEqual(asyncConfig)
+      expect(syncConfig.basePath).toBe('/demo')
+      expect(syncConfig.customDomain).toBe(false)
+    } finally {
+      await rm(dir, { recursive: true, force: true })
+    }
   })
 
   it('切换到自定义域名：清空 basePath、打开 customDomain、写入新域名', async () => {
