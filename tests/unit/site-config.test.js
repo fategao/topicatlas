@@ -154,4 +154,15 @@ describe('站点域名配置', () => {
     // 断言具体的校验错误，避免「函数不存在导致抛错」也算通过
     expect(() => switchToCustomDomain({ repo: 'a/b' }, 'not a domain')).toThrow(/domain 不合法/)
   })
+
+  it('为已知路由生成真实文件路径，避免深链返回 404 状态码', async () => {
+    const { routeFallbackPaths } = await import('../../scripts/site-config.mjs')
+    // GitHub Pages 没有服务端重写：把 /hermes 变成真实的 hermes/index.html，才会返回 200
+    expect(routeFallbackPaths(['/', '/hermes'])).toEqual(['hermes/index.html'])
+    expect(routeFallbackPaths(['/', '/hermes', '/about/'])).toEqual([
+      'hermes/index.html',
+      'about/index.html',
+    ])
+    expect(routeFallbackPaths(['/'])).toEqual([])
+  })
 })

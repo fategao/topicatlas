@@ -13,6 +13,7 @@
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { SITE_ROUTES } from './site-config.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -104,6 +105,49 @@ async function checkSite(siteUrl) {
     problems.push(`${failedAssets} 个静态资源请求失败，页面会白屏或样式缺失`)
   } else {
     notes.push(`已抽检 ${Math.min(assetPaths.length, 6)} 个静态资源，全部可正常加载`)
+  }
+
+  // 深链检查：GitHub Pages 是纯静态托管，/hermes 这类路径如果没有对应的静态入口，
+  // 会返回 404 状态码（浏览器里 404.html 兜底仍能渲染，但搜索引擎与链接预览会当坏链接）。
+  for (const route of SITE_ROUTES.filter((item) => item !== '/')) {
+    const deepUrl = `${response.url.replace(/\/$/, '')}${route}`
+    try {
+      const deepResponse = await fetch(deepUrl, {
+        redirect: 'follow',
+        headers: { 'user-agent': 'Mozilla/5.0 (deploy-check)' },
+      })
+      if (deepResponse.status === 200) {
+        notes.push(`深链 ${route} 返回 200`)
+      } else {
+        problems.push(
+          `深链 ${deepUrl} 返回 ${deepResponse.status}：构建时应为该路由生成静态入口（hermes/index.html），` +
+            '否则搜索引擎和链接预览会把它当成坏链接。',
+        )
+      }
+    } catch (error) {
+      problems.push(`深链 ${deepUrl} 请求失败：${error.message}`)
+    }
+  }
+
+  // http 是否强制跳转到 https（GitHub Pages 的 Enforce HTTPS 开关）
+  const httpUrl = response.url.replace(/^https:/, 'http:')
+  try {
+    const httpResponse = await fetch(httpUrl, {
+      redirect: 'manual',
+      headers: { 'user-agent': 'Mozilla/5.0 (deploy-check)' },
+    })
+    if (httpResponse.status === 404) {
+      problems.push(
+        'http:// 返回 404（Site not found）：到 Settings → Pages 勾上 Enforce HTTPS，' +
+          '让 http 请求 301 跳转到 https。',
+      )
+    } else if (httpResponse.status >= 300 && httpResponse.status < 400) {
+      notes.push(`http 请求已 ${httpResponse.status} 跳转到 ${httpResponse.headers.get('location') ?? 'https'}`)
+    } else {
+      notes.push(`http 请求返回 ${httpResponse.status}（Enforce HTTPS 可能还没开启）`)
+    }
+  } catch (error) {
+    problems.push(`http 检查失败：${error.message}`)
   }
 }
 

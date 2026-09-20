@@ -17,6 +17,20 @@ export const DEFAULT_CONFIG = { domain: 'topicatlas.dev' }
 /** 站点对外开放的路径，用于生成 sitemap.xml。新增路由时记得同步这里。 */
 export const SITE_ROUTES = ['/', '/hermes']
 
+/**
+ * 已知路由 → 需要额外生成的真实文件路径。
+ *
+ * 原因：GitHub Pages 是纯静态托管，没有服务端重写。访问 /hermes 时它找不到文件，
+ * 会返回 404 状态码（内容虽由 404.html 兜底，浏览器能渲染，但搜索引擎与链接预览
+ * 会把它当坏链接）。为每个已知路由生成一份 index.html 副本后，深链就是真 200。
+ */
+export function routeFallbackPaths(routes = SITE_ROUTES) {
+  return routes
+    .map((route) => String(route).replace(/^\/+|\/+$/g, ''))
+    .filter((route) => route.length > 0)
+    .map((route) => `${route}/index.html`)
+}
+
 const DOMAIN_PATTERN = /^(?=.{4,253}$)([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$/
 
 export function normalizeConfig(raw = {}) {

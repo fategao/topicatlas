@@ -7,6 +7,8 @@ import { access, copyFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { buildSiteArtifacts, loadSiteConfig, SITE_ROUTES } from './site-config.mjs'
+import { mkdir } from 'node:fs/promises'
+import { routeFallbackPaths } from './site-config.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const dist = path.join(root, 'dist')
@@ -28,6 +30,14 @@ async function main() {
 
   await copyFile(index, path.join(dist, '404.html'))
 
+  // 为每个已知路由生成真实的 index.html，让深链返回 200 而不是 404
+  const routeFiles = routeFallbackPaths(SITE_ROUTES)
+  for (const relative of routeFiles) {
+    const target = path.join(dist, relative)
+    await mkdir(path.dirname(target), { recursive: true })
+    await copyFile(index, target)
+  }
+
   // 域名相关的三个文件统一由 site.config.json 生成，避免多处硬编码。
   const config = await loadSiteConfig(root)
   const artifacts = buildSiteArtifacts(config, SITE_ROUTES)
@@ -43,6 +53,7 @@ async function main() {
       `域名 ${artifacts.domain}`,
       artifacts.cname ? '已写入 CNAME' : '按配置跳过 CNAME（尚未绑定自定义域名）',
       '已写入 robots.txt / sitemap.xml',
+      routeFiles.length > 0 ? `已为 ${routeFiles.join('、')} 生成静态入口` : '',
     ].join('；'),
   )
 }
