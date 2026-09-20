@@ -97,4 +97,45 @@ describe('站点域名配置', () => {
     expect(syncConfig.basePath).toBe('/topicatlas')
     expect(syncConfig.customDomain).toBe(false)
   })
+
+  it('切换到自定义域名：清空 basePath、打开 customDomain、写入新域名', async () => {
+    const { switchToCustomDomain } = await import('../../scripts/site-config.mjs')
+    const next = switchToCustomDomain(
+      { domain: 'old.dev', customDomain: false, basePath: '/topicatlas', repo: 'fategao/topicatlas' },
+      'https://TopicAtlas.TECH/',
+    )
+    expect(next).toEqual({
+      domain: 'topicatlas.tech',
+      customDomain: true,
+      basePath: '',
+      repo: 'fategao/topicatlas',
+    })
+    // 切换后必须产出 CNAME，否则 GitHub Pages 不会认这个域名
+    const artifacts = buildSiteArtifacts(next, routes)
+    expect(artifacts.cname).toBe('topicatlas.tech\n')
+    expect(artifacts.siteUrl).toBe('https://topicatlas.tech')
+  })
+
+  it('切回项目页模式：自动用 repo 推导出 basePath', async () => {
+    const { switchToProjectPage } = await import('../../scripts/site-config.mjs')
+    const next = switchToProjectPage({
+      domain: 'topicatlas.tech',
+      customDomain: true,
+      basePath: '',
+      repo: 'fategao/topicatlas',
+    })
+    expect(next).toEqual({
+      domain: 'topicatlas.tech',
+      customDomain: false,
+      basePath: '/topicatlas',
+      repo: 'fategao/topicatlas',
+    })
+    expect(buildSiteArtifacts(next, routes).cname).toBeNull()
+  })
+
+  it('切换域名时同样拒绝非法域名', async () => {
+    const { switchToCustomDomain } = await import('../../scripts/site-config.mjs')
+    // 断言具体的校验错误，避免「函数不存在导致抛错」也算通过
+    expect(() => switchToCustomDomain({ repo: 'a/b' }, 'not a domain')).toThrow(/domain 不合法/)
+  })
 })

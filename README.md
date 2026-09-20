@@ -121,6 +121,15 @@ npm run deploy:check
 
 它会检查仓库是否存在、Pages 站点是否可访问，并专门诊断三种「部署绿了但页面打不开」：被 301 到未解析的自定义域名、资源路径与子路径不匹配（白屏）、静态资源 404。
 
+### 一键切换部署形态
+
+```bash
+npm run domain:set topicatlas.tech   # 切到自定义域名（清空 basePath、产出 CNAME）
+npm run domain:set --project-page    # 切回 GitHub Pages 项目页
+```
+
+脚本会改写 `site.config.json`，并打印需要添加的 DNS 记录（4 条 A + `www` CNAME）与后续步骤。**绑定自定义域名后要重新推送一次**，让 CI 发布带 CNAME 的新构建。
+
 ### 3. 配置自定义域名（Cloudflare）
 
 1. 在 Cloudflare Registrar 注册 `topicatlas.dev`（若结账时该后缀不可选，可在 Porkbun / Spaceship 注册后把 NS 指向 Cloudflare）。

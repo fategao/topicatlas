@@ -45,6 +45,23 @@ export function normalizeConfig(raw = {}) {
   }
 }
 
+/**
+ * 切换到自定义域名模式：域名换成新的、清空 basePath（站点挂在根路径）、
+ * 打开 customDomain（构建会产出 CNAME）。
+ */
+export function switchToCustomDomain(raw = {}, domain) {
+  const { domain: normalized } = normalizeConfig({ domain })
+  const base = normalizeConfig(raw)
+  return { ...base, domain: normalized, customDomain: true, basePath: '' }
+}
+
+/** 切回 GitHub Pages 项目页模式：不产出 CNAME，basePath 用仓库名推导。 */
+export function switchToProjectPage(raw = {}) {
+  const base = normalizeConfig(raw)
+  const repoName = base.repo.split('/')[1] ?? ''
+  return { ...base, customDomain: false, basePath: repoName ? `/${repoName}` : '' }
+}
+
 export async function loadSiteConfig(baseDir = root) {
   const raw = await readConfigFile(baseDir)
   return applyEnvOverrides(raw)
