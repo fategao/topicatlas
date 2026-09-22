@@ -1,12 +1,12 @@
 # Topic Atlas
 
-把官方文档整理成**有学习目标、有官方出处、有可勾选验收清单**的交互式学习路径站。第一个主题是 [Hermes Agent](https://hermes-agent.nousresearch.com/)（Nous Research 出品的自托管 AI Agent）。
+把官方文档整理成**有学习目标、有官方出处、有交互实验与验收清单**的多主题学习站。当前主题包括 [Hermes Agent](https://hermes-agent.nousresearch.com/)（Nous Research 出品的自托管 AI Agent）和 **Eval-driven Prompt**（先定义成功标准，再迭代 Prompt）。
 
 **线上地址：[https://topicatlas.tech](https://topicatlas.tech)**（绑定自定义域名 + 强制 HTTPS）
 
 [![Deploy to GitHub Pages](https://github.com/fategao/topicatlas/actions/workflows/deploy.yml/badge.svg)](https://github.com/fategao/topicatlas/actions/workflows/deploy.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-59%20passed-brightgreen.svg)](tests)
+[![Tests](https://img.shields.io/badge/tests-71%20passed-brightgreen.svg)](tests)
 
 ![Topic Atlas 首页](docs/screenshots/home.png)
 
@@ -22,6 +22,10 @@
   - 每步结构固定：**学什么 → 官方中英双链接 → 要点与图示 → 动手练习 → 验收清单**
   - 底部是四个交互式速查参考：CLI 命令、配置项、工具集、Provider
   - 全局 ⌘K / Ctrl+K 搜索，可检索步骤、命令、配置项、工具集与 provider
+- `/eval-driven-prompt` — Eval-driven Prompt 五步闭环：
+  - 固定 8 条工单用例、Prompt v1/v2 规格差异、可调 rubric 与通过线
+  - 16 条真实模型快照、逐用例评分矩阵与维度对比
+  - 官方 OpenAI / Anthropic 评估指南，以及两轮 Prompt 迭代日志
 
 进度以 `topicatlas:progress:hermes:v1` 为键写入 `localStorage`；某一步的验收项全部勾选后该步才标记完成，并提供一键重置。
 
@@ -58,12 +62,13 @@ npm run content:fetch      # 1. 抓取官方中英文 Markdown 快照 → conten
 npm run content:extract    # 2. 抽取结构化数据 → src/data/hermes/*.json
 npm run content:validate   # 3. 校验内容完整性（CI 也会跑）
 npm run content:refresh    # 等价于依次执行上面三步
+npm run eval:snapshot      # 重新生成 Eval 主题的真实模型快照（需要可用模型凭据）
 ```
 
 - **抓取**走 `api.github.com` 的 contents 接口（本机无法直连 `raw.githubusercontent.com`），拿到的是 `NousResearch/hermes-agent` 仓库里 `website/i18n/zh-Hans/` 的中文文档与 `website/docs/` 的英文文档。
 - 每次抓取都会把上游 commit SHA、抓取时间、许可证写进 `content/upstream/manifest.json`，站点页脚会展示这些信息。
 - **抽取**把官方文档拆成四份可交互数据：CLI 命令（含选项表与示例）、配置小节与配置键、工具集与工具、Provider 与鉴权方式。每条都带官方锚点，页面上可以点回原文核对。
-- **校验**会检查：7 个步骤齐全、每步都有学习目标/双链接/验收清单、每条参考数据都指向官方域名、数据与快照的 commit 一致、正文里没有占位文本。
+- **校验**会检查：7 个步骤齐全、每步都有学习目标/双链接/验收清单、每条参考数据都指向官方域名、数据与快照的 commit 一致、正文里没有占位文本，并校验 8 条 Eval 用例、两版 Prompt 与 16 条快照一一对应。
 
 ## 测试与校验
 
@@ -74,7 +79,7 @@ npm run test         # Vitest：纯逻辑 + 组件交互
 npm run e2e          # Playwright：桌面 1440 + 移动 Pixel 7
 ```
 
-E2E 覆盖：首页 → 学习路径 → 勾选验收 → 刷新后进度仍在、⌘K 全局搜索、速查参考切换与搜索、深浅色切换与持久化、深链直接访问 `/hermes`、移动端无横向溢出、`prefers-reduced-motion` 下依然可用。
+E2E 覆盖：首页 → 两个主题、Hermes 进度持久化、⌘K 全局搜索、Eval rubric 权重切换与排序翻转、Prompt v1/v2 差异、深浅色切换、深链直接访问、移动端无横向溢出，以及 `prefers-reduced-motion`。
 
 ## 部署
 

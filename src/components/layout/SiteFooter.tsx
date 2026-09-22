@@ -36,6 +36,27 @@ export function SiteFooter() {
                 （Nous Research），按 {upstream.license} 协议使用。
               </li>
               <li>
+                Eval-driven Prompt 方法改写自{' '}
+                <a
+                  className="link-underline text-accent"
+                  href="https://developers.openai.com/api/docs/guides/evaluation-best-practices"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  OpenAI Evaluation best practices ↗
+                </a>
+                {' 与 '}
+                <a
+                  className="link-underline text-accent"
+                  href="https://docs.anthropic.com/en/docs/build-with-claude/develop-tests"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Anthropic Define success criteria ↗
+                </a>
+                。
+              </li>
+              <li>
                 上游仓库：
                 <a
                   className="link-underline text-accent"

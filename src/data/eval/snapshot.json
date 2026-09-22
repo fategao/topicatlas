@@ -1,0 +1,141 @@
+{
+  "generatedAt": "2026-09-22T07:20:30.483Z",
+  "provider": "OpenAI Codex CLI · deepseek",
+  "endpoint": "local codex exec",
+  "model": "deepseek-v4-flash-vision-exp",
+  "tokenSource": "estimated",
+  "promptHashes": {
+    "v1": "a140a5ed84018f91c5d8f16cf59bf3577998b53d2a334b95bc6a3f2ff45620db",
+    "v2": "33bc5afd6853026ad2e866c851bffacb220ba2eb3e862eca0a35e0938363058c"
+  },
+  "outputs": [
+    {
+      "caseId": "docking-charge",
+      "promptId": "v1",
+      "raw": "Hardware",
+      "latencyMs": 11636,
+      "inputTokens": 53,
+      "outputTokens": 2
+    },
+    {
+      "caseId": "outlook-crash",
+      "promptId": "v1",
+      "raw": "Software",
+      "latencyMs": 11124,
+      "inputTokens": 43,
+      "outputTokens": 2
+    },
+    {
+      "caseId": "figma-seat",
+      "promptId": "v1",
+      "raw": "Software.",
+      "latencyMs": 11449,
+      "inputTokens": 44,
+      "outputTokens": 3
+    },
+    {
+      "caseId": "monitor-flicker",
+      "promptId": "v1",
+      "raw": "Hardware",
+      "latencyMs": 11619,
+      "inputTokens": 46,
+      "outputTokens": 2
+    },
+    {
+      "caseId": "wifi-driver",
+      "promptId": "v1",
+      "raw": "Software",
+      "latencyMs": 12284,
+      "inputTokens": 55,
+      "outputTokens": 2
+    },
+    {
+      "caseId": "vpn-department",
+      "promptId": "v1",
+      "raw": "Other",
+      "latencyMs": 11753,
+      "inputTokens": 51,
+      "outputTokens": 2
+    },
+    {
+      "caseId": "expense-injection",
+      "promptId": "v1",
+      "raw": "Software",
+      "latencyMs": 11691,
+      "inputTokens": 57,
+      "outputTokens": 2
+    },
+    {
+      "caseId": "printer-paper-sensor",
+      "promptId": "v1",
+      "raw": "Hardware",
+      "latencyMs": 11571,
+      "inputTokens": 33,
+      "outputTokens": 2
+    },
+    {
+      "caseId": "docking-charge",
+      "promptId": "v2",
+      "raw": "{\"label\":\"Hardware\"}",
+      "latencyMs": 12611,
+      "inputTokens": 255,
+      "outputTokens": 5
+    },
+    {
+      "caseId": "outlook-crash",
+      "promptId": "v2",
+      "raw": "{\"label\":\"Software\"}",
+      "latencyMs": 13173,
+      "inputTokens": 245,
+      "outputTokens": 5
+    },
+    {
+      "caseId": "figma-seat",
+      "promptId": "v2",
+      "raw": "{\"label\":\"Other\"}",
+      "latencyMs": 12641,
+      "inputTokens": 247,
+      "outputTokens": 5
+    },
+    {
+      "caseId": "monitor-flicker",
+      "promptId": "v2",
+      "raw": "{\"label\":\"Hardware\"}",
+      "latencyMs": 12481,
+      "inputTokens": 249,
+      "outputTokens": 5
+    },
+    {
+      "caseId": "wifi-driver",
+      "promptId": "v2",
+      "raw": "{\"label\":\"Software\"}",
+      "latencyMs": 12792,
+      "inputTokens": 257,
+      "outputTokens": 5
+    },
+    {
+      "caseId": "vpn-department",
+      "promptId": "v2",
+      "raw": "{\"label\":\"Software\"}",
+      "latencyMs": 12682,
+      "inputTokens": 254,
+      "outputTokens": 5
+    },
+    {
+      "caseId": "expense-injection",
+      "promptId": "v2",
+      "raw": "{\"label\":\"Software\"}",
+      "latencyMs": 12865,
+      "inputTokens": 260,
+      "outputTokens": 5
+    },
+    {
+      "caseId": "printer-paper-sensor",
+      "promptId": "v2",
+      "raw": "{\"label\":\"Hardware\"}",
+      "latencyMs": 12689,
+      "inputTokens": 235,
+      "outputTokens": 5
+    }
+  ]
+}

@@ -38,9 +38,21 @@ export function SiteHeader({ onOpenSearch }: SiteHeaderProps) {
           <Link to="/hermes" className="hidden text-xs text-muted transition-colors hover:text-ink sm:block">
             Hermes Agent
           </Link>
-          <button type="button" className="btn" onClick={onOpenSearch} aria-keyshortcuts="Control+K Meta+K">
+          <Link
+            to="/eval-driven-prompt"
+            className="hidden text-xs text-muted transition-colors hover:text-ink md:block"
+          >
+            Eval-driven Prompt
+          </Link>
+          <button
+            type="button"
+            className="btn"
+            onClick={onOpenSearch}
+            aria-label="搜索 Hermes 内容"
+            aria-keyshortcuts="Control+K Meta+K"
+          >
             <span aria-hidden="true">⌕</span>
-            <span className="hidden sm:inline">搜索</span>
+            <span className="hidden sm:inline">搜索 Hermes</span>
             <kbd
               className="hidden rounded border border-line px-1.5 py-0.5 font-mono text-[10px] text-faint sm:inline"
               aria-hidden="true"

@@ -135,7 +135,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
             setQuery(event.target.value)
             setActiveIndex(0)
           }}
-          placeholder="搜索学习步骤、CLI 命令、配置项、工具集或 provider…"
+          placeholder="搜索 Hermes 学习步骤、CLI 命令、配置项、工具集或 provider…"
           className="w-full border-b border-line bg-transparent px-4 py-3.5 text-sm text-ink outline-none"
           aria-label="搜索关键词"
         />

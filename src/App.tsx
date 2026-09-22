@@ -9,6 +9,7 @@ import { CommandPalette } from './components/hermes/CommandPalette'
 import { useCommandPaletteShortcut } from './lib/useCommandPaletteShortcut'
 import { HomePage } from './routes/HomePage'
 import { HermesPage } from './routes/HermesPage'
+import { EvalDrivenPromptPage } from './routes/EvalDrivenPromptPage'
 import { NotFoundPage } from './routes/NotFoundPage'
 
 function ScrollToTop() {
@@ -39,6 +40,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/hermes" element={<HermesPage />} />
+            <Route path="/eval-driven-prompt" element={<EvalDrivenPromptPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>

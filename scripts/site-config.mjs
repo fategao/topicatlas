@@ -15,7 +15,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 export const DEFAULT_CONFIG = { domain: 'topicatlas.dev' }
 
 /** 站点对外开放的路径，用于生成 sitemap.xml。新增路由时记得同步这里。 */
-export const SITE_ROUTES = ['/', '/hermes']
+export const SITE_ROUTES = ['/', '/hermes', '/eval-driven-prompt']
 
 /**
  * 已知路由 → 需要额外生成的真实文件路径。

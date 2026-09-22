@@ -23,6 +23,24 @@ test('截取视觉留档', async ({ page }, testInfo) => {
   await page.waitForTimeout(400)
   await page.screenshot({ path: path.join(OUT_DIR, `hermes-top-${project}.png`), fullPage: false })
 
+  await page.goto('eval-driven-prompt')
+  await expect(page.getByRole('heading', { name: /先定义“什么叫好”/ })).toBeVisible()
+  await page.waitForTimeout(400)
+  await page.screenshot({
+    path: path.join(OUT_DIR, `eval-driven-prompt-top-${project}.png`),
+    fullPage: false,
+  })
+
+  await page.locator('#workbench').scrollIntoViewIfNeeded()
+  await expect(page.getByTestId('eval-workbench')).toBeVisible()
+  await page.waitForTimeout(400)
+  await page.screenshot({
+    path: path.join(OUT_DIR, `eval-driven-prompt-workbench-${project}.png`),
+    fullPage: false,
+  })
+
+  await page.goto('hermes')
+  await expect(page.getByRole('heading', { name: '学习路径总览' })).toBeVisible()
   await page.locator('#step-installation').scrollIntoViewIfNeeded()
   await expect(page.locator('#step-installation-heading')).toBeVisible()
   await page.waitForTimeout(400)

@@ -107,7 +107,92 @@ async function main() {
     check(entry.url?.startsWith(officialHost), `配置小节 ${entry.title} 缺少官方来源链接`)
   }
 
-  // ---- 4. 上游一致性 ----
+  // ---- 4. Eval-driven Prompt 内容 ----
+  const evalCases = await readJson('src/data/eval/cases.json')
+  const evalPrompts = await readJson('src/data/eval/prompts.json')
+  const evalSnapshot = await readJson('src/data/eval/snapshot.json')
+
+  check(evalCases.length === 8, `Eval 用例应为 8 个，实际 ${evalCases.length}`)
+  check(
+    evalPrompts.map((prompt) => prompt.id).join(',') === 'v1,v2',
+    'Eval Prompt 必须按 v1、v2 顺序各有一版',
+  )
+  check(
+    new Set(evalCases.map((item) => item.id)).size === evalCases.length,
+    'Eval 用例 id 不能重复',
+  )
+  check(
+    evalCases.every(
+      (item) =>
+        item.ticket?.trim() &&
+        ['Hardware', 'Software', 'Other'].includes(item.expectedLabel) &&
+        ['typical', 'edge'].includes(item.category),
+    ),
+    'Eval 用例存在空 ticket、非法标签或非法类别',
+  )
+  check(
+    evalPrompts.every((prompt) => prompt.userTemplate?.includes('{{ticket}}')),
+    'Eval Prompt 缺少 {{ticket}} 数据插槽',
+  )
+  check(
+    evalSnapshot.outputs.length === evalCases.length * evalPrompts.length,
+    `Eval 快照应有 ${evalCases.length * evalPrompts.length} 条，实际 ${evalSnapshot.outputs.length}`,
+  )
+  check(
+    evalSnapshot.outputs.every(
+      (output) =>
+        typeof output.raw === 'string' &&
+        output.raw.trim().length > 0 &&
+        Number.isFinite(output.outputTokens) &&
+        output.outputTokens > 0,
+    ),
+    'Eval 快照存在空输出或非法 token 计数',
+  )
+
+  const outputKeys = new Set()
+  for (const output of evalSnapshot.outputs) {
+    const key = `${output.caseId}:${output.promptId}`
+    check(!outputKeys.has(key), `Eval 快照重复：${key}`)
+    outputKeys.add(key)
+    check(
+      evalCases.some((item) => item.id === output.caseId),
+      `Eval 快照引用了未知用例：${output.caseId}`,
+    )
+    check(
+      evalPrompts.some((item) => item.id === output.promptId),
+      `Eval 快照引用了未知 Prompt：${output.promptId}`,
+    )
+  }
+  check(Boolean(evalSnapshot.generatedAt), 'Eval 快照缺少 generatedAt')
+  check(Boolean(evalSnapshot.model), 'Eval 快照缺少 model')
+  check(Boolean(evalSnapshot.provider), 'Eval 快照缺少 provider')
+  check(
+    ['provider', 'estimated'].includes(evalSnapshot.tokenSource),
+    'Eval 快照 tokenSource 只能是 provider 或 estimated',
+  )
+  check(
+    Object.keys(evalSnapshot.promptHashes ?? {}).sort().join(',') === 'v1,v2',
+    'Eval 快照缺少 v1/v2 Prompt hash',
+  )
+  check(
+    !/sk-[A-Za-z0-9_-]{12,}/.test(JSON.stringify(evalSnapshot)),
+    'Eval 快照疑似包含 API Key',
+  )
+
+  const evalSourcesSource = await readText('src/data/eval/sources.ts')
+  check(
+    evalSourcesSource.includes('https://developers.openai.com') &&
+      evalSourcesSource.includes('https://docs.anthropic.com'),
+    'Eval 来源必须包含 OpenAI 与 Anthropic 官方域名',
+  )
+  check(
+    !/https?:\/\/(?!developers\.openai\.com|docs\.anthropic\.com)[^'"]+/.test(
+      evalSourcesSource,
+    ),
+    'Eval 来源里出现了非官方域名',
+  )
+
+  // ---- 5. 上游一致性 ----
   for (const [name, data] of Object.entries({ cli, config, tools, providers })) {
     check(
       data.commitSha === manifest.commitSha,
@@ -123,6 +208,9 @@ async function main() {
     `数据规模：${cli.commands.length} 条命令 / ${config.entries.length} 个配置小节（${config.totalKeys} 键）/ ${tools.toolsets.length} 个工具集 / ${providers.providers.length} 个 provider / ${searchIndex.entries.length} 条搜索索引`,
   )
   notes.push(`正文：${CONTENT_FILES.length} 个步骤文件，验收项 ${acceptanceItems} 条`)
+  notes.push(
+    `Eval 主题：${evalCases.length} 个用例 / ${evalPrompts.length} 个 Prompt / ${evalSnapshot.outputs.length} 条快照（${evalSnapshot.model}）`,
+  )
 
   if (problems.length > 0) {
     console.error('内容校验失败：')
