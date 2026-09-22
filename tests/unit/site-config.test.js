@@ -15,7 +15,8 @@ describe('站点域名配置', () => {
     expect(artifacts.cname).toBe('example.com\n')
     expect(artifacts.robots).toContain('Sitemap: https://example.com/sitemap.xml')
     expect(artifacts.sitemap).toContain('<loc>https://example.com/</loc>')
-    expect(artifacts.sitemap).toContain('<loc>https://example.com/hermes</loc>')
+    // 深链用带尾斜杠的最终地址（GitHub Pages 会把 /hermes 301 到 /hermes/）
+    expect(artifacts.sitemap).toContain('<loc>https://example.com/hermes/</loc>')
   })
 
   it('sitemap 里不会出现双斜杠，根路径也只出现一次', () => {
@@ -49,7 +50,7 @@ describe('站点域名配置', () => {
     )
     expect(artifacts.siteUrl).toBe('https://topicatlas.dev')
     expect(artifacts.cname).toBe('topicatlas.dev\n')
-    expect(artifacts.sitemap).toContain('<loc>https://topicatlas.dev/hermes</loc>')
+    expect(artifacts.sitemap).toContain('<loc>https://topicatlas.dev/hermes/</loc>')
   })
 
   it('index.html 注入的占位符能定位到规范链接与 og:url', () => {
@@ -164,5 +165,19 @@ describe('站点域名配置', () => {
       'about/index.html',
     ])
     expect(routeFallbackPaths(['/'])).toEqual([])
+  })
+
+  it('路由的规范 URL 带尾部斜杠，与 GitHub Pages 的静态目录行为一致', async () => {
+    const { routeUrl } = await import('../../scripts/site-config.mjs')
+    expect(routeUrl('https://a.dev', '/')).toBe('https://a.dev/')
+    expect(routeUrl('https://a.dev', '/hermes')).toBe('https://a.dev/hermes/')
+    expect(routeUrl('https://a.dev', '/hermes/')).toBe('https://a.dev/hermes/')
+  })
+
+  it('sitemap 里的深链用带斜杠的最终地址，避免搜索引擎踩 301', async () => {
+    const { buildSiteArtifacts } = await import('../../scripts/site-config.mjs')
+    const artifacts = buildSiteArtifacts({ domain: 'topicatlas.tech' }, ['/', '/hermes'])
+    expect(artifacts.sitemap).toContain('<loc>https://topicatlas.tech/hermes/</loc>')
+    expect(artifacts.sitemap).not.toContain('<loc>https://topicatlas.tech/hermes</loc>')
   })
 })

@@ -2,6 +2,16 @@
 
 把官方文档整理成**有学习目标、有官方出处、有可勾选验收清单**的交互式学习路径站。第一个主题是 [Hermes Agent](https://hermes-agent.nousresearch.com/)（Nous Research 出品的自托管 AI Agent）。
 
+**线上地址：[https://topicatlas.tech](https://topicatlas.tech)**（绑定自定义域名 + 强制 HTTPS）
+
+[![Deploy to GitHub Pages](https://github.com/fategao/topicatlas/actions/workflows/deploy.yml/badge.svg)](https://github.com/fategao/topicatlas/actions/workflows/deploy.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Tests](https://img.shields.io/badge/tests-59%20passed-brightgreen.svg)](tests)
+
+![Topic Atlas 首页](docs/screenshots/home.png)
+
+![Hermes Agent 学习路径](docs/screenshots/hermes-learning-path.png)
+
 站点是纯静态页面：无后端、无账号、无 Cookie 追踪；学习进度只保存在访问者自己的浏览器里。
 
 ## 站点结构
@@ -67,6 +77,19 @@ npm run e2e          # Playwright：桌面 1440 + 移动 Pixel 7
 E2E 覆盖：首页 → 学习路径 → 勾选验收 → 刷新后进度仍在、⌘K 全局搜索、速查参考切换与搜索、深浅色切换与持久化、深链直接访问 `/hermes`、移动端无横向溢出、`prefers-reduced-motion` 下依然可用。
 
 ## 部署
+
+### 本仓库的实际部署（可作为参考）
+
+| 环节 | 实际配置 |
+|---|---|
+| 域名 | `topicatlas.tech`，在**阿里云**注册（含实名认证，未认证会被 `client hold` 暂停解析） |
+| DNS | 阿里云云解析：apex 4 条 A 记录指向 GitHub Pages（`185.199.108-111.153`），`www` CNAME 指向 `fategao.github.io` |
+| 托管 | GitHub Pages，Source = **GitHub Actions**（`deploy.yml` 自动构建发布） |
+| 自定义域名 | 在仓库 Settings → Pages → Custom domain 填 `topicatlas.tech`（**Actions 部署模式下，构建产物里的 CNAME 不会自动设置它，必须手填一次**） |
+| HTTPS | 证书由 GitHub 自动签发（Let's Encrypt，覆盖 apex 与 www），随后勾上 **Enforce HTTPS**，`http://` 会 301 到 `https://` |
+| 旧地址 | `fategao.github.io/topicatlas/` 会自动 301 到 `https://topicatlas.tech/` |
+
+验证命令：`npm run deploy:check -- --url https://topicatlas.tech/`（检查仓库、站点、静态资源、深链状态码、http→https 跳转）。
 
 ### 0. 域名与部署路径只有一个配置源
 

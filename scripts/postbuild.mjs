@@ -3,12 +3,16 @@
 // 直接访问 /hermes（或在该地址刷新）时 GitHub Pages 会返回 404.html，
 // 由前端路由接管渲染，避免出现真 404 页面。
 
-import { access, copyFile, writeFile } from 'node:fs/promises'
+import { access, copyFile, mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { buildSiteArtifacts, loadSiteConfig, SITE_ROUTES } from './site-config.mjs'
-import { mkdir } from 'node:fs/promises'
-import { routeFallbackPaths } from './site-config.mjs'
+import {
+  buildSiteArtifacts,
+  loadSiteConfig,
+  routeFallbackPaths,
+  routeUrl,
+  SITE_ROUTES,
+} from './site-config.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const dist = path.join(root, 'dist')
@@ -28,19 +32,29 @@ async function main() {
     throw new Error('dist/index.html 不存在，请先运行 vite build')
   }
 
-  await copyFile(index, path.join(dist, '404.html'))
-
-  // 为每个已知路由生成真实的 index.html，让深链返回 200 而不是 404
-  const routeFiles = routeFallbackPaths(SITE_ROUTES)
-  for (const relative of routeFiles) {
-    const target = path.join(dist, relative)
-    await mkdir(path.dirname(target), { recursive: true })
-    await copyFile(index, target)
-  }
-
   // 域名相关的三个文件统一由 site.config.json 生成，避免多处硬编码。
   const config = await loadSiteConfig(root)
   const artifacts = buildSiteArtifacts(config, SITE_ROUTES)
+
+  const indexHtml = await readFile(index, 'utf8')
+  await copyFile(index, path.join(dist, '404.html'))
+
+  // 为每个已知路由生成真实的 index.html，让深链返回 200 而不是 404。
+  // 同时把该页面里的 canonical / og:url 指向它自己，否则搜索引擎会认为
+  // /hermes/ 是首页的重复内容。
+  const routeFiles = []
+  for (const route of SITE_ROUTES.filter((item) => item !== '/')) {
+    const [relative] = routeFallbackPaths([route])
+    const target = path.join(dist, relative)
+    await mkdir(path.dirname(target), { recursive: true })
+    await writeFile(
+      target,
+      indexHtml.split(`${artifacts.siteUrl}/`).join(routeUrl(artifacts.siteUrl, route)),
+      'utf8',
+    )
+    routeFiles.push(relative)
+  }
+
   if (artifacts.cname) {
     await writeFile(path.join(dist, 'CNAME'), artifacts.cname, 'utf8')
   }

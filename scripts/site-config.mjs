@@ -31,6 +31,16 @@ export function routeFallbackPaths(routes = SITE_ROUTES) {
     .map((route) => `${route}/index.html`)
 }
 
+/**
+ * 路由的规范 URL。GitHub Pages 会把 /hermes 301 到 /hermes/（因为那里是静态目录），
+ * 所以带尾斜杠的才是最终地址——canonical、sitemap 都应该用这个形式，避免搜索引擎踩 301。
+ */
+export function routeUrl(siteUrl, route) {
+  const base = String(siteUrl).replace(/\/+$/, '')
+  const path = String(route).replace(/^\/+|\/+$/g, '')
+  return path ? `${base}/${path}/` : `${base}/`
+}
+
 const DOMAIN_PATTERN = /^(?=.{4,253}$)([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$/
 
 export function normalizeConfig(raw = {}) {
@@ -119,7 +129,7 @@ export function buildSiteArtifacts(config, routes = SITE_ROUTES) {
   // canonical / robots / sitemap 都应该指向那个能打开的地址。
   const siteUrl = customDomain ? `https://${domain}` : pagesUrl || `https://${domain}`
 
-  const locations = routes.map((route) => (route === '/' ? `${siteUrl}/` : `${siteUrl}${route}`))
+  const locations = routes.map((route) => routeUrl(siteUrl, route))
   const sitemap = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
