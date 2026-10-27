@@ -39,6 +39,22 @@ test('截取视觉留档', async ({ page }, testInfo) => {
     fullPage: false,
   })
 
+  await page.goto('agent-observatory')
+  await expect(page.getByTestId('run-status')).toBeVisible()
+  await page.waitForTimeout(400)
+  await page.screenshot({
+    path: path.join(OUT_DIR, `agent-observatory-${project}.png`),
+    fullPage: false,
+  })
+
+  await page.goto('agent-observatory/matrix-lab')
+  await expect(page.getByTestId('matrix-determinant')).toBeVisible()
+  await page.waitForTimeout(400)
+  await page.screenshot({
+    path: path.join(OUT_DIR, `matrix-lab-${project}.png`),
+    fullPage: false,
+  })
+
   await page.goto('hermes')
   await expect(page.getByRole('heading', { name: '学习路径总览' })).toBeVisible()
   await page.locator('#step-installation').scrollIntoViewIfNeeded()

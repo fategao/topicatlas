@@ -52,6 +52,21 @@ export const topics: Topic[] = [
     sourceUrl: 'https://developers.openai.com/api/docs/guides/evaluation-best-practices',
     license: '官方文档引用，页面内容为本站改写',
   },
+  {
+    id: 'agent-observatory',
+    slug: 'agent-observatory',
+    title: 'Agent Observatory',
+    zhTitle: '双 Agent 可观测实验室',
+    tagline: '看一个数学产品如何被真正的 Agent 做出来',
+    description:
+      '产品 Agent 实际实现矩阵学习页，监控 Agent 消费真实 JSON 事件流，保留工具调用、文件变更、验证结果与源码位置。所有证据在构建期脱敏，浏览器只播放静态快照。',
+    status: 'ready',
+    stepCount: 4,
+    tags: ['双 Agent', 'Tool Calling', 'Observability', 'Linear Algebra'],
+    sourceName: 'Codex JSON 事件流 · cctrace 交互参考',
+    sourceUrl: 'https://github.com/thevibeworks/cctrace',
+    license: '运行快照来自本项目真实实验；cctrace 为 MIT 参考项目',
+  },
 ]
 
 export function findTopic(slug: string): Topic | undefined {

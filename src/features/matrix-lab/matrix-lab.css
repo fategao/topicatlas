@@ -1,0 +1,749 @@
+.matrix-lab {
+  --matrix-input: #ef9d43;
+  --matrix-output: var(--c-accent-2);
+  display: grid;
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--c-line);
+  border-radius: 18px;
+  background:
+    linear-gradient(145deg, color-mix(in oklab, var(--c-surface-strong) 48%, transparent), transparent 34%),
+    var(--c-page-soft);
+  box-shadow: 0 24px 70px rgb(0 0 0 / 0.12);
+}
+
+.matrix-lab *,
+.matrix-lab *::before,
+.matrix-lab *::after {
+  box-sizing: border-box;
+}
+
+.matrix-lab__header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2rem;
+  align-items: end;
+  padding: 1.75rem;
+}
+
+.matrix-lab__intro {
+  max-width: 42rem;
+}
+
+.matrix-lab__eyebrow,
+.matrix-lab__section-heading p {
+  margin: 0;
+  color: var(--c-accent);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  line-height: 1.5;
+}
+
+.matrix-lab__intro h2 {
+  margin: 0.35rem 0 0;
+  color: var(--c-ink);
+  font-size: clamp(1.55rem, 3vw, 2.2rem);
+  font-weight: 680;
+  letter-spacing: -0.02em;
+}
+
+.matrix-lab__intro > p:last-child {
+  max-width: 38rem;
+  margin: 0.65rem 0 0;
+  color: var(--c-muted);
+  font-size: 0.9rem;
+  line-height: 1.75;
+}
+
+.matrix-lab__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(5.4rem, auto));
+  margin: 0;
+  border: 1px solid var(--c-line);
+  border-radius: 12px;
+  background: var(--c-surface);
+}
+
+.matrix-lab__metrics > div {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+  padding: 0.75rem 1rem;
+}
+
+.matrix-lab__metrics > div + div {
+  border-left: 1px solid var(--c-line);
+}
+
+.matrix-lab__metrics dt {
+  color: var(--c-faint);
+  font-size: 0.67rem;
+  line-height: 1.5;
+}
+
+.matrix-lab__metrics dd {
+  margin: 0;
+  color: var(--c-ink);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+  line-height: 1.45;
+  white-space: nowrap;
+}
+
+.matrix-lab__metrics > div:first-child dd {
+  color: var(--matrix-output);
+}
+
+.matrix-lab__workspace {
+  display: grid;
+  grid-template-columns: minmax(21rem, 0.88fr) minmax(0, 1.12fr);
+  border-top: 1px solid var(--c-line);
+}
+
+.matrix-lab__controls {
+  display: grid;
+  align-content: start;
+  border-right: 1px solid var(--c-line);
+}
+
+.matrix-lab__control-block,
+.matrix-lab__visual {
+  padding: 1.45rem 1.6rem;
+}
+
+.matrix-lab__control-block + .matrix-lab__control-block {
+  border-top: 1px solid var(--c-line);
+}
+
+.matrix-lab__section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.matrix-lab__section-heading h3 {
+  margin: 0.22rem 0 0;
+  color: var(--c-ink);
+  font-size: 0.98rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.matrix-lab__badge {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 1.65rem;
+  padding: 0.16rem 0.55rem;
+  border: 1px solid var(--c-line);
+  border-radius: 999px;
+  background: var(--c-surface);
+  color: var(--c-faint);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.matrix-lab__matrix-row {
+  display: grid;
+  grid-template-columns: minmax(9.5rem, 0.8fr) minmax(9rem, 1.2fr);
+  gap: 1rem;
+  align-items: center;
+  margin-top: 1.1rem;
+}
+
+.matrix-lab__matrix-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+  padding: 1rem 1rem;
+}
+
+.matrix-lab__matrix-grid::before,
+.matrix-lab__matrix-grid::after {
+  position: absolute;
+  top: 0.35rem;
+  bottom: 0.35rem;
+  width: 0.55rem;
+  border-color: var(--c-line-strong);
+  border-style: solid;
+  content: '';
+  pointer-events: none;
+}
+
+.matrix-lab__matrix-grid::before {
+  left: 0;
+  border-width: 1px 0 1px 1px;
+}
+
+.matrix-lab__matrix-grid::after {
+  right: 0;
+  border-width: 1px 1px 1px 0;
+}
+
+.matrix-lab__matrix-cell {
+  position: relative;
+  display: block;
+}
+
+.matrix-lab__matrix-cell > span {
+  position: absolute;
+  top: 0.15rem;
+  left: 0.45rem;
+  z-index: 1;
+  color: var(--c-faint);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.matrix-lab__matrix-cell input {
+  width: 100%;
+  min-width: 0;
+  height: 3.1rem;
+  padding: 0.75rem 0.35rem 0.28rem;
+  border: 1px solid var(--c-line);
+  border-radius: 8px;
+  background: var(--c-page);
+  color: var(--c-ink);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 620;
+  text-align: center;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease;
+}
+
+.matrix-lab__matrix-cell input:hover {
+  border-color: var(--c-line-strong);
+}
+
+.matrix-lab__matrix-cell input:focus {
+  border-color: var(--c-accent);
+  background: var(--c-surface);
+  outline: none;
+}
+
+.matrix-lab__formula {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+  color: var(--c-faint);
+  font-size: 0.66rem;
+}
+
+.matrix-lab__formula code {
+  overflow-x: auto;
+  padding: 0.55rem 0.25rem;
+  color: var(--c-muted);
+  font-size: 0.69rem;
+  line-height: 1.7;
+  white-space: nowrap;
+}
+
+.matrix-lab__reset {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 2rem;
+  padding: 0.32rem 0.58rem;
+  border: 1px solid var(--c-line);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--c-muted);
+  font-size: 0.7rem;
+  line-height: 1.4;
+  transition:
+    color 150ms ease,
+    border-color 150ms ease,
+    background-color 150ms ease;
+}
+
+.matrix-lab__reset:hover {
+  border-color: var(--c-line-strong);
+  background: var(--c-surface);
+  color: var(--c-ink);
+}
+
+.matrix-lab__presets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.95rem;
+}
+
+.matrix-lab__preset {
+  display: grid;
+  gap: 0.16rem;
+  min-width: 0;
+  min-height: 3.7rem;
+  padding: 0.62rem 0.7rem;
+  border: 1px solid var(--c-line);
+  border-radius: 10px;
+  background: var(--c-surface);
+  color: var(--c-faint);
+  font-size: 0.66rem;
+  line-height: 1.4;
+  text-align: left;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease;
+}
+
+.matrix-lab__preset:hover {
+  transform: translateY(-1px);
+  border-color: var(--c-line-strong);
+  background: var(--c-surface-strong);
+}
+
+.matrix-lab__preset[aria-pressed='true'] {
+  border-color: color-mix(in oklab, var(--c-accent) 58%, var(--c-line));
+  background: color-mix(in oklab, var(--c-accent) 10%, var(--c-page-soft));
+}
+
+.matrix-lab__preset-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  color: var(--c-ink);
+  font-size: 0.77rem;
+  font-weight: 620;
+}
+
+.matrix-lab__preset[aria-pressed='true'] .matrix-lab__preset-title {
+  color: var(--c-accent);
+}
+
+.matrix-lab__visual {
+  min-width: 0;
+}
+
+.matrix-lab__canvas-frame {
+  position: relative;
+  margin-top: 1rem;
+  overflow: hidden;
+  border: 1px solid var(--c-line);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 50% 50%, color-mix(in oklab, var(--c-accent) 6%, transparent), transparent 55%),
+    var(--c-page);
+}
+
+.matrix-lab__canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  touch-action: none;
+  user-select: none;
+}
+
+.matrix-lab__canvas.is-dragging {
+  cursor: grabbing;
+}
+
+.matrix-lab__grid line {
+  stroke: var(--c-grid);
+  stroke-width: 1;
+}
+
+.matrix-lab__axes line {
+  stroke: var(--c-line-strong);
+  stroke-width: 1.2;
+}
+
+.matrix-lab__axes text {
+  fill: var(--c-faint);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.matrix-lab__axes circle {
+  fill: var(--c-ink);
+}
+
+.matrix-lab__transformed-vector line {
+  stroke: var(--matrix-output);
+  stroke-width: 3.4;
+  stroke-linecap: round;
+}
+
+.matrix-lab__transformed-vector circle {
+  fill: var(--matrix-output);
+  stroke: var(--c-page);
+  stroke-width: 3;
+}
+
+.matrix-lab__input-vector line {
+  stroke: var(--matrix-input);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+
+.matrix-lab__canvas marker path {
+  fill: var(--matrix-output);
+}
+
+.matrix-lab__handle {
+  cursor: grab;
+  outline: none;
+}
+
+.matrix-lab__handle-halo {
+  fill: color-mix(in oklab, var(--matrix-input) 12%, transparent);
+  stroke: transparent;
+  stroke-width: 2;
+  transition:
+    fill 160ms ease,
+    stroke 160ms ease;
+}
+
+.matrix-lab__handle-core {
+  fill: var(--matrix-input);
+  stroke: var(--c-page);
+  stroke-width: 3;
+  transition: transform 160ms ease;
+}
+
+.matrix-lab__handle-dot {
+  fill: var(--c-page);
+  pointer-events: none;
+}
+
+.matrix-lab__handle:hover .matrix-lab__handle-halo,
+.matrix-lab__handle:focus-visible .matrix-lab__handle-halo {
+  fill: color-mix(in oklab, var(--matrix-input) 20%, transparent);
+  stroke: var(--matrix-input);
+}
+
+.matrix-lab__canvas.is-dragging .matrix-lab__handle {
+  cursor: grabbing;
+}
+
+.matrix-lab__legend {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.65rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  padding: 0.32rem 0.55rem;
+  border: 1px solid var(--c-line);
+  border-radius: 7px;
+  background: color-mix(in oklab, var(--c-page) 85%, transparent);
+  color: var(--c-faint);
+  font-size: 0.62rem;
+  line-height: 1.45;
+  backdrop-filter: blur(8px);
+}
+
+.matrix-lab__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+}
+
+.matrix-lab__legend i {
+  display: block;
+  width: 1.1rem;
+  height: 2px;
+  border-radius: 2px;
+}
+
+.matrix-lab__legend .is-input {
+  background: var(--matrix-input);
+}
+
+.matrix-lab__legend .is-output {
+  background: var(--matrix-output);
+}
+
+.matrix-lab__instructions {
+  margin: 0.65rem 0 0;
+  color: var(--c-faint);
+  font-size: 0.68rem;
+  line-height: 1.6;
+}
+
+.matrix-lab__vector-readout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin: 1rem 0 0;
+}
+
+.matrix-lab__vector-readout > div {
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  border-left: 2px solid var(--c-line-strong);
+  background: var(--c-surface);
+}
+
+.matrix-lab__vector-readout > div:first-child {
+  border-left-color: var(--matrix-input);
+}
+
+.matrix-lab__vector-readout > div:last-child {
+  border-left-color: var(--matrix-output);
+}
+
+.matrix-lab__vector-readout dt {
+  color: var(--c-faint);
+  font-size: 0.65rem;
+}
+
+.matrix-lab__vector-readout dd {
+  margin: 0.12rem 0 0;
+  overflow: hidden;
+  color: var(--c-ink);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.matrix-lab__insights {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  border-top: 1px solid var(--c-line);
+}
+
+.matrix-lab__hint {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.9rem;
+  align-content: start;
+  padding: 1.35rem 1.5rem;
+  border-right: 1px solid var(--c-line);
+}
+
+.matrix-lab__hint-icon {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  border: 1px solid color-mix(in oklab, var(--matrix-output) 36%, var(--c-line));
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--matrix-output) 9%, transparent);
+  color: var(--matrix-output);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 650;
+}
+
+.matrix-lab__hint h3 {
+  margin: 0;
+  color: var(--c-ink);
+  font-size: 0.88rem;
+  font-weight: 630;
+}
+
+.matrix-lab__hint p {
+  margin: 0.3rem 0 0;
+  color: var(--c-muted);
+  font-size: 0.77rem;
+  line-height: 1.65;
+}
+
+.matrix-lab__rank-hint {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.7rem;
+  align-items: baseline;
+  margin-top: 0.25rem;
+  color: var(--c-faint);
+  font-size: 0.66rem;
+}
+
+.matrix-lab__rank-hint span {
+  font-family: var(--font-mono);
+  color: var(--matrix-output);
+}
+
+.matrix-lab__rank-hint strong {
+  color: var(--c-muted);
+  font-weight: 550;
+}
+
+.matrix-lab__challenges {
+  padding: 1.35rem 1.5rem;
+}
+
+.matrix-lab__challenges ul {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.9rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.matrix-lab__challenges li {
+  display: grid;
+  grid-template-columns: 5.4rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: start;
+  padding: 0.62rem 0;
+  border-top: 1px solid var(--c-line);
+}
+
+.matrix-lab__challenges li:first-child {
+  border-top: 0;
+}
+
+.matrix-lab__challenge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-height: 1.45rem;
+  color: var(--c-faint);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.matrix-lab__challenges li.is-complete .matrix-lab__challenge-status {
+  color: var(--matrix-output);
+}
+
+.matrix-lab__challenges h4 {
+  margin: 0;
+  color: var(--c-ink);
+  font-size: 0.76rem;
+  font-weight: 620;
+  line-height: 1.45;
+}
+
+.matrix-lab__challenges p {
+  margin: 0.16rem 0 0;
+  color: var(--c-faint);
+  font-size: 0.68rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 960px) {
+  .matrix-lab__header {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.2rem;
+  }
+
+  .matrix-lab__metrics {
+    width: 100%;
+  }
+
+  .matrix-lab__metrics > div {
+    padding-inline: 0.85rem;
+  }
+
+  .matrix-lab__workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .matrix-lab__controls {
+    border-right: 0;
+  }
+
+  .matrix-lab__visual {
+    border-top: 1px solid var(--c-line);
+  }
+
+  .matrix-lab__insights {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .matrix-lab__hint {
+    border-right: 0;
+    border-bottom: 1px solid var(--c-line);
+  }
+}
+
+@media (max-width: 620px) {
+  .matrix-lab__header,
+  .matrix-lab__control-block,
+  .matrix-lab__visual,
+  .matrix-lab__hint,
+  .matrix-lab__challenges {
+    padding: 1.1rem;
+  }
+
+  .matrix-lab__metrics {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .matrix-lab__metrics > div {
+    min-width: 0;
+    padding: 0.62rem;
+  }
+
+  .matrix-lab__metrics dt,
+  .matrix-lab__metrics dd {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .matrix-lab__matrix-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .matrix-lab__formula {
+    display: none;
+  }
+
+  .matrix-lab__presets {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .matrix-lab__preset {
+    min-height: 3.25rem;
+  }
+
+  .matrix-lab__visual .matrix-lab__section-heading {
+    display: grid;
+  }
+
+  .matrix-lab__visual .matrix-lab__badge {
+    justify-self: start;
+  }
+
+  .matrix-lab__legend {
+    left: 0.65rem;
+    right: auto;
+  }
+
+  .matrix-lab__vector-readout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .matrix-lab__challenges li {
+    grid-template-columns: 5rem minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .matrix-lab *,
+  .matrix-lab *::before,
+  .matrix-lab *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

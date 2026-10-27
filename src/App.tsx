@@ -10,6 +10,8 @@ import { useCommandPaletteShortcut } from './lib/useCommandPaletteShortcut'
 import { HomePage } from './routes/HomePage'
 import { HermesPage } from './routes/HermesPage'
 import { EvalDrivenPromptPage } from './routes/EvalDrivenPromptPage'
+import { AgentObservatoryPage } from './routes/AgentObservatoryPage'
+import { MatrixLabPage } from './routes/MatrixLabPage'
 import { NotFoundPage } from './routes/NotFoundPage'
 
 function ScrollToTop() {
@@ -41,6 +43,8 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/hermes" element={<HermesPage />} />
             <Route path="/eval-driven-prompt" element={<EvalDrivenPromptPage />} />
+            <Route path="/agent-observatory" element={<AgentObservatoryPage />} />
+            <Route path="/agent-observatory/matrix-lab" element={<MatrixLabPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>

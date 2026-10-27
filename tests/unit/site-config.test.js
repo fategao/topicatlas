@@ -2,7 +2,13 @@
 import { describe, expect, it } from 'vitest'
 import { buildSiteArtifacts, normalizeConfig } from '../../scripts/site-config.mjs'
 
-const routes = ['/', '/hermes', '/eval-driven-prompt']
+const routes = [
+  '/',
+  '/hermes',
+  '/eval-driven-prompt',
+  '/agent-observatory',
+  '/agent-observatory/matrix-lab',
+]
 
 describe('站点域名配置', () => {
   it('去掉协议、路径与多余空白，只保留裸域名', () => {
@@ -19,6 +25,10 @@ describe('站点域名配置', () => {
     expect(artifacts.sitemap).toContain('<loc>https://example.com/hermes/</loc>')
     expect(artifacts.sitemap).toContain(
       '<loc>https://example.com/eval-driven-prompt/</loc>',
+    )
+    expect(artifacts.sitemap).toContain('<loc>https://example.com/agent-observatory/</loc>')
+    expect(artifacts.sitemap).toContain(
+      '<loc>https://example.com/agent-observatory/matrix-lab/</loc>',
     )
   })
 
