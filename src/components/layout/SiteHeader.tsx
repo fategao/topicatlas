@@ -44,6 +44,12 @@ export function SiteHeader({ onOpenSearch }: SiteHeaderProps) {
           >
             Eval-driven Prompt
           </Link>
+          <Link
+            to="/agent-observatory"
+            className="hidden text-xs text-muted transition-colors hover:text-ink lg:block"
+          >
+            Agent Lab
+          </Link>
           <button
             type="button"
             className="btn"

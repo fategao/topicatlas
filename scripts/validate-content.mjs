@@ -9,6 +9,7 @@
 // 5. 数据里的上游 commit 与 manifest 一致
 
 import { readFile } from 'node:fs/promises'
+import { createHash } from 'node:crypto'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -192,7 +193,88 @@ async function main() {
     'Eval 来源里出现了非官方域名',
   )
 
-  // ---- 5. 上游一致性 ----
+  // ---- 5. 双 Agent 可观测实验 ----
+  const observatory = await readJson('src/data/observatory/snapshot.json')
+  check(observatory.schemaVersion === 1, 'Agent 快照 schemaVersion 必须为 1')
+  check(Boolean(observatory.runId), 'Agent 快照缺少 runId')
+  check(
+    observatory.product?.route === '/agent-observatory/matrix-lab',
+    'Agent 快照产品路由不正确',
+  )
+  check(
+    ['completed', 'failed'].includes(observatory.status),
+    'Agent 快照状态只能是 completed 或 failed',
+  )
+  check(
+    ['provider', 'estimated'].includes(observatory.agent?.tokenSource),
+    'Agent tokenSource 只能是 provider 或 estimated',
+  )
+  check(
+    observatory.agent?.provider && observatory.agent?.model,
+    'Agent 快照缺少 provider 或 model',
+  )
+  check(observatory.monitor?.summary, 'Agent 快照缺少监控 Agent 结论')
+  check(
+    Array.isArray(observatory.monitor?.observations) &&
+      observatory.monitor.observations.length >= 3,
+    '监控 Agent 至少应给出 3 条观察',
+  )
+
+  const observatoryEvents = Array.isArray(observatory.events) ? observatory.events : []
+  const observatorySources = Array.isArray(observatory.sources) ? observatory.sources : []
+  check(observatoryEvents.length >= 10, 'Agent 快照公开事件过少')
+  check(
+    new Set(observatoryEvents.map((event) => event.id)).size === observatoryEvents.length,
+    'Agent 快照事件 id 不能重复',
+  )
+  check(
+    observatoryEvents.every(
+      (event, index) =>
+        event.id &&
+        event.title &&
+        event.summary &&
+        event.startedAt &&
+        ['message', 'command', 'file', 'tool', 'test', 'error'].includes(event.kind) &&
+        ['passed', 'failed', 'pending'].includes(event.status) &&
+        (index === 0 ||
+          Date.parse(event.startedAt) >= Date.parse(observatoryEvents[index - 1].startedAt)),
+    ),
+    'Agent 事件存在空字段、非法类型或乱序时间',
+  )
+  check(
+    !JSON.stringify(observatory).includes('"reasoning"'),
+    'Agent 快照不得包含 reasoning 事件',
+  )
+  check(
+    !/sk-[A-Za-z0-9_-]{12,}/.test(JSON.stringify(observatory)),
+    'Agent 快照疑似包含 API Key',
+  )
+
+  const sourcePaths = new Set()
+  for (const source of observatorySources) {
+    check(source.path && typeof source.sha256 === 'string', `Agent 源码缺少路径或哈希：${source.path}`)
+    check(Array.isArray(source.lines) && source.lines.length > 0, `Agent 源码为空：${source.path}`)
+    check(!sourcePaths.has(source.path), `Agent 源码重复：${source.path}`)
+    sourcePaths.add(source.path)
+    const actual = await readText(source.path)
+    const hash = createHash('sha256').update(actual).digest('hex')
+    check(hash === source.sha256, `Agent 源码哈希不一致：${source.path}`)
+  }
+
+  for (const event of observatoryEvents) {
+    for (const ref of event.sourceRefs ?? []) {
+      const source = observatorySources.find((item) => item.path === ref.file)
+      check(Boolean(source), `Agent 事件 ${event.id} 引用了未知源码：${ref.file}`)
+      if (!source) continue
+      check(
+        ref.startLine >= 1 && ref.endLine >= ref.startLine && ref.endLine <= source.lines.length,
+        `Agent 事件 ${event.id} 的源码行段越界：${ref.file}`,
+      )
+      check(Boolean(ref.symbol), `Agent 事件 ${event.id} 缺少源码符号`)
+    }
+  }
+
+  // ---- 6. 上游一致性 ----
   for (const [name, data] of Object.entries({ cli, config, tools, providers })) {
     check(
       data.commitSha === manifest.commitSha,
@@ -210,6 +292,9 @@ async function main() {
   notes.push(`正文：${CONTENT_FILES.length} 个步骤文件，验收项 ${acceptanceItems} 条`)
   notes.push(
     `Eval 主题：${evalCases.length} 个用例 / ${evalPrompts.length} 个 Prompt / ${evalSnapshot.outputs.length} 条快照（${evalSnapshot.model}）`,
+  )
+  notes.push(
+    `Agent 实验：${observatoryEvents.length} 条公开事件 / ${observatorySources.length} 个源码文件 / ${observatory.agent.tokenCount} 估算 token`,
   )
 
   if (problems.length > 0) {

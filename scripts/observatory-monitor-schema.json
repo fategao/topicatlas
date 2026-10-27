@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["provider", "model", "summary", "observations"],
+  "properties": {
+    "provider": { "type": "string" },
+    "model": { "type": "string" },
+    "summary": { "type": "string" },
+    "observations": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 5,
+      "items": { "type": "string" }
+    }
+  }
+}
