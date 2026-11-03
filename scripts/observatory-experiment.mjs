@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { spawn } from 'node:child_process'
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { access, mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -11,7 +11,9 @@ const monitorLog = path.join(artifactDir, 'monitor-agent.jsonl')
 const monitorResult = path.join(artifactDir, 'monitor-agent-result.json')
 const productLastMessage = path.join(artifactDir, 'product-agent-last.txt')
 const schema = path.join(root, 'scripts', 'observatory-monitor-schema.json')
-const snapshotPath = path.join(root, 'src', 'data', 'observatory', 'snapshot.json')
+const projectRunPath = path.join(root, 'src', 'data', 'observatory', 'project-run.json')
+const referenceSamplePath = path.join(root, 'artifacts', 'cctrace-sample.html')
+const referenceSnapshotScript = path.join(root, 'scripts', 'observatory-reference.mjs')
 
 const PRODUCT_PROMPT = `你是“产品 Agent”，负责按照已经冻结的测试实现矩阵学习页，不要重新做需求分析或计划。
 允许修改的文件只有：
@@ -120,7 +122,7 @@ async function main() {
 
   console.log('3/4 生成脱敏事件索引并启动监控 Agent…')
   await run(process.execPath, [path.join(root, 'scripts', 'observatory-snapshot.mjs')])
-  const snapshot = JSON.parse(await readFile(snapshotPath, 'utf8'))
+  const snapshot = JSON.parse(await readFile(projectRunPath, 'utf8'))
   const eventIndex = snapshot.events.map(({ id, phase, kind, status, title }) => ({
     id,
     phase,
@@ -142,9 +144,20 @@ async function main() {
     sandbox: 'read-only',
   })
 
-  console.log('4/4 写入提交快照…')
+  console.log('4/4 写入项目 run 快照…')
   await run(process.execPath, [path.join(root, 'scripts', 'observatory-snapshot.mjs')])
-  console.log('双 Agent 实验完成。请检查 git diff、npm run test 和浏览器验收后再提交。')
+
+  try {
+    await access(referenceSamplePath)
+    console.log('5/5 组合 cctrace 官方样例，写入页面 v2 快照…')
+    await run(process.execPath, [referenceSnapshotScript])
+  } catch {
+    console.log(
+      '未找到 artifacts/cctrace-sample.html，跳过页面 v2 快照；请先准备 cctrace 官方样例后运行 npm run observatory:snapshot。',
+    )
+  }
+
+  console.log('双 Agent 实验完成。请检查 git diff、npm run content:validate 和浏览器验收后再提交。')
 }
 
 main().catch((error) => {

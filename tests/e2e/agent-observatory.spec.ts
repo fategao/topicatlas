@@ -1,13 +1,23 @@
 import { expect, test } from '@playwright/test'
 
-test.describe('双 Agent 可观测实验室', () => {
-  test('首页可以进入监控页并从真实快照打开矩阵产品', async ({ page }) => {
+test.describe('Agent 运行可观测实验室', () => {
+  test('首页可以进入监控页、切换两条真实 run 并打开矩阵产品', async ({ page }) => {
     await page.goto('./')
     await page.locator('[data-topic="agent-observatory"]').click()
 
     await expect(page).toHaveURL(/\/agent-observatory\/?$/)
     await expect(page.getByTestId('run-status')).toHaveText(/已完成/)
-    await expect(page.getByTestId('event-list').getByRole('button').first()).toBeVisible()
+    await expect(page.getByTestId('run-tabs')).toBeVisible()
+    await expect(
+      page.getByRole('tab', { name: /cctrace 真实样例/ }),
+    ).toHaveAttribute('aria-selected', 'true')
+    await expect(page.getByTestId('session-outline').getByText(/子代理：复查/)).toBeVisible()
+    await expect(page.getByTestId('reference-probes')).toContainText('404')
+    await expect(page.getByTestId('reference-probes')).toContainText('cctrace')
+
+    await page.getByRole('tab', { name: /矩阵构建 run/ }).click()
+    await expect(page.getByTestId('active-event')).toContainText('规格与勘察')
+    await expect(page.getByRole('region', { name: '源代码' })).toBeVisible()
 
     await page.getByRole('link', { name: /实际使用矩阵实验室/ }).click()
     await expect(page).toHaveURL(/\/agent-observatory\/matrix-lab\/?$/)
@@ -41,20 +51,46 @@ test.describe('双 Agent 可观测实验室', () => {
     }
   })
 
-  test('可以筛选文件事件并联动源码行段', async ({ page }) => {
+  test('工具筛选只留下匹配的真实工具调用，点击后打开输入与结果', async ({ page }) => {
     await page.goto('agent-observatory')
 
-    await page.getByRole('button', { name: /文件 \d+/ }).click()
-    const fileEvent = page.getByTestId('event-list').getByRole('button').first()
-    await expect(fileEvent).toBeVisible()
-    await fileEvent.click()
+    await page.getByRole('button', { name: /Read 10/ }).click()
+    const toolRows = page.getByTestId('session-outline').locator('[data-testid^="tool-"]')
+    await expect(toolRows).toHaveCount(10)
 
-    const sourceButton = page.getByTestId('active-event').getByRole('button').first()
-    await sourceButton.click()
+    await toolRows.first().click()
+    const inspector = page.getByTestId('active-event')
+    await expect(inspector).toContainText('INPUT')
+    await expect(inspector).toContainText('RESULT')
+    await expect(inspector).toContainText('Read')
+  })
+
+  test('压缩事件与记忆来源可以逐条检查', async ({ page }) => {
+    await page.goto('agent-observatory')
+
+    await page
+      .getByTestId('session-outline')
+      .getByRole('button', { name: /上下文压缩：71 条消息 → 4 条/ })
+      .click()
+    await expect(page.getByTestId('active-event')).toContainText('71 → 4')
+    await expect(page.getByTestId('active-event')).toContainText('wire history drop')
+
+    await page.getByTestId('context-panel').getByRole('button', { name: /项目 CLAUDE\.md/ }).click()
+    await expect(page.getByTestId('context-panel')).toContainText('/workspace/cctrace/CLAUDE.md')
+    await expect(page.getByTestId('context-panel')).toContainText('真实进入请求的长期指令')
+  })
+
+  test('源码检查器会随真实源码引用高亮行段', async ({ page }) => {
+    await page.goto('agent-observatory')
+    await page.getByRole('tab', { name: /矩阵构建 run/ }).click()
+    await page.getByRole('button', { name: /apply_patch 4/ }).click()
+    await page.getByTestId('step-pstep-event-8').click()
+
+    await page.getByTestId('active-event').getByRole('button', { name: /transformVector/ }).click()
     await expect(page.locator('[data-highlighted="true"]').first()).toBeVisible()
   })
 
-  test('两个新深链可直接访问且移动端没有横向溢出', async ({ page }) => {
+  test('两个深链可直接访问且移动端没有横向溢出', async ({ page }) => {
     const observatoryResponse = await page.goto('agent-observatory')
     expect(observatoryResponse?.status()).toBeLessThan(400)
     await expect(page.getByTestId('run-status')).toBeVisible()
@@ -73,7 +109,8 @@ test.describe('双 Agent 可观测实验室', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' })
     await page.goto('agent-observatory')
 
-    await page.getByRole('button', { name: '下一条事件' }).click()
+    await page.getByRole('button', { name: '下一条 step' }).click()
     await expect(page.getByTestId('active-event')).toBeVisible()
+    await expect(page.getByTestId('active-event')).not.toContainText('STEP 1 /')
   })
 })

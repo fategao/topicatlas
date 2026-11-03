@@ -56,16 +56,16 @@ export const topics: Topic[] = [
     id: 'agent-observatory',
     slug: 'agent-observatory',
     title: 'Agent Observatory',
-    zhTitle: '双 Agent 可观测实验室',
-    tagline: '看一个数学产品如何被真正的 Agent 做出来',
+    zhTitle: 'Agent 运行可观测实验室',
+    tagline: '沿着工具调用、记忆注入和迭代，看清一次真实 agent 运行',
     description:
-      '产品 Agent 实际实现矩阵学习页，监控 Agent 消费真实 JSON 事件流，保留工具调用、文件变更、验证结果与源码位置。所有证据在构建期脱敏，浏览器只播放静态快照。',
+      '两条真实轨迹：cctrace 公开的 Claude Code 会话，以及本项目 Codex 矩阵构建。按 wire pair → session → loop / step 结构回放工具调用、上下文构成、子代理、压缩和 token 口径；所有证据在构建期脱敏，浏览器只读静态快照。',
     status: 'ready',
     stepCount: 4,
-    tags: ['双 Agent', 'Tool Calling', 'Observability', 'Linear Algebra'],
-    sourceName: 'Codex JSON 事件流 · cctrace 交互参考',
+    tags: ['Trace Schema', 'Tool Calling', 'Context Memory', 'Observability'],
+    sourceName: 'cctrace TracePair 模型 · 本项目 Codex JSONL',
     sourceUrl: 'https://github.com/thevibeworks/cctrace',
-    license: '运行快照来自本项目真实实验；cctrace 为 MIT 参考项目',
+    license: '运行快照来自真实实验与 cctrace 公开样例；cctrace 为 MIT 参考项目',
   },
 ]
 

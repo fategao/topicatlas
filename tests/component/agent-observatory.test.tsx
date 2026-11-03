@@ -1,105 +1,74 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { AgentObservatory } from '../../src/features/agent-observatory/AgentObservatory'
 import type { ObservatorySnapshot } from '../../src/features/agent-observatory/types'
+import snapshotJson from '../../src/data/observatory/snapshot.json'
 
-const fixture: ObservatorySnapshot = {
-  schemaVersion: 1,
-  runId: 'run-test',
-  generatedAt: '2026-10-27T10:00:00.000Z',
-  status: 'completed',
-  product: {
-    name: '矩阵实验室',
-    route: '/agent-observatory/matrix-lab',
-  },
-  agent: {
-    provider: 'OpenAI Codex CLI',
-    model: 'test-model',
-    tokenSource: 'provider',
-    durationMs: 65_000,
-    requestCount: 3,
-    toolCallCount: 4,
-    tokenCount: 1_234,
-  },
-  events: [
-    {
-      id: 'spec',
-      phase: '规格',
-      kind: 'message',
-      status: 'passed',
-      title: '冻结数学与交互契约',
-      summary: '确定矩阵字段、挑战和可访问性要求。',
-      startedAt: '2026-10-27T10:00:00.000Z',
-      targets: ['src/features/matrix-lab'],
-      sourceRefs: [],
-    },
-    {
-      id: 'command',
-      phase: '验证',
-      kind: 'test',
-      status: 'passed',
-      title: '运行矩阵数学测试',
-      summary: '全部测试通过。',
-      startedAt: '2026-10-27T10:00:10.000Z',
-      durationMs: 4_200,
-      targets: ['tests/unit/matrix-math.test.ts'],
-      sourceRefs: [
-        {
-          file: 'src/features/matrix-lab/matrixMath.ts',
-          symbol: 'determinant',
-          startLine: 1,
-          endLine: 3,
-        },
-      ],
-    },
-    {
-      id: 'error',
-      phase: '验证',
-      kind: 'test',
-      status: 'failed',
-      title: '首次类型检查失败',
-      summary: '发现一个未处理的边界状态。',
-      startedAt: '2026-10-27T10:00:20.000Z',
-      targets: ['MatrixLab.tsx'],
-      sourceRefs: [],
-    },
-  ],
-  sources: [
-    {
-      path: 'src/features/matrix-lab/matrixMath.ts',
-      language: 'ts',
-      sha256: 'test-hash',
-      lines: ['export function determinant', '  return 1', '}'],
-    },
-  ],
-}
+const snapshot = snapshotJson as unknown as ObservatorySnapshot
 
-describe('双 Agent 可观测实验室', () => {
-  it('展示真实运行元数据并默认选中首条事件', () => {
-    render(<AgentObservatory snapshot={fixture} />)
+describe('Agent 运行可观测实验室', () => {
+  it('默认展示 cctrace 真实样例的 run、模型与循环', () => {
+    render(<AgentObservatory snapshot={snapshot} />)
 
     expect(screen.getByTestId('run-status')).toHaveTextContent('已完成')
-    expect(screen.getByText('test-model')).toBeVisible()
-    expect(screen.getByTestId('active-event')).toHaveTextContent('冻结数学与交互契约')
+    expect(screen.getByText('cctrace 真实样例')).toBeVisible()
+    expect(screen.getByTestId('active-event')).toHaveTextContent('修复：最小改动补回可访问标签')
+    expect(screen.getByTestId('session-outline')).toHaveTextContent('子代理：复查 dashboard 标签改动')
   })
 
-  it('可以筛选失败事件并跳到对应检查器', () => {
-    render(<AgentObservatory snapshot={fixture} />)
+  it('切换 run 后会改变 provider、step 与源码证据', () => {
+    render(<AgentObservatory snapshot={snapshot} />)
 
-    fireEvent.click(screen.getByRole('button', { name: /错误 1/ }))
-    fireEvent.click(screen.getByRole('button', { name: /首次类型检查失败/ }))
+    fireEvent.click(screen.getByRole('tab', { name: /矩阵构建 run/ }))
 
-    expect(screen.getByTestId('active-event')).toHaveTextContent('首次类型检查失败')
-    expect(screen.getByTestId('event-list').children).toHaveLength(1)
+    expect(screen.getByTestId('run-status')).toHaveTextContent('已完成')
+    expect(screen.getAllByText(/gpt-5\.6-luna/).length).toBeGreaterThan(0)
+    expect(screen.getByTestId('active-event')).toHaveTextContent('规格与勘察')
+    expect(screen.getByRole('region', { name: '源代码' })).toBeVisible()
   })
 
-  it('选择源码引用后高亮真实行段', () => {
-    render(<AgentObservatory snapshot={fixture} />)
+  it('工具筛选会改变可见 step，点击工具后显示真实输入与结果', () => {
+    render(<AgentObservatory snapshot={snapshot} />)
 
-    fireEvent.click(screen.getByRole('button', { name: /运行矩阵数学测试/ }))
-    fireEvent.click(screen.getByRole('button', { name: /determinant/ }))
+    fireEvent.click(screen.getByRole('tab', { name: /矩阵构建 run/ }))
+    fireEvent.click(screen.getByRole('button', { name: /apply_patch 4/ }))
+    fireEvent.click(screen.getByTestId('step-pstep-event-8'))
 
-    expect(screen.getByTestId('source-line-1')).toHaveAttribute('data-highlighted', 'true')
+    const inspector = screen.getByTestId('active-event')
+    expect(inspector).toHaveTextContent('apply_patch')
+
+    fireEvent.click(within(inspector).getByRole('button', { name: /transformVector/ }))
+    const highlighted = screen
+      .getAllByTestId(/^source-line-/)
+      .find((line) => line.getAttribute('data-highlighted') === 'true')
+    expect(highlighted).toBeTruthy()
+
+    fireEvent.click(within(inspector).getByRole('button', { name: /apply_patch/ }))
+    expect(within(screen.getByTestId('active-event')).getByText('INPUT')).toBeVisible()
+    expect(within(screen.getByTestId('active-event')).getByText('RESULT')).toBeVisible()
+  })
+
+  it('上下文压缩事件会打开检查器并显示历史消息变化', () => {
+    render(<AgentObservatory snapshot={snapshot} />)
+
+    fireEvent.click(
+      within(screen.getByTestId('session-outline')).getByRole('button', {
+        name: /上下文压缩：71 条消息 → 4 条/,
+      }),
+    )
+
+    expect(screen.getByTestId('active-event')).toHaveTextContent('71 → 4')
+    expect(screen.getByTestId('active-event')).toHaveTextContent('wire history drop')
+  })
+
+  it('上下文来源列表可以切换并显示记忆片段', () => {
+    render(<AgentObservatory snapshot={snapshot} />)
+
+    fireEvent.click(screen.getByRole('button', { name: /项目 CLAUDE\.md/ }))
+
+    const panel = screen.getByTestId('context-panel')
+    expect(panel).toHaveTextContent('/workspace/cctrace/CLAUDE.md')
+    expect(panel).toHaveTextContent('真实进入请求的长期指令')
   })
 
   it('缺少快照时显示可恢复的空状态', () => {

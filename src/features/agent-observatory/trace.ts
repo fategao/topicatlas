@@ -1,8 +1,11 @@
 import type {
-  RawTraceEvent,
-  TraceEvent,
-  TraceEventStatus,
-  TraceFilter,
+  AgentRun,
+  Composition,
+  FlatStep,
+  TokenUsage,
+  ToolCall,
+  TraceLoop,
+  TraceStep,
 } from './types'
 
 const SECRET_PATTERNS = [
@@ -11,11 +14,6 @@ const SECRET_PATTERNS = [
   /\b[A-Z]:\\Users\\[^\\\s"'<>]+/gi,
 ]
 
-function truncate(value: string, length = 180): string {
-  const compact = value.replace(/\s+/g, ' ').trim()
-  return compact.length > length ? `${compact.slice(0, length - 1)}…` : compact
-}
-
 export function redactTraceText(value: string): string {
   return SECRET_PATTERNS.reduce(
     (text, pattern) => text.replace(pattern, '[REDACTED]'),
@@ -23,115 +21,105 @@ export function redactTraceText(value: string): string {
   )
 }
 
-function statusOf(item: NonNullable<RawTraceEvent['item']>): TraceEventStatus {
-  if (item.status === 'failed' || (typeof item.exit_code === 'number' && item.exit_code !== 0)) {
-    return 'failed'
-  }
-  if (item.exit_code === 0 || item.status === 'completed') return 'passed'
-  return 'pending'
+export function formatDuration(value: number | null | undefined): string {
+  if (value == null || !Number.isFinite(value)) return '未记录'
+  if (value < 1_000) return `${Math.round(value)} ms`
+  if (value < 60_000) return `${(value / 1_000).toFixed(1)} s`
+  const minutes = Math.floor(value / 60_000)
+  const seconds = Math.round((value % 60_000) / 1_000)
+  return `${minutes}m ${seconds}s`
 }
 
-function eventFromItem(
-  item: NonNullable<RawTraceEvent['item']>,
-  timestamp: string,
-  index: number,
-): TraceEvent | null {
-  const id = item.id || `event-${index + 1}`
-  const startedAt = timestamp
-
-  switch (item.type) {
-    case 'command_execution': {
-      const command = redactTraceText(item.command || '未记录命令')
-      return {
-        id,
-        phase: '执行',
-        kind: 'command',
-        status: statusOf(item),
-        title: truncate(command, 90),
-        summary:
-          statusOf(item) === 'failed'
-            ? '命令执行失败，失败结果被保留用于回溯。'
-            : '命令完成并通过结构化事件流记录。',
-        startedAt,
-        targets: [],
-        sourceRefs: [],
-      }
-    }
-    case 'file_change': {
-      const targets = (item.changes ?? [])
-        .map((change) => change.path)
-        .filter((path): path is string => Boolean(path))
-        .map(redactTraceText)
-      return {
-        id,
-        phase: '实现',
-        kind: 'file',
-        status: statusOf(item),
-        title: targets.length === 1 ? `修改 ${targets[0]}` : `修改 ${targets.length} 个文件`,
-        summary: '源代码变更已被记录，并可通过源码检查器定位。',
-        startedAt,
-        targets,
-        sourceRefs: [],
-      }
-    }
-    case 'agent_message':
-      return {
-        id,
-        phase: '协作',
-        kind: 'message',
-        status: 'passed',
-        title: '产品 Agent 更新',
-        summary: truncate(redactTraceText(item.text || 'Agent 完成了一次阶段更新。')),
-        startedAt,
-        targets: [],
-        sourceRefs: [],
-      }
-    case 'error':
-      return {
-        id,
-        phase: '环境',
-        kind: 'error',
-        status: 'failed',
-        title: '执行环境返回错误',
-        summary: truncate(redactTraceText(item.message || '未提供错误详情。')),
-        startedAt,
-        targets: [],
-        sourceRefs: [],
-      }
-    case 'mcp_tool_call':
-    case 'tool_call':
-      return {
-        id,
-        phase: '工具',
-        kind: 'tool',
-        status: statusOf(item),
-        title: '调用执行工具',
-        summary: '工具调用已归一化为可审计事件。',
-        startedAt,
-        targets: [],
-        sourceRefs: [],
-      }
-    case 'reasoning':
-      return null
-    default:
-      return null
-  }
+export function formatClock(value: string): string {
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return '--:--:--'
+  return date.toISOString().slice(11, 19)
 }
 
-export function normalizeTraceEvents(events: RawTraceEvent[]): TraceEvent[] {
-  return events.flatMap((event, index) => {
-    if (!event.item) return []
-    const normalized = eventFromItem(
-      event.item,
-      event.timestamp || new Date(Date.UTC(2026, 9, 27, 0, 0, index)).toISOString(),
-      index,
+export function formatDateTime(value: string): string {
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return '未记录'
+  return date.toLocaleString('zh-CN', { hour12: false })
+}
+
+export function formatCount(value: number | null | undefined): string {
+  if (value == null || !Number.isFinite(value)) return '—'
+  return value.toLocaleString('zh-CN')
+}
+
+export function formatPercent(value: number | null | undefined): string {
+  if (value == null || !Number.isFinite(value)) return '—'
+  return `${Math.round(value)}%`
+}
+
+export function tokenTotal(tokens: TokenUsage | null | undefined): number | null {
+  if (!tokens) return null
+  if (tokens.total != null) return tokens.total
+  const values = [tokens.input, tokens.output, tokens.cacheRead, tokens.cacheWrite]
+  if (values.every((value) => value == null)) return null
+  return values.reduce<number>((sum, value) => sum + (value ?? 0), 0)
+}
+
+export function buildFlatSteps(run: AgentRun): FlatStep[] {
+  return run.loops
+    .flatMap((loop) =>
+      loop.steps.map((step) => ({
+        runId: run.id,
+        loop,
+        step,
+      })),
     )
-    return normalized ? [normalized] : []
-  })
+    .sort((left, right) => {
+      const byTime = Date.parse(left.step.startedAt) - Date.parse(right.step.startedAt)
+      if (byTime !== 0) return byTime
+      return left.loop.id.localeCompare(right.loop.id)
+    })
+    .map((item, index) => ({ ...item, index }))
 }
 
-export function eventMatchesFilter(event: TraceEvent, filter: TraceFilter): boolean {
-  if (filter === 'all') return true
-  if (filter === 'error') return event.status === 'failed' || event.kind === 'error'
-  return event.kind === filter
+export function loopDuration(loop: TraceLoop): number {
+  const start = Date.parse(loop.startedAt)
+  const end = Date.parse(loop.endedAt)
+  if (!Number.isFinite(start) || !Number.isFinite(end) || end < start) return 0
+  return end - start
+}
+
+export function stepToolCount(step: TraceStep): number {
+  return step.toolCalls.length
+}
+
+export function stepFailed(step: TraceStep): boolean {
+  return (
+    step.status === 'failed' ||
+    step.toolCalls.some((tool) => tool.status === 'failed')
+  )
+}
+
+export function toolFailed(tool: ToolCall): boolean {
+  return tool.status === 'failed'
+}
+
+export const COMPOSITION_SEGMENTS: ReadonlyArray<{
+  key: keyof Pick<Composition, 'system' | 'tools' | 'user' | 'inject' | 'assistant' | 'toolResult'>
+  label: string
+  color: string
+}> = [
+  { key: 'system', label: '系统提示', color: 'is-system' },
+  { key: 'tools', label: '工具 schema', color: 'is-tools' },
+  { key: 'user', label: '用户消息', color: 'is-user' },
+  { key: 'inject', label: '注入上下文', color: 'is-inject' },
+  { key: 'assistant', label: '助手回复', color: 'is-assistant' },
+  { key: 'toolResult', label: '工具结果', color: 'is-tool-result' },
+]
+
+export function compositionMax(composition: Composition): number {
+  return Math.max(
+    composition.system,
+    composition.tools,
+    composition.user,
+    composition.inject,
+    composition.assistant,
+    composition.toolResult,
+    1,
+  )
 }

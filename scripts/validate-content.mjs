@@ -193,63 +193,68 @@ async function main() {
     'Eval 来源里出现了非官方域名',
   )
 
-  // ---- 5. 双 Agent 可观测实验 ----
+  // ---- 5. Agent 运行可观测实验（schema v2） ----
   const observatory = await readJson('src/data/observatory/snapshot.json')
-  check(observatory.schemaVersion === 1, 'Agent 快照 schemaVersion 必须为 1')
-  check(Boolean(observatory.runId), 'Agent 快照缺少 runId')
+  check(observatory.schemaVersion === 2, 'Agent 快照 schemaVersion 必须为 2')
+  check(Boolean(observatory.generatedAt), 'Agent 快照缺少 generatedAt')
+  check(Boolean(observatory.disclaimer), 'Agent 快照缺少静态回放声明')
+  const observatoryRuns = Array.isArray(observatory.runs) ? observatory.runs : []
+  check(observatoryRuns.length === 2, `Agent 快照应包含 2 条 run，实际 ${observatoryRuns.length}`)
   check(
-    observatory.product?.route === '/agent-observatory/matrix-lab',
-    'Agent 快照产品路由不正确',
+    new Set(observatoryRuns.map((run) => run.id)).size === observatoryRuns.length,
+    'Agent run id 不能重复',
   )
+
+  const projectRun = observatoryRuns.find((run) => run.id === 'matrix-build')
+  const referenceRun = observatoryRuns.find((run) => run.id === 'cctrace-reference')
+  check(Boolean(projectRun), 'Agent 快照缺少本项目矩阵 run')
+  check(Boolean(referenceRun), 'Agent 快照缺少 cctrace 参考 run')
+
   check(
-    ['completed', 'failed'].includes(observatory.status),
-    'Agent 快照状态只能是 completed 或 failed',
+    projectRun?.product?.route === '/agent-observatory/matrix-lab',
+    '本项目 run 产品路由不正确',
   )
+  check(projectRun?.monitor?.summary, '本项目 run 缺少监控 Agent 结论')
   check(
-    ['provider', 'estimated'].includes(observatory.agent?.tokenSource),
-    'Agent tokenSource 只能是 provider 或 estimated',
-  )
-  check(
-    observatory.agent?.provider && observatory.agent?.model,
-    'Agent 快照缺少 provider 或 model',
-  )
-  check(observatory.monitor?.summary, 'Agent 快照缺少监控 Agent 结论')
-  check(
-    Array.isArray(observatory.monitor?.observations) &&
-      observatory.monitor.observations.length >= 3,
+    Array.isArray(projectRun?.monitor?.observations) &&
+      projectRun.monitor.observations.length >= 3,
     '监控 Agent 至少应给出 3 条观察',
   )
-
-  const observatoryEvents = Array.isArray(observatory.events) ? observatory.events : []
-  const observatorySources = Array.isArray(observatory.sources) ? observatory.sources : []
-  check(observatoryEvents.length >= 10, 'Agent 快照公开事件过少')
   check(
-    new Set(observatoryEvents.map((event) => event.id)).size === observatoryEvents.length,
-    'Agent 快照事件 id 不能重复',
+    projectRun?.sourceKind === 'codex-jsonl' && projectRun?.timeScale === 'normalized',
+    '本项目 run 必须标记 Codex JSONL 与归一化时间轴',
   )
   check(
-    observatoryEvents.every(
-      (event, index) =>
-        event.id &&
-        event.title &&
-        event.summary &&
-        event.startedAt &&
-        ['message', 'command', 'file', 'tool', 'test', 'error'].includes(event.kind) &&
-        ['passed', 'failed', 'pending'].includes(event.status) &&
-        (index === 0 ||
-          Date.parse(event.startedAt) >= Date.parse(observatoryEvents[index - 1].startedAt)),
+    projectRun?.tokenSource === 'estimated',
+    '本项目 run 缺少 token 估算口径',
+  )
+  check(
+    referenceRun?.sourceKind === 'cctrace-public-sample' &&
+      referenceRun?.tokenSource === 'provider',
+    '参考 run 必须标记 cctrace 公共样例与 provider token',
+  )
+  check(
+    referenceRun?.metrics?.toolCallCount === referenceRun?.metrics?.sampledToolCallCount,
+    '参考 run 的工具调用与快照内可点击数量不一致',
+  )
+  check(
+    referenceRun?.loops?.some((loop) => loop.kind === 'subagent'),
+    '参考 run 缺少子代理分支',
+  )
+  check(
+    referenceRun?.loops?.some((loop) =>
+      loop.contextEvents?.some((event) => event.kind === 'compaction'),
     ),
-    'Agent 事件存在空字段、非法类型或乱序时间',
+    '参考 run 缺少真实压缩事件',
   )
   check(
-    !JSON.stringify(observatory).includes('"reasoning"'),
-    'Agent 快照不得包含 reasoning 事件',
-  )
-  check(
-    !/sk-[A-Za-z0-9_-]{12,}/.test(JSON.stringify(observatory)),
-    'Agent 快照疑似包含 API Key',
+    ['memory', 'system', 'injection', 'compaction', 'subagent'].every((kind) =>
+      referenceRun?.context?.some((source) => source.kind === kind),
+    ),
+    '参考 run 的上下文来源缺少记忆、系统提示、注入、压缩或子代理',
   )
 
+  const observatorySources = Array.isArray(projectRun?.sources) ? projectRun.sources : []
   const sourcePaths = new Set()
   for (const source of observatorySources) {
     check(source.path && typeof source.sha256 === 'string', `Agent 源码缺少路径或哈希：${source.path}`)
@@ -261,18 +266,158 @@ async function main() {
     check(hash === source.sha256, `Agent 源码哈希不一致：${source.path}`)
   }
 
-  for (const event of observatoryEvents) {
-    for (const ref of event.sourceRefs ?? []) {
-      const source = observatorySources.find((item) => item.path === ref.file)
-      check(Boolean(source), `Agent 事件 ${event.id} 引用了未知源码：${ref.file}`)
-      if (!source) continue
+  const traceStepIds = new Set()
+  const runToolIds = new Map()
+  for (const run of observatoryRuns) {
+    const loopIds = new Set()
+    const toolIds = new Set()
+    let stepCount = 0
+    for (const loop of run.loops ?? []) {
+      check(Boolean(loop.id && loop.label && loop.prompt), `${run.id} 存在空 loop 字段`)
+      check(!loopIds.has(loop.id), `${run.id} loop id 重复：${loop.id}`)
+      loopIds.add(loop.id)
       check(
-        ref.startLine >= 1 && ref.endLine >= ref.startLine && ref.endLine <= source.lines.length,
-        `Agent 事件 ${event.id} 的源码行段越界：${ref.file}`,
+        ['human', 'subagent'].includes(loop.kind) &&
+          ['passed', 'failed', 'pending'].includes(loop.status),
+        `${run.id} loop ${loop.id} 类型或状态非法`,
       )
-      check(Boolean(ref.symbol), `Agent 事件 ${event.id} 缺少源码符号`)
+      check(
+        Date.parse(loop.startedAt) <= Date.parse(loop.endedAt),
+        `${run.id} loop ${loop.id} 时间顺序非法`,
+      )
+      for (const step of loop.steps ?? []) {
+        stepCount += 1
+        check(step.id && step.loopId === loop.id, `${run.id} step 缺少 id 或 loop 绑定`)
+        check(!traceStepIds.has(step.id), `Agent step id 重复：${step.id}`)
+        traceStepIds.add(step.id)
+        check(
+          Date.parse(step.startedAt) <= Date.parse(step.endedAt),
+          `${run.id} step ${step.id} 时间顺序非法`,
+        )
+        check(
+          ['passed', 'failed', 'pending'].includes(step.status),
+          `${run.id} step ${step.id} 状态非法`,
+        )
+        check(Boolean(step.model), `${run.id} step ${step.id} 缺少 model`)
+        for (const tool of step.toolCalls ?? []) {
+          check(
+            tool.id && tool.name && tool.preview,
+            `${run.id} step ${step.id} 存在空工具字段`,
+          )
+          check(
+            ['passed', 'failed', 'pending'].includes(tool.status),
+            `${run.id} step ${step.id} 工具状态非法`,
+          )
+          check(!toolIds.has(tool.id), `${run.id} tool id 重复：${tool.id}`)
+          toolIds.add(tool.id)
+        }
+        for (const ref of step.sourceRefs ?? []) {
+          const source = observatorySources.find((item) => item.path === ref.file)
+          check(Boolean(source), `Agent step ${step.id} 引用了未知源码：${ref.file}`)
+          if (!source) continue
+          check(
+            ref.startLine >= 1 &&
+              ref.endLine >= ref.startLine &&
+              ref.endLine <= source.lines.length,
+            `Agent step ${step.id} 的源码行段越界：${ref.file}`,
+          )
+          check(Boolean(ref.symbol), `Agent step ${step.id} 缺少源码符号`)
+        }
+      }
+      for (const event of loop.contextEvents ?? []) {
+        check(
+          event.id && event.label && event.detail && event.startedAt,
+          `${run.id} loop ${loop.id} 存在空上下文事件`,
+        )
+        check(
+          ['injection', 'compaction', 'failure', 'subagent'].includes(event.kind),
+          `${run.id} 上下文事件类型非法：${event.kind}`,
+        )
+        if (event.kind === 'compaction') {
+          check(
+            Number.isFinite(event.fromTurns) &&
+              Number.isFinite(event.toTurns) &&
+              event.toTurns < event.fromTurns,
+            `${run.id} 压缩事件缺少有效的历史消息变化`,
+          )
+        }
+      }
     }
+    runToolIds.set(run.id, toolIds)
+    check(
+      stepCount === run.metrics?.stepCount,
+      `${run.id} stepCount 与真实 loop 内 step 数量不一致`,
+    )
+    check(
+      (run.loops ?? []).filter((loop) => loop.kind === 'human').length === run.metrics?.loopCount,
+      `${run.id} loopCount 与 human loop 数量不一致`,
+    )
+    check(
+      (run.loops ?? []).filter((loop) => loop.kind === 'subagent').length === run.metrics?.subagentCount,
+      `${run.id} subagentCount 与 subagent loop 数量不一致`,
+    )
+    check(
+      (run.context ?? []).length >= 3,
+      `${run.id} 上下文来源过少`,
+    )
+    check(
+      Array.isArray(run.notes) && run.notes.length >= 3,
+      `${run.id} 数据口径说明过少`,
+    )
   }
+
+  check(
+    runToolIds.get('cctrace-reference')?.size === referenceRun?.metrics?.toolCallCount,
+    '参考 run 去重后的工具数量与 metrics 不一致',
+  )
+  check(
+    referenceRun?.loops
+      ?.flatMap((loop) => loop.steps)
+      .every((step) => step.tokens?.source === 'provider' && Number.isFinite(step.tokens?.total)),
+    '参考 run 存在缺失 provider token 的 step',
+  )
+  check(
+    referenceRun?.loops
+      ?.flatMap((loop) => loop.steps)
+      .some((step) => step.composition?.source === 'cctrace-demo-data'),
+    '参考 run 缺少 cctrace demo 的精确上下文构成',
+  )
+  check(
+    observatory.reference?.probes?.some(
+      (probe) =>
+        probe.url === 'https://thevibeworks.github.io/CRTrace' && probe.status === 404,
+    ),
+    'Agent 快照缺少 CRTrace 404 核验记录',
+  )
+  check(
+    observatory.reference?.probes?.some(
+      (probe) =>
+        probe.url === 'https://github.com/thevibeworks/cctrace' && probe.status === 200,
+    ),
+    'Agent 快照缺少 cctrace 200 核验记录',
+  )
+  check(
+    observatory.reference?.links?.every(
+      (link) =>
+        link.url.startsWith('https://github.com/thevibeworks/cctrace/') ||
+        link.url.startsWith('https://thevibeworks.github.io/cctrace/'),
+    ),
+    'cctrace 参考链接出现未知域名',
+  )
+  check(
+    (observatory.sourceHash?.agentsMd ?? '').length === 64 &&
+      (observatory.sourceHash?.cctraceSample ?? '').length === 64,
+    'Agent 快照缺少输入源哈希',
+  )
+
+  const observatoryJson = JSON.stringify(observatory)
+  check(!observatoryJson.includes('"reasoning"'), 'Agent 快照不得包含 reasoning 字段')
+  check(!/sk-[A-Za-z0-9_-]{12,}/.test(observatoryJson), 'Agent 快照疑似包含 API Key')
+  check(!/\/home\/(agent|deva)\//.test(observatoryJson), 'Agent 快照仍包含本机用户目录')
+  check(
+    !/646a7535-[0-9a-f-]{20,}/.test(observatoryJson),
+    'Agent 快照仍包含未脱敏的 session id',
+  )
 
   // ---- 6. 上游一致性 ----
   for (const [name, data] of Object.entries({ cli, config, tools, providers })) {
@@ -294,7 +439,11 @@ async function main() {
     `Eval 主题：${evalCases.length} 个用例 / ${evalPrompts.length} 个 Prompt / ${evalSnapshot.outputs.length} 条快照（${evalSnapshot.model}）`,
   )
   notes.push(
-    `Agent 实验：${observatoryEvents.length} 条公开事件 / ${observatorySources.length} 个源码文件 / ${observatory.agent.tokenCount} 估算 token`,
+    `Agent 实验：${observatoryRuns.length} 条 run（${projectRun?.metrics?.stepCount ?? 0} + ${
+      referenceRun?.metrics?.stepCount ?? 0
+    } 个 step）/ ${referenceRun?.metrics?.toolCallCount ?? 0} 次可点击参考工具 / ${
+      observatorySources.length
+    } 个源码文件`,
   )
 
   if (problems.length > 0) {

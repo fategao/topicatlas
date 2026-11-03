@@ -8,7 +8,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const artifactDir = path.join(root, 'artifacts', 'agent-observatory')
 const productLogPath = path.join(artifactDir, 'product-agent.jsonl')
 const monitorResultPath = path.join(artifactDir, 'monitor-agent-result.json')
-const outputPath = path.join(root, 'src', 'data', 'observatory', 'snapshot.json')
+const projectRunPath = path.join(root, 'src', 'data', 'observatory', 'project-run.json')
 
 const PRODUCT_SOURCES = [
   'src/features/matrix-lab/matrixMath.ts',
@@ -296,10 +296,10 @@ async function main() {
     sources,
   }
 
-  await mkdir(path.dirname(outputPath), { recursive: true })
-  await writeFile(outputPath, `${JSON.stringify(snapshot, null, 2)}\n`, 'utf8')
+  await mkdir(path.dirname(projectRunPath), { recursive: true })
+  await writeFile(projectRunPath, `${JSON.stringify(snapshot, null, 2)}\n`, 'utf8')
   console.log(
-    `observatory: ${events.length} 条公开事件 / ${sources.length} 个源码文件 / ${snapshot.agent.tokenCount} 估算 token`,
+    `observatory project-run: ${events.length} 条公开事件 / ${sources.length} 个源码文件 / ${snapshot.agent.tokenCount} 估算 token（再运行 npm run observatory:snapshot 组合页面快照）`,
   )
 }
 

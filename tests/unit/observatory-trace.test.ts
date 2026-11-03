@@ -1,48 +1,66 @@
 import { describe, expect, it } from 'vitest'
 import {
-  eventMatchesFilter,
-  normalizeTraceEvents,
+  COMPOSITION_SEGMENTS,
+  buildFlatSteps,
+  compositionMax,
+  formatClock,
+  formatDuration,
   redactTraceText,
+  tokenTotal,
 } from '../../src/features/agent-observatory/trace'
+import type { AgentRun, Composition } from '../../src/features/agent-observatory/types'
+import snapshotJson from '../../src/data/observatory/snapshot.json'
 
-describe('Agent 轨迹归一化', () => {
-  it('只保留可公开的执行事件并忽略 reasoning', () => {
-    const events = normalizeTraceEvents([
-      {
-        type: 'item.completed',
-        timestamp: '2026-10-27T10:00:00.000Z',
-        item: {
-          id: 'command-1',
-          type: 'command_execution',
-          command: 'npm test',
-          status: 'completed',
-          exit_code: 0,
-        },
-      },
-      {
-        type: 'item.completed',
-        timestamp: '2026-10-27T10:00:01.000Z',
-        item: {
-          id: 'reasoning-1',
-          type: 'reasoning',
-          text: '不应进入公开轨迹的内部内容',
-        },
-      },
-      {
-        type: 'item.completed',
-        timestamp: '2026-10-27T10:00:02.000Z',
-        item: {
-          id: 'file-1',
-          type: 'file_change',
-          status: 'completed',
-          changes: [{ path: 'src/features/matrix-lab/MatrixLab.tsx' }],
-        },
-      },
-    ])
+const snapshot = snapshotJson as unknown as { runs: AgentRun[] }
 
-    expect(events).toHaveLength(2)
-    expect(events.map((event) => event.kind)).toEqual(['command', 'file'])
-    expect(JSON.stringify(events)).not.toContain('内部内容')
+describe('Agent 轨迹工具函数', () => {
+  it('格式化真实墙钟与耗时', () => {
+    expect(formatDuration(330_766)).toBe('5m 31s')
+    expect(formatDuration(9728)).toBe('9.7 s')
+    expect(formatDuration(0)).toBe('0 ms')
+    expect(formatClock('2026-09-15T04:20:45.890Z')).toBe('04:20:45')
+    expect(formatClock('not-a-date')).toBe('--:--:--')
+  })
+
+  it('tokenTotal 只汇总真实存在的 usage 字段', () => {
+    expect(
+      tokenTotal({
+        input: 2,
+        output: 184,
+        cacheRead: 11_661,
+        cacheWrite: 31_148,
+        thinking: 58,
+        cachePct: 27,
+        source: 'provider',
+        total: 42_995,
+      }),
+    ).toBe(42_995)
+    expect(
+      tokenTotal({
+        input: null,
+        output: null,
+        cacheRead: null,
+        cacheWrite: null,
+        thinking: null,
+        source: 'estimated',
+        total: 57_413,
+      }),
+    ).toBe(57_413)
+    expect(tokenTotal(null)).toBeNull()
+  })
+
+  it('flat steps 按真实开始时间排序，而不是按 loop 顺序', () => {
+    const reference = snapshot.runs.find((run) => run.id === 'cctrace-reference')
+    expect(reference).toBeTruthy()
+    const flat = buildFlatSteps(reference!)
+    expect(flat.length).toBe(reference!.metrics.stepCount)
+    expect(flat[0].step.startedAt).toBe('2026-09-15T04:20:45.890Z')
+    for (let index = 1; index < flat.length; index += 1) {
+      expect(Date.parse(flat[index].step.startedAt)).toBeGreaterThanOrEqual(
+        Date.parse(flat[index - 1].step.startedAt),
+      )
+    }
+    expect(flat.some((item) => item.loop.kind === 'subagent')).toBe(true)
   })
 
   it('脱敏密钥、令牌和本机用户目录', () => {
@@ -56,22 +74,19 @@ describe('Agent 轨迹归一化', () => {
     expect(result).toContain('[REDACTED]')
   })
 
-  it('事件筛选覆盖命令、文件、测试、错误和全部', () => {
-    const event = {
-      id: 'e1',
-      kind: 'test' as const,
-      status: 'passed' as const,
-      title: 'npm run test',
-      summary: '71 个测试通过',
-      phase: '验证',
-      startedAt: '2026-10-27T10:00:00.000Z',
-      targets: [],
-      sourceRefs: [],
+  it('上下文构成有六个分类且按最大值归一化', () => {
+    const composition: Composition = {
+      system: 3596,
+      tools: 7723,
+      user: 3640,
+      inject: 12493,
+      assistant: 0,
+      toolResult: 0,
+      total: 27452,
+      source: 'cctrace-demo-data',
     }
 
-    expect(eventMatchesFilter(event, 'all')).toBe(true)
-    expect(eventMatchesFilter(event, 'test')).toBe(true)
-    expect(eventMatchesFilter(event, 'error')).toBe(false)
-    expect(eventMatchesFilter({ ...event, status: 'failed' }, 'error')).toBe(true)
+    expect(COMPOSITION_SEGMENTS).toHaveLength(6)
+    expect(compositionMax(composition)).toBe(12493)
   })
 })
