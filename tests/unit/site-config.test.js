@@ -8,6 +8,7 @@ const routes = [
   '/eval-driven-prompt',
   '/agent-observatory',
   '/agent-observatory/matrix-lab',
+  '/skills-loading',
 ]
 
 describe('站点域名配置', () => {
@@ -30,6 +31,7 @@ describe('站点域名配置', () => {
     expect(artifacts.sitemap).toContain(
       '<loc>https://example.com/agent-observatory/matrix-lab/</loc>',
     )
+    expect(artifacts.sitemap).toContain('<loc>https://example.com/skills-loading/</loc>')
   })
 
   it('sitemap 里不会出现双斜杠，根路径也只出现一次', () => {

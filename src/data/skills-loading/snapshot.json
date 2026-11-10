@@ -1,0 +1,225 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-10T06:50:56.951Z",
+  "title": "Skill Loading Lab",
+  "label": "RECORDED CODEX TURN",
+  "provider": "custom",
+  "model": "deepseek-flash",
+  "reasoningEffort": "high",
+  "environment": {
+    "os": "Windows_NT 10.0.26200 x64",
+    "node": "v24.13.0",
+    "codex": "codex-cli 0.167.0-alpha.3.2",
+    "sandbox": "read-only",
+    "captureMode": "codex exec --json --ephemeral"
+  },
+  "prompt": {
+    "text": "$release-brief-auditor\n\n你是本次“技能加载”演示的录制 Agent。任务只读，不修改任何文件，不联网，不安装依赖，不提交 Git。\n\n请严格按以下顺序留下可审计证据：\n1. 读取 .agents/skills/release-brief-auditor/SKILL.md。\n2. 读取 .agents/skills/release-brief-auditor/references/editorial-checklist.md，用清单审查示例简报。\n3. 执行 node .agents/skills/release-brief-auditor/scripts/audit-brief.mjs .agents/skills/release-brief-auditor/examples/release-brief.md。\n4. 根据脚本输出和清单，用中文返回三条最高价值的发布建议，并列出你实际读取的文件。\n\n不要调用与该任务无关的技能或工具。不要输出内部推理。",
+    "sha256": "259885f166db102484def62e112266baf4917d9c12b5d802120230df21e920bb"
+  },
+  "finalOutput": "**审查结论：需修订后发布（needs_revision）**\n\n三条最高价值建议：\n\n1. **处理未注明来源的 Token 数据**：删除“约 10k tokens”，或补充明确的测量来源、口径与估算标记，不能把 Open issue 当作来源。\n2. **明确具体受众与结果追踪信息**：将“agent developers”细化为可识别的目标读者，并写明模型、页面路由或对应产物，使每项结果可追溯。\n3. **补充发布回滚路径**：说明页面发布异常时如何撤下、恢复上一版本，以及判断触发回滚的条件。\n\n脚本还判定 `audience` 和 `rollback` 信号缺失；现有发布验证计划较完整，但尚未覆盖回滚。未修改文件、未联网、未安装依赖。\n\n实际读取的文件：\n\n- `.agents/skills/release-brief-auditor/SKILL.md`\n- `.agents/skills/release-brief-auditor/references/editorial-checklist.md`\n- `.agents/skills/release-brief-auditor/examples/release-brief.md`\n\n按要求执行了：\n\n- `node .agents/skills/release-brief-auditor/scripts/audit-brief.mjs .agents/skills/release-brief-auditor/examples/release-brief.md`",
+  "skill": {
+    "name": "release-brief-auditor",
+    "path": ".agents/skills/release-brief-auditor",
+    "description": "Audit a release brief before publishing. Use when the user asks for a release brief review, pre-publication content check, or explicitly invokes release-brief-auditor.",
+    "files": [
+      {
+        "path": "SKILL.md",
+        "kind": "instructions",
+        "bytes": 754,
+        "chars": 754,
+        "sha256": "ec581aeb35ec6c66baedf6dced4db2d4972920cbaf743ffcbced46d2e0821d20",
+        "excerpt": "--- name: release-brief-auditor description: Audit a release brief before publishing. Use when the user asks for a release brief review, pre-publication content check, or explicitly invokes release-brief-auditor. --- # Release Brief Auditor Audit the requested brief without changing project files or fetching remote content. 1. Read `references/editorial-checklist.md`. 2. Run `node scripts/audit-brief.mjs <brief-path>` to collect deterministic counts. 3. Apply every checklist item to the brief. 4. Return a concise Chinese verdict with the three highest-value fixes. Do not claim that a checklist item passed unless the brief contains supporting text. Keep script code and unrelated skill files out of the response; use only the script's output."
+      },
+      {
+        "path": "examples/release-brief.md",
+        "kind": "example",
+        "bytes": 807,
+        "chars": 807,
+        "sha256": "153ae5d86c809f2d8499dabd2e839e4163351d36ca5112f78be037d5f8445b47",
+        "excerpt": "# Topic Atlas Skills Loading Lab ## Release decision Publish a new static learning page for agent developers. The page explains how Codex keeps skill metadata in context, loads `SKILL.md` on demand, and reads supporting files only when needed. ## Evidence - The demo uses one recorded Codex turn with provider-reported usage. - The browser receives a static snapshot and never asks for an API key. - The run loaded the skill body, one reference file, and one deterministic script. ## Verification plan Run the content validator, unit tests, component tests, production build, and Playwright checks before deployment. After deployment, verify the public deep link and its static assets. ## Open issue The draft currently says the initial skill index costs \"about 10k tokens\" without naming a source."
+      },
+      {
+        "path": "references/editorial-checklist.md",
+        "kind": "reference",
+        "bytes": 760,
+        "chars": 760,
+        "sha256": "0047bc8cb45003133443f83108973f84226eae9186c886f752fb81313fe4fa5d",
+        "excerpt": "# Editorial checklist Use this checklist after running the deterministic audit script. ## Scope and claim quality - The brief names one concrete audience and one release decision. - Every quantitative claim has a visible basis or is labeled as an estimate. - The brief separates observed results from planned work. ## Technical traceability - The reader can tell which artifact, route, or model produced each result. - Token counts and context-budget claims use an explicit source. - Failure states are preserved instead of being rewritten as successes. ## Delivery readiness - The brief states how the result will be verified after release. - High-risk changes have a rollback path. - The next owner can act without reading the entire project history."
+      },
+      {
+        "path": "scripts/audit-brief.mjs",
+        "kind": "script",
+        "bytes": 1956,
+        "chars": 1940,
+        "sha256": "41487dbf8c22c4bdd719f4ac1bf84200bf57dd93ba2d4410cdee9412d6077e8f",
+        "excerpt": "Executable helper. The trace records its command and output, not source-body loading."
+      }
+    ]
+  },
+  "index": {
+    "scannedSkillFiles": 129,
+    "metadataChars": 35318,
+    "estimatedTokens": 8830,
+    "defaultContextRatio": 0.02,
+    "rule": "Codex 官方文档说明初始技能列表最多使用模型上下文窗口的 2%；窗口未知时按 8,000 字符回退。页面只展示本地元数据实测规模，不冒充 provider token。",
+    "scope": [
+      "project:.agents/skills",
+      "user:~/.codex/skills",
+      "user:~/.agents/skills",
+      "plugins:~/.codex/plugins/cache"
+    ]
+  },
+  "usage": {
+    "inputTokens": 18501,
+    "cachedInputTokens": 107904,
+    "cacheWriteInputTokens": 0,
+    "outputTokens": 2724,
+    "reasoningOutputTokens": 1507,
+    "source": "provider"
+  },
+  "events": [
+    {
+      "id": "skill-event-1",
+      "ordinal": 1,
+      "status": "passed",
+      "contextCharsAdded": 0,
+      "contextTokensAdded": 0,
+      "tokenLabel": "estimated",
+      "kind": "turn",
+      "level": "context",
+      "observability": "observed",
+      "title": "显式调用进入当前 turn",
+      "summary": "$release-brief-auditor 你是本次“技能加载”演示的录制 Agent。任务只读，不修改任何文件，不联网，不安装依赖，不提交 Git。 请严格按以下顺序留下可审计证据： 1. 读取 .agents/skills/release-brief-auditor/SKILL.md。 2. 读取 .agents/skills/release-brief-auditor/references/editorial-checklis…"
+    },
+    {
+      "id": "skill-event-2",
+      "ordinal": 2,
+      "status": "passed",
+      "contextCharsAdded": 35318,
+      "contextTokensAdded": 8830,
+      "tokenLabel": "estimated",
+      "kind": "metadata",
+      "level": "metadata",
+      "observability": "computed",
+      "title": "初始技能索引已准备",
+      "summary": "扫描到的 SKILL.md 元数据共 35,318 字符；按 chars/4 估算约 8,830 token。"
+    },
+    {
+      "id": "skill-event-3",
+      "ordinal": 3,
+      "status": "passed",
+      "contextCharsAdded": 0,
+      "contextTokensAdded": 0,
+      "tokenLabel": "estimated",
+      "kind": "selection",
+      "level": "instructions",
+      "observability": "documented",
+      "title": "显式命中 release-brief-auditor",
+      "summary": "当前 Codex JSON 事件不暴露完整 system prompt，因此这一项依据显式调用和后续文件读取判定，不展示未捕获的原始索引。",
+      "file": ".agents/skills/release-brief-auditor/SKILL.md"
+    },
+    {
+      "id": "skill-event-4",
+      "ordinal": 4,
+      "status": "passed",
+      "contextCharsAdded": 0,
+      "contextTokensAdded": 0,
+      "tokenLabel": "estimated",
+      "kind": "read",
+      "level": "instructions",
+      "observability": "observed",
+      "title": "读取 SKILL.md 正文",
+      "summary": "技能根文档进入当前上下文；此时才加载 Level 2 的过程性指令。",
+      "command": "\"powershell.exe\" -Command \"Get-Content -LiteralPath '.agents\\\\skills\\\\release-brief-auditor\\\\SKILL.md' -Raw\"",
+      "outputExcerpt": "--- name: release-brief-auditor description: Audit a release brief before publishing. Use when the user asks for a release brief review, pre-publication content check, or explicitly invokes release-brief-auditor. --- # Release Brief Auditor Audit the requested brief without changing project files or fetching remote content. 1. Read `references/editorial-checklist.md`. 2. Run `node scripts/audit-brief.mjs <brief-path>` to collect deterministic counts. 3. Apply every checklist item to the brief. 4. Return a concise Chinese verdict with the three highest-value fixes. Do not claim that a checklist item passed unless the brief contains supporting text. Keep script code and unrelated skill files out of the response; use only the script's output.",
+      "file": ".agents/skills/release-brief-auditor/SKILL.md"
+    },
+    {
+      "id": "skill-event-5",
+      "ordinal": 5,
+      "status": "passed",
+      "contextCharsAdded": 0,
+      "contextTokensAdded": 0,
+      "tokenLabel": "estimated",
+      "kind": "read",
+      "level": "reference",
+      "observability": "observed",
+      "title": "按需读取审查清单",
+      "summary": "只有任务需要的参考文件才进入上下文；未引用资源保持零 token。",
+      "command": "\"powershell.exe\" -Command \"Get-Content -LiteralPath '.agents\\\\skills\\\\release-brief-auditor\\\\references\\\\editorial-checklist.md' -Raw\"",
+      "outputExcerpt": "# Editorial checklist Use this checklist after running the deterministic audit script. ## Scope and claim quality - The brief names one concrete audience and one release decision. - Every quantitative claim has a visible basis or is labeled as an estimate. - The brief separates observed results from planned work. ## Technical traceability - The reader can tell which artifact, route, or model produced each result. - Token counts and context-budget claims use an explicit source. - Failure states are preserved instead of being rewritten as successes. ## Delivery readiness - The brief states how the result will be verified after release. - High-risk changes have a rollback path. - The next owner can act without reading the entire project history.",
+      "file": ".agents/skills/release-brief-auditor/references/editorial-checklist.md"
+    },
+    {
+      "id": "skill-event-6",
+      "ordinal": 6,
+      "status": "passed",
+      "contextCharsAdded": 391,
+      "contextTokensAdded": 98,
+      "tokenLabel": "estimated",
+      "kind": "execute",
+      "level": "script",
+      "observability": "observed",
+      "title": "执行确定性审计脚本",
+      "summary": "脚本源码不进入模型上下文；回放中记录的是命令与脚本输出。",
+      "command": "\"powershell.exe\" -Command 'node .agents/skills/release-brief-auditor/scripts/audit-brief.mjs .agents/skills/release-brief-auditor/examples/release-brief.md'",
+      "outputExcerpt": "{ \"file\": \"release-brief.md\", \"counts\": { \"characters\": 807, \"words\": 121, \"lines\": 22, \"headings\": 5, \"bullets\": 3, \"numericParagraphs\": 1, \"sourcedNumericParagraphs\": 1 }, \"signals\": { \"audience\": false, \"evidence\": true, \"verification\": true, \"rollback\": false }, \"issues\": [ \"Add an explicit rollback path for the release.\", \"Name the intended audience.\" ], \"verdict\": \"needs_revision\" }",
+      "file": ".agents/skills/release-brief-auditor/scripts/audit-brief.mjs"
+    },
+    {
+      "id": "skill-event-7",
+      "ordinal": 7,
+      "status": "passed",
+      "contextCharsAdded": 0,
+      "contextTokensAdded": 0,
+      "tokenLabel": "estimated",
+      "kind": "message",
+      "level": "output",
+      "observability": "observed",
+      "title": "形成可复核的发布建议",
+      "summary": "最终可见输出返回给用户；这里不保存模型内部 reasoning。",
+      "outputExcerpt": "**审查结论：需修订后发布（needs_revision）** 三条最高价值建议： 1. **处理未注明来源的 Token 数据**：删除“约 10k tokens”，或补充明确的测量来源、口径与估算标记，不能把 Open issue 当作来源。 2. **明确具体受众与结果追踪信息**：将“agent developers”细化为可识别的目标读者，并写明模型、页面路由或对应产物，使每项结果可追溯。 3. **补充发布回滚路径**：说明页面发布异常时如何撤下、恢复上一版本，以及判断触发回滚的条件。 脚本还判定 `audience` 和 `rollback` 信号缺失；现有发布验证计划较完整，但尚未覆盖回滚。未修改文件、未联网、未安装依赖。 实际读取的文件： - `.agents/skills/release-brief-auditor/SKILL.md` - `.agents/skills/release-brief-auditor/references/editorial-checklist.md` - `.agents/skills/release-brief-auditor/examples/release-brief.md` 按要求执行了： - `node .agents/skills/release-brief-auditor/scripts/audit-brief.mjs .agents/skills/release-brief-auditor/examples/release-brief.md`"
+    },
+    {
+      "id": "skill-event-8",
+      "ordinal": 8,
+      "status": "passed",
+      "contextCharsAdded": 0,
+      "contextTokensAdded": 0,
+      "tokenLabel": "provider",
+      "kind": "usage",
+      "level": "context",
+      "observability": "observed",
+      "title": "收束 provider usage",
+      "summary": "input 18,501 · cached 107,904 · output 2,724 · reasoning 1,507"
+    }
+  ],
+  "sources": [
+    {
+      "label": "OpenAI · Agent Skills",
+      "url": "https://developers.openai.com/codex/skills",
+      "usedFor": "技能目录、按需加载、2% 初始上下文预算与显式/隐式调用。",
+      "retrievedAt": "2026-11-10"
+    },
+    {
+      "label": "OpenAI · Skills in plugins",
+      "url": "https://developers.openai.com/plugins/concepts/skills",
+      "usedFor": "模型先看到 name/description，请求匹配后才读取完整 SKILL.md。",
+      "retrievedAt": "2026-11-10"
+    },
+    {
+      "label": "cctrace · TracePair model",
+      "url": "https://github.com/thevibeworks/cctrace/blob/main/README.zh-CN.md",
+      "usedFor": "诊断控制台的 request、上下文、工具与运行证据组织方式。",
+      "retrievedAt": "2026-11-10"
+    }
+  ],
+  "notes": [
+    "轨迹来自一次真实、只读、无持久化会话的 Codex CLI 运行；浏览器只读取构建前快照。",
+    "Codex JSON 暴露 agent message、command execution 与 provider usage，但不暴露完整 system prompt。",
+    "初始技能索引规模由本机 SKILL.md frontmatter 计算，使用 chars/4 估算，不冒充 provider token。",
+    "内部 reasoning 未写入快照；绝对工作区路径已归一化，原始 JSONL 只保留在被 Git 忽略的 artifacts/。",
+    "本次录制 stderr 有内容，详见本地 artifacts；未写入页面。"
+  ]
+}

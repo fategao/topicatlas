@@ -419,7 +419,142 @@ async function main() {
     'Agent 快照仍包含未脱敏的 session id',
   )
 
-  // ---- 6. 上游一致性 ----
+  // ---- 6. Skills Loading Lab 快照 ----
+  const skillsLoading = await readJson('src/data/skills-loading/snapshot.json')
+  check(skillsLoading.schemaVersion === 1, 'Skills Loading 快照 schemaVersion 必须为 1')
+  check(Boolean(skillsLoading.generatedAt), 'Skills Loading 快照缺少 generatedAt')
+  check(Boolean(skillsLoading.provider), 'Skills Loading 快照缺少 provider')
+  check(Boolean(skillsLoading.model), 'Skills Loading 快照缺少 model')
+  check(Boolean(skillsLoading.reasoningEffort), 'Skills Loading 快照缺少 reasoning effort')
+  check(skillsLoading.usage?.source === 'provider', 'Skills Loading usage 必须来自 provider')
+  check(
+    [
+      'inputTokens',
+      'cachedInputTokens',
+      'cacheWriteInputTokens',
+      'outputTokens',
+      'reasoningOutputTokens',
+    ].every((key) => Number.isFinite(skillsLoading.usage?.[key])),
+    'Skills Loading provider usage 字段不完整',
+  )
+  check(/^[a-f0-9]{64}$/.test(skillsLoading.prompt?.sha256 ?? ''), 'Skills Loading prompt hash 非法')
+  check(String(skillsLoading.finalOutput ?? '').trim().length > 50, 'Skills Loading 最终输出过短')
+  check(skillsLoading.skill?.name === 'release-brief-auditor', 'Skills Loading 技能名不正确')
+  check(
+    Number.isFinite(skillsLoading.index?.scannedSkillFiles) &&
+      skillsLoading.index.scannedSkillFiles > 0,
+    'Skills Loading 初始技能索引缺少扫描结果',
+  )
+  check(
+    skillsLoading.index?.metadataChars > 0 && skillsLoading.index?.estimatedTokens > 0,
+    'Skills Loading 初始技能索引缺少字符或 token 估算',
+  )
+  check(
+    skillsLoading.index?.defaultContextRatio === 0.02 &&
+      String(skillsLoading.index?.rule).includes('2%'),
+    'Skills Loading 缺少官方 2% 上下文预算口径',
+  )
+
+  const skillFiles = Array.isArray(skillsLoading.skill?.files) ? skillsLoading.skill.files : []
+  check(skillFiles.length >= 4, `Skills Loading 技能文件应至少 4 个，实际 ${skillFiles.length}`)
+  check(
+    ['instructions', 'reference', 'script', 'example'].every((kind) =>
+      skillFiles.some((file) => file.kind === kind),
+    ),
+    'Skills Loading 技能包缺少正文、引用、脚本或示例文件',
+  )
+  const skillPaths = new Set()
+  for (const file of skillFiles) {
+    check(Boolean(file.path && file.sha256), `Skills Loading 文件缺少路径或哈希：${file.path}`)
+    check(!skillPaths.has(file.path), `Skills Loading 文件重复：${file.path}`)
+    skillPaths.add(file.path)
+    const actual = await readText(path.join(skillsLoading.skill.path, file.path))
+    const hash = createHash('sha256').update(actual).digest('hex')
+    check(hash === file.sha256, `Skills Loading 文件哈希不一致：${file.path}`)
+  }
+
+  const skillEvents = Array.isArray(skillsLoading.events) ? skillsLoading.events : []
+  check(skillEvents.length >= 8, `Skills Loading 事件过少：${skillEvents.length}`)
+  check(
+    new Set(skillEvents.map((event) => event.id)).size === skillEvents.length,
+    'Skills Loading 事件 id 不能重复',
+  )
+  check(
+    skillEvents.every((event, index) => event.ordinal === index + 1),
+    'Skills Loading 事件 ordinal 必须连续',
+  )
+  check(
+    skillEvents.every(
+      (event) =>
+        ['context', 'metadata', 'instructions', 'reference', 'script', 'output'].includes(
+          event.level,
+        ) &&
+        ['observed', 'computed', 'documented'].includes(event.observability) &&
+        ['passed', 'failed', 'info'].includes(event.status) &&
+        Number.isFinite(event.contextCharsAdded) &&
+        Number.isFinite(event.contextTokensAdded),
+    ),
+    'Skills Loading 事件字段非法',
+  )
+  check(
+    skillEvents.some(
+      (event) =>
+        event.kind === 'read' &&
+        event.level === 'instructions' &&
+        event.observability === 'observed',
+    ),
+    'Skills Loading 缺少真实 SKILL.md 读取证据',
+  )
+  check(
+    skillEvents.some(
+      (event) =>
+        event.kind === 'read' &&
+        event.level === 'reference' &&
+        event.observability === 'observed',
+    ),
+    'Skills Loading 缺少真实引用文件读取证据',
+  )
+  check(
+    skillEvents.some(
+      (event) =>
+        event.kind === 'execute' &&
+        event.level === 'script' &&
+        event.observability === 'observed',
+    ),
+    'Skills Loading 缺少真实脚本执行证据',
+  )
+  check(
+    skillEvents.some(
+      (event) => event.kind === 'message' && event.level === 'output',
+    ),
+    'Skills Loading 缺少最终输出事件',
+  )
+  for (const event of skillEvents) {
+    if (!event.file) continue
+    const relativeEventPath = event.file.startsWith(`${skillsLoading.skill.path}/`)
+      ? event.file.slice(skillsLoading.skill.path.length + 1)
+      : event.file
+    check(skillPaths.has(relativeEventPath), `Skills Loading 事件引用未知文件：${event.file}`)
+  }
+  check(
+    skillsLoading.sources?.some(
+      (source) => source.url === 'https://developers.openai.com/codex/skills',
+    ),
+    'Skills Loading 缺少 OpenAI Skills 官方来源',
+  )
+  check(
+    skillsLoading.sources?.some((source) =>
+      source.url.startsWith('https://github.com/thevibeworks/cctrace/'),
+    ),
+    'Skills Loading 缺少 cctrace 参考来源',
+  )
+  const skillsLoadingJson = JSON.stringify(skillsLoading)
+  check(!/"reasoning"\s*:/.test(skillsLoadingJson), 'Skills Loading 不得保存内部 reasoning 正文')
+  check(!/sk-[A-Za-z0-9_-]{12,}/.test(skillsLoadingJson), 'Skills Loading 快照疑似包含 API Key')
+  check(!/[A-Z]:\\/.test(skillsLoadingJson), 'Skills Loading 快照仍包含 Windows 绝对路径')
+  check(!/\/home\/[^/\s]+/.test(skillsLoadingJson), 'Skills Loading 快照仍包含本机用户目录')
+
+  // ---- 7. 上游一致性 ----
   for (const [name, data] of Object.entries({ cli, config, tools, providers })) {
     check(
       data.commitSha === manifest.commitSha,
@@ -444,6 +579,9 @@ async function main() {
     } 个 step）/ ${referenceRun?.metrics?.toolCallCount ?? 0} 次可点击参考工具 / ${
       observatorySources.length
     } 个源码文件`,
+  )
+  notes.push(
+    `Skills Loading：${skillEvents.length} 个真实事件 / ${skillFiles.length} 个技能文件 / ${skillsLoading.index.scannedSkillFiles} 个初始索引 skill / provider ${skillsLoading.provider}:${skillsLoading.model}`,
   )
 
   if (problems.length > 0) {

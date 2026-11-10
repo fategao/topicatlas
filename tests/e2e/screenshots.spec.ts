@@ -55,6 +55,21 @@ test('截取视觉留档', async ({ page }, testInfo) => {
     fullPage: false,
   })
 
+  await page.goto('skills-loading')
+  await expect(page.getByTestId('skills-load-workbench')).toBeVisible()
+  await page.waitForTimeout(400)
+  await page.screenshot({
+    path: path.join(OUT_DIR, `skills-loading-${project}.png`),
+    fullPage: false,
+  })
+
+  await page.getByRole('button', { name: /按需读取审查清单/ }).click()
+  await page.waitForTimeout(300)
+  await page.screenshot({
+    path: path.join(OUT_DIR, `skills-loading-inspector-${project}.png`),
+    fullPage: false,
+  })
+
   await page.goto('hermes')
   await expect(page.getByRole('heading', { name: '学习路径总览' })).toBeVisible()
   await page.locator('#step-installation').scrollIntoViewIfNeeded()

@@ -1,6 +1,6 @@
 # Topic Atlas
 
-把官方文档整理成**有学习目标、有官方出处、有交互实验与验收清单**的多主题学习站。当前主题包括 [Hermes Agent](https://hermes-agent.nousresearch.com/)（Nous Research 出品的自托管 AI Agent）、**Eval-driven Prompt**（先定义成功标准，再迭代 Prompt）和 **Agent Observatory**（两条真实 agent run 的工具调用、记忆与上下文回放）。
+把官方文档整理成**有学习目标、有官方出处、有交互实验与验收清单**的多主题学习站。当前主题包括 [Hermes Agent](https://hermes-agent.nousresearch.com/)（Nous Research 出品的自托管 AI Agent）、**Eval-driven Prompt**（先定义成功标准，再迭代 Prompt）、**Agent Observatory**（两条真实 agent run 的工具调用、记忆与上下文回放）和 **Skills Loading Lab**（一次真实 Codex turn 的技能按需加载回放）。
 
 **线上地址：[https://topicatlas.tech](https://topicatlas.tech)**（绑定自定义域名 + 强制 HTTPS）
 
@@ -13,6 +13,8 @@
 ![Hermes Agent 学习路径](docs/screenshots/hermes-learning-path.png)
 
 ![Agent 运行可观测实验室](docs/screenshots/agent-observatory.png)
+
+![Skills Loading Lab](docs/screenshots/skills-loading.png)
 
 ![矩阵与线性变换学习页](docs/screenshots/matrix-lab.png)
 
@@ -37,6 +39,10 @@
 - `/agent-observatory/matrix-lab` — 产品 Agent 实际交付的 2×2 矩阵学习页：
   - 六个变换预设、可拖动与键盘操作的向量、SVG 网格、行列式、秩和三个挑战
   - 全部计算在浏览器本地完成，不请求模型或数学 API
+- `/skills-loading` — Skills Loading Lab：
+  - 真实 Codex turn 的 event rail、文件读取、脚本执行、最终输出与 provider usage
+  - 加载阶梯区分 metadata、`SKILL.md`、reference 与 script，并标注 observed / computed / documented
+  - 显式展示本机初始技能索引规模，不把未捕获的 system prompt 伪造成 wire 数据
 
 进度以 `topicatlas:progress:hermes:v1` 为键写入 `localStorage`；某一步的验收项全部勾选后该步才标记完成，并提供一键重置。
 
@@ -76,6 +82,7 @@ npm run content:refresh    # 等价于依次执行上面三步
 npm run eval:snapshot      # 重新生成 Eval 主题的真实模型快照（需要可用模型凭据）
 npm run experiment:observatory # 手动运行双 Agent 并生成脱敏快照（不进入 CI）
 npm run observatory:snapshot    # 从 cctrace 官方样例重建 v2 快照（需要本地样例，不进入 CI）
+npm run skills:trace            # 真实录制一次只读 Codex 技能调用并重建静态快照（不进入 CI）
 ```
 
 - **抓取**走 `api.github.com` 的 contents 接口（本机无法直连 `raw.githubusercontent.com`），拿到的是 `NousResearch/hermes-agent` 仓库里 `website/i18n/zh-Hans/` 的中文文档与 `website/docs/` 的英文文档。
@@ -92,7 +99,7 @@ npm run test         # Vitest：纯逻辑 + 组件交互
 npm run e2e          # Playwright：桌面 1440 + 移动 Pixel 7
 ```
 
-E2E 覆盖：首页 → 三个主题、Hermes 进度持久化、⌘K 全局搜索、Eval rubric 权重切换与排序翻转、Prompt v1/v2 差异、矩阵预设与键盘向量、Agent run 切换 / 工具筛选 / 压缩与记忆检查 / 源码联动、深浅色切换、新深链直接访问、移动端无横向溢出，以及 `prefers-reduced-motion`。
+E2E 覆盖：首页 → 四个主题、Hermes 进度持久化、⌘K 全局搜索、Eval rubric 权重切换与排序翻转、Prompt v1/v2 差异、矩阵预设与键盘向量、Agent run 切换 / 工具筛选 / 压缩与记忆检查 / 源码联动、Skills 真实事件回放 / 文件加载高亮 / 无 provider 请求、深浅色切换、新深链直接访问、移动端无横向溢出，以及 `prefers-reduced-motion`。
 
 ## 部署
 
@@ -202,7 +209,9 @@ content/upstream/         官方文档快照 + manifest（含上游 commit）
 scripts/                  内容管线（fetch / extract / validate）与 postbuild
 src/content/steps/        7 个步骤的 MDX 正文
 src/data/hermes/          抽取出来的参考数据、步骤元数据与类型
+src/data/skills-loading/  真实 Codex 技能轨迹快照、类型与 token 计算
 src/components/hermes/    学习路径、各步骤实验台、速查参考、全局搜索
+src/features/skills-loading/  加载阶梯、事件回放与上下文检查器
 src/components/ui/        基础 UI（复制按钮、进度环、滚动显现、Callout）
 tests/unit | component    纯逻辑与组件测试
 tests/e2e                 Playwright 端到端与视觉留档
@@ -220,5 +229,8 @@ tests/e2e                 Playwright 端到端与视觉留档
 ## 内容来源与许可
 
 - 内容改写自 **Hermes Agent 官方文档**（Nous Research），上游仓库 [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)，许可证 **MIT**。
+- Skills Loading 机制引用 [OpenAI Agent Skills](https://developers.openai.com/codex/skills) 与
+  [OpenAI Skills in plugins](https://developers.openai.com/plugins/concepts/skills)；轨迹呈现参考
+  [cctrace](https://github.com/thevibeworks/cctrace)（MIT），不复用其 TLS 代理或本地服务。
 - 站点是**非官方**学习站点；页脚会标注上游 commit 与抓取时间，每条命令、配置项、工具与 provider 都带官方锚点链接。
 - 图形元素均为自绘 SVG，未使用官方图片素材。

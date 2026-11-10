@@ -20,6 +20,7 @@
     "eval:snapshot": "node scripts/eval-snapshot.mjs",
     "experiment:observatory": "node scripts/observatory-experiment.mjs",
     "observatory:snapshot": "node scripts/observatory-reference.mjs",
+    "skills:trace": "node scripts/skills-trace.mjs",
     "content:fetch": "node scripts/fetch-upstream.mjs",
     "content:extract": "node scripts/extract-data.mjs",
     "content:validate": "node scripts/validate-content.mjs",

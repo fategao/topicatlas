@@ -15,6 +15,7 @@ export type Topic = {
   description: string
   status: TopicStatus
   stepCount: number
+  countLabel?: string
   tags: string[]
   sourceName: string
   sourceUrl: string
@@ -66,6 +67,22 @@ export const topics: Topic[] = [
     sourceName: 'cctrace TracePair 模型 · 本项目 Codex JSONL',
     sourceUrl: 'https://github.com/thevibeworks/cctrace',
     license: '运行快照来自真实实验与 cctrace 公开样例；cctrace 为 MIT 参考项目',
+  },
+  {
+    id: 'skills-loading',
+    slug: 'skills-loading',
+    title: 'Skills Loading',
+    zhTitle: '技能加载真实轨迹',
+    tagline: '从常驻索引到按需正文，逐步看清 skill 何时占用上下文',
+    description:
+      '一次真实 Codex turn 被拆成可回放事件：技能目录先进入初始索引，显式命中后才读取 SKILL.md，再按需加载引用文件并执行确定性脚本。页面区分已观测事件、本地计算与官方文档规则。',
+    status: 'ready',
+    stepCount: 8,
+    countLabel: '个事件',
+    tags: ['Skill Loading', 'Progressive Disclosure', 'Codex Trace', 'Context Budget'],
+    sourceName: 'OpenAI Codex Skills · cctrace',
+    sourceUrl: 'https://developers.openai.com/codex/skills',
+    license: '运行快照为本项目真实 Codex 调用；cctrace 为 MIT 参考项目',
   },
 ]
 

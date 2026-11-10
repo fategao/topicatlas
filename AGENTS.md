@@ -1,4 +1,4 @@
-# 项目：LMAPI 知识网页 - Eval-driven Prompt
+# 项目：Topic Atlas 多主题知识站
 
 ## Task
 
@@ -35,6 +35,24 @@ Eval-driven Prompt：先定义成功标准，再构造测试集、选择评分�
 - 核心交互：可调 rubric 权重和通过线、Prompt v1/v2 对比、逐用例评分矩阵、Prompt 规格差异。
 - 交付文档：本文件与 `docs/eval-driven-prompt-log.md`。
 
+## Skills Loading Lab
+
+- 页面路由：`/skills-loading`，接入首页主题卡片、顶部导航、sitemap 与静态深链。
+- 受众：理解 LLM API、tool calling 与 agent 运行结构的开发者。
+- 页面只讲 Codex 技能加载，不做 Claude、Codex、Hermes 平台机制对照；Claude Skills 与 Hermes Marketplace
+  只作为延伸阅读。
+- 专用技能在 `.agents/skills/release-brief-auditor/`。根 `SKILL.md` 只做路由，引用清单和确定性脚本
+  分别在 `references/` 与 `scripts/`，用于展示渐进式披露。
+- 快照：`src/data/skills-loading/snapshot.json`。记录实际 provider/model、reasoning effort、prompt 与
+  skill 文件 hash、事件顺序、provider usage、最终输出和 `observed / computed / documented` 证据级别。
+- 生成脚本：`npm run skills:trace`。它执行一次只读、临时、无持久化会话的 Codex 调用；原始 JSONL 只写
+  `artifacts/skills-loading/`，该目录被 Git 忽略。CI 不运行模型调用，只校验已提交快照。
+- 页面与组件集中在 `src/features/skills-loading/`，不得修改 `/hermes` 的进度模型、搜索索引或内容管线。
+- 技术事实引用 OpenAI Codex Skills 官方文档；cctrace 只作为轨迹呈现参考。
+- 过程日志：`docs/skills-loading-log.md`。必须记录实际环境、来源、真实事件、限制与验证结果。
+- 任何事件若没有真实 command execution 或 provider 证据，必须标为 `computed`/`documented` 或直接留空，
+  不得补造“Skill 工具调用”。
+
 ## Verification
 
 提交前必须依次通过：
@@ -49,4 +67,5 @@ npm run e2e
 ```
 
 部署后运行 `npm run deploy:check -- --url https://topicatlas.tech/`，并确认
-`https://topicatlas.tech/eval-driven-prompt/` 返回可交互页面且无资源 404。
+`https://topicatlas.tech/eval-driven-prompt/` 与 `https://topicatlas.tech/skills-loading/`
+返回可交互页面且无资源 404。

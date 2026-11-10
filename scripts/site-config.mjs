@@ -21,6 +21,7 @@ export const SITE_ROUTES = [
   '/eval-driven-prompt',
   '/agent-observatory',
   '/agent-observatory/matrix-lab',
+  '/skills-loading',
 ]
 
 /**

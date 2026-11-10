@@ -27,7 +27,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: 端到端测试（桌面 + 移动）
-        run: npx playwright test tests/e2e/journey.spec.ts
+        run: npx playwright test tests/e2e/journey.spec.ts tests/e2e/skills-loading.spec.ts
 
       - uses: actions/upload-artifact@v4
         if: failure()

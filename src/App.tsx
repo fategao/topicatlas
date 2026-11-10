@@ -12,6 +12,7 @@ import { HermesPage } from './routes/HermesPage'
 import { EvalDrivenPromptPage } from './routes/EvalDrivenPromptPage'
 import { AgentObservatoryPage } from './routes/AgentObservatoryPage'
 import { MatrixLabPage } from './routes/MatrixLabPage'
+import { SkillsLoadingPage } from './routes/SkillsLoadingPage'
 import { NotFoundPage } from './routes/NotFoundPage'
 
 function ScrollToTop() {
@@ -45,6 +46,7 @@ export default function App() {
             <Route path="/eval-driven-prompt" element={<EvalDrivenPromptPage />} />
             <Route path="/agent-observatory" element={<AgentObservatoryPage />} />
             <Route path="/agent-observatory/matrix-lab" element={<MatrixLabPage />} />
+            <Route path="/skills-loading" element={<SkillsLoadingPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>

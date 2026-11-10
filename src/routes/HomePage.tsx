@@ -53,7 +53,9 @@ export function HomePage() {
                   data-topic={topic.id}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="pill">{topic.stepCount} 个步骤</span>
+                    <span className="pill">
+                      {topic.stepCount} {topic.countLabel ?? '个步骤'}
+                    </span>
                     <span className="pill" style={{ color: 'var(--c-accent-2)' }}>
                       {topic.status === 'ready' ? '已上线' : '筹备中'}
                     </span>

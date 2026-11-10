@@ -50,6 +50,12 @@ export function SiteHeader({ onOpenSearch }: SiteHeaderProps) {
           >
             Agent Lab
           </Link>
+          <Link
+            to="/skills-loading"
+            className="hidden text-xs text-muted transition-colors hover:text-ink xl:block"
+          >
+            Skills
+          </Link>
           <button
             type="button"
             className="btn"
