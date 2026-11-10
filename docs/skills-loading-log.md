@@ -107,3 +107,17 @@ npm run e2e               ✓ 46 tests（desktop + mobile）
 
 本机 Playwright 自带 Chromium 版本未下载，首轮 E2E 在浏览器启动阶段失败；随后按项目已支持的回退路径
 使用 `PLAYWRIGHT_CHANNEL=chrome` 复用本机 Chrome。页面断言全部通过，这不是功能测试失败。
+
+## 9. 生产部署
+
+- 首次实现提交：`10731fd`。
+- GitHub Actions：`build` 与 `deploy` 均成功。
+- `npm run deploy:check -- --url https://topicatlas.tech/` 通过：
+  - 首页与 5 个静态深链均返回 200。
+  - `/skills-loading` 已有真实静态入口。
+  - 抽检静态资源无 404，http 正确 301 到 https。
+- 生产浏览器复验：
+  - 页面状态码 200，标题正常。
+  - 点击“按需读取审查清单”后，只读引用文件被标记为 `is-loaded`。
+  - 桌面横向溢出为 0。
+  - 无资源 4xx/5xx，无外部 provider 请求。
